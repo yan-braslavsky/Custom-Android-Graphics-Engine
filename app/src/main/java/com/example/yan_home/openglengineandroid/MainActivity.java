@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
                         || Build.MODEL.contains("Emulator")
                         || Build.MODEL.contains("Android SDK built for x86")));
 
-        final AppRenderer renderer = new AppRenderer(this);
+        final YANRenderer renderer = new YANRenderer();
 
         if (supportsEs2) {
             // ...

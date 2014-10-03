@@ -8,7 +8,6 @@
  ***/
 package com.example.yan_home.openglengineandroid;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
@@ -19,34 +18,22 @@ import com.example.yan_home.openglengineandroid.programs.ColorShaderProgram;
 import com.example.yan_home.openglengineandroid.programs.TextureShaderProgram;
 import com.example.yan_home.openglengineandroid.screens.BaseScreen;
 import com.example.yan_home.openglengineandroid.screens.IScreen;
+import com.example.yan_home.openglengineandroid.util.MatrixHelper;
 import com.example.yan_home.openglengineandroid.util.TextureHelper;
 import com.example.yan_home.openglengineandroid.util.colors.YANColor;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public class AppRenderer implements Renderer {
-    private final Context context;
+public class YANRenderer implements Renderer {
+
+
     private IScreen mCurrentScreen;
-
-    // matricies that used for vertex calculations
-    private final float[] projectionMatrix = new float[16];
-    private final float[] modelMatrix = new float[16];
-    private final float[] viewMatrix = new float[16];
-    private final float[] viewProjectionMatrix = new float[16];
-    private final float[] invertedViewProjectionMatrix = new float[16];
-    private final float[] modelViewProjectionMatrix = new float[16];
-
 
     // shader programs
     private TextureShaderProgram textureProgram;
     private ColorShaderProgram colorProgram;
     private int mLoadedTableTextureHandle;
-
-    public AppRenderer(Context activityCtx) {
-        this.context = activityCtx;
-
-    }
 
     public void handleTouchPress(float normalizedX, float normalizedY) {
         //TODO : handle
@@ -57,9 +44,9 @@ public class AppRenderer implements Renderer {
         //TODO: handle
     }
 
-    void setActiveScreen(IScreen screen){
+    void setActiveScreen(IScreen screen) {
 
-        if(this.mCurrentScreen != null){
+        if (this.mCurrentScreen != null) {
             this.mCurrentScreen.onSetNotActive();
         }
 
@@ -68,7 +55,7 @@ public class AppRenderer implements Renderer {
 
         //TODO : load all textures related to this screen
         for (INode iNode : mCurrentScreen.getNodeList()) {
-            mLoadedTableTextureHandle = TextureHelper.loadTexture(context,
+            mLoadedTableTextureHandle = TextureHelper.loadTexture(GLEngineApp.getAppContext(),
                     iNode.getSpriteResourceId());
         }
 
@@ -87,8 +74,8 @@ public class AppRenderer implements Renderer {
     }
 
     private void loadShaderPrograms() {
-        textureProgram = new TextureShaderProgram(context);
-        colorProgram = new ColorShaderProgram(context);
+        textureProgram = new TextureShaderProgram(GLEngineApp.getAppContext());
+        colorProgram = new ColorShaderProgram(GLEngineApp.getAppContext());
     }
 
     @Override
@@ -101,11 +88,11 @@ public class AppRenderer implements Renderer {
         float newWidth = 4;
         float newHeight = newWidth / aspectRatio;
 
-        Matrix.orthoM(projectionMatrix, 0, -(newWidth / 2), (newWidth / 2), -(newHeight / 2), (newHeight / 2), 1, 100);
+        Matrix.orthoM(MatrixHelper.projectionMatrix, 0, -(newWidth / 2), (newWidth / 2), -(newHeight / 2), (newHeight / 2), 1, 100);
 
         //fill view matrix
-        Matrix.setLookAtM(viewMatrix, 0, 0f, 1.2f, 2.2f, 0f, 0f, 0f, 0f, 1f, 0f);
-        mCurrentScreen.onResize(newWidth,newHeight);
+        Matrix.setLookAtM(MatrixHelper.viewMatrix, 0, 0f, 1.2f, 2.2f, 0f, 0f, 0f, 0f, 1f, 0f);
+        mCurrentScreen.onResize(newWidth, newHeight);
     }
 
     @Override
@@ -119,28 +106,21 @@ public class AppRenderer implements Renderer {
 
         // Update the viewProjection matrix, and create an inverted matrix for
         // touch picking.
-        Matrix.multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
-        Matrix.invertM(invertedViewProjectionMatrix, 0, viewProjectionMatrix, 0);
+        Matrix.multiplyMM(MatrixHelper.viewProjectionMatrix, 0, MatrixHelper.projectionMatrix, 0, MatrixHelper.viewMatrix, 0);
+        Matrix.invertM(MatrixHelper.invertedViewProjectionMatrix, 0, MatrixHelper.viewProjectionMatrix, 0);
 
         drawNodes();
     }
 
     private void drawNodes() {
         for (INode iNode : mCurrentScreen.getNodeList()) {
-            positionObjectInScene(iNode.getPosition().getX(),iNode.getPosition().getY());
+            MatrixHelper.positionObjectInScene(iNode.getPosition().getX(), iNode.getPosition().getY());
             textureProgram.useProgram();
-            textureProgram.setUniforms(modelViewProjectionMatrix, mLoadedTableTextureHandle);
+            textureProgram.setUniforms(MatrixHelper.modelViewProjectionMatrix, mLoadedTableTextureHandle);
             iNode.bindData(textureProgram);
             iNode.draw();
         }
     }
 
 
-    // The mallets and the puck are positioned on the same plane as the table.
-    private void positionObjectInScene(float x, float y) {
-        Matrix.setIdentityM(modelMatrix, 0);
-        Matrix.translateM(modelMatrix, 0, x, y, 0);
-        Matrix.multiplyMM(modelViewProjectionMatrix, 0, viewProjectionMatrix, 0,
-                modelMatrix, 0);
-    }
 }
