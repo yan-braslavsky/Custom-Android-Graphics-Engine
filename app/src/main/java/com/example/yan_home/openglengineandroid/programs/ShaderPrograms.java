@@ -10,8 +10,8 @@ package com.example.yan_home.openglengineandroid.programs;
 
 import android.content.Context;
 
-import com.example.yan_home.openglengineandroid.util.ShaderHelper;
-import com.example.yan_home.openglengineandroid.util.TextResourceReader;
+import com.example.yan_home.openglengineandroid.util.YANShaderHelper;
+import com.example.yan_home.openglengineandroid.util.YANTextResourceReader;
 
 import static android.opengl.GLES20.glUseProgram;
 
@@ -32,10 +32,10 @@ abstract class ShaderProgram {
 
     protected ShaderProgram(Context context, int vertexShaderResourceId, int fragmentShaderResourceId) {
         // Compile the shaders and link the program.
-        program = ShaderHelper.buildProgram(
-                TextResourceReader
+        program = YANShaderHelper.buildProgram(
+                YANTextResourceReader
                         .readTextFileFromResource(context, vertexShaderResourceId),
-                TextResourceReader
+                YANTextResourceReader
                         .readTextFileFromResource(context, fragmentShaderResourceId));
     }
 

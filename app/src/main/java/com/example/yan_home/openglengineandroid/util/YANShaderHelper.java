@@ -29,7 +29,7 @@ import static android.opengl.GLES20.glLinkProgram;
 import static android.opengl.GLES20.glShaderSource;
 import static android.opengl.GLES20.glValidateProgram;
 
-public class ShaderHelper {
+public class YANShaderHelper {
     private static final String TAG = "ShaderHelper";
 
     private static final boolean IS_LOGGING_ON = true;

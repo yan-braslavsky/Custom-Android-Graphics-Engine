@@ -13,13 +13,14 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.Matrix;
 
-import com.example.yan_home.openglengineandroid.nodes.INode;
-import com.example.yan_home.openglengineandroid.programs.ColorShaderProgram;
-import com.example.yan_home.openglengineandroid.programs.TextureShaderProgram;
-import com.example.yan_home.openglengineandroid.screens.BaseScreen;
-import com.example.yan_home.openglengineandroid.screens.IScreen;
-import com.example.yan_home.openglengineandroid.util.MatrixHelper;
-import com.example.yan_home.openglengineandroid.util.TextureHelper;
+import com.example.yan_home.openglengineandroid.nodes.YANIRenderableNode;
+import com.example.yan_home.openglengineandroid.nodes.YANTexturedNode;
+import com.example.yan_home.openglengineandroid.programs.YANColorShaderProgram;
+import com.example.yan_home.openglengineandroid.programs.YANTextureShaderProgram;
+import com.example.yan_home.openglengineandroid.screens.YANBaseScreen;
+import com.example.yan_home.openglengineandroid.screens.YANIScreen;
+import com.example.yan_home.openglengineandroid.util.YANMatrixHelper;
+import com.example.yan_home.openglengineandroid.util.YANTextureHelper;
 import com.example.yan_home.openglengineandroid.util.colors.YANColor;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -27,12 +28,11 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class YANRenderer implements Renderer {
 
-
-    private IScreen mCurrentScreen;
+    private YANIScreen mCurrentScreen;
 
     // shader programs
-    private TextureShaderProgram textureProgram;
-    private ColorShaderProgram colorProgram;
+    private YANTextureShaderProgram textureProgram;
+    private YANColorShaderProgram colorProgram;
     private int mLoadedTableTextureHandle;
 
     public void handleTouchPress(float normalizedX, float normalizedY) {
@@ -44,7 +44,7 @@ public class YANRenderer implements Renderer {
         //TODO: handle
     }
 
-    void setActiveScreen(IScreen screen) {
+    void setActiveScreen(YANIScreen screen) {
 
         if (this.mCurrentScreen != null) {
             this.mCurrentScreen.onSetNotActive();
@@ -54,9 +54,9 @@ public class YANRenderer implements Renderer {
         mCurrentScreen.onSetActive();
 
         //TODO : load all textures related to this screen
-        for (INode iNode : mCurrentScreen.getNodeList()) {
-            mLoadedTableTextureHandle = TextureHelper.loadTexture(GLEngineApp.getAppContext(),
-                    iNode.getSpriteResourceId());
+        for (YANIRenderableNode iNode : mCurrentScreen.getNodeList()) {
+            mLoadedTableTextureHandle = YANTextureHelper.loadTexture(GLEngineApp.getAppContext(),
+                    ((YANTexturedNode) iNode).getSpriteResourceId());
         }
 
     }
@@ -65,7 +65,7 @@ public class YANRenderer implements Renderer {
     public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
         setClearColor();
         loadShaderPrograms();
-        setActiveScreen(new BaseScreen());
+        setActiveScreen(new YANBaseScreen());
     }
 
     private void setClearColor() {
@@ -74,8 +74,8 @@ public class YANRenderer implements Renderer {
     }
 
     private void loadShaderPrograms() {
-        textureProgram = new TextureShaderProgram(GLEngineApp.getAppContext());
-        colorProgram = new ColorShaderProgram(GLEngineApp.getAppContext());
+        textureProgram = new YANTextureShaderProgram(GLEngineApp.getAppContext());
+        colorProgram = new YANColorShaderProgram(GLEngineApp.getAppContext());
     }
 
     @Override
@@ -84,14 +84,18 @@ public class YANRenderer implements Renderer {
         // Set the OpenGL viewport to fill the entire surface.
         GLES20.glViewport(0, 0, width, height);
 
+        // Enable blending using pre-multiplied alpha.
+        GLES20.glEnable(GL10.GL_BLEND);
+        GLES20.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
         float aspectRatio = (float) width / (float) height;
         float newWidth = 4;
         float newHeight = newWidth / aspectRatio;
 
-        Matrix.orthoM(MatrixHelper.projectionMatrix, 0, -(newWidth / 2), (newWidth / 2), -(newHeight / 2), (newHeight / 2), 1, 100);
+        Matrix.orthoM(YANMatrixHelper.projectionMatrix, 0, -(newWidth / 2), (newWidth / 2), -(newHeight / 2), (newHeight / 2), 1, 100);
 
         //fill view matrix
-        Matrix.setLookAtM(MatrixHelper.viewMatrix, 0, 0f, 1.2f, 2.2f, 0f, 0f, 0f, 0f, 1f, 0f);
+        Matrix.setLookAtM(YANMatrixHelper.viewMatrix, 0, 0f, 1.2f, 2.2f, 0f, 0f, 0f, 0f, 1f, 0f);
         mCurrentScreen.onResize(newWidth, newHeight);
     }
 
@@ -106,17 +110,17 @@ public class YANRenderer implements Renderer {
 
         // Update the viewProjection matrix, and create an inverted matrix for
         // touch picking.
-        Matrix.multiplyMM(MatrixHelper.viewProjectionMatrix, 0, MatrixHelper.projectionMatrix, 0, MatrixHelper.viewMatrix, 0);
-        Matrix.invertM(MatrixHelper.invertedViewProjectionMatrix, 0, MatrixHelper.viewProjectionMatrix, 0);
+        Matrix.multiplyMM(YANMatrixHelper.viewProjectionMatrix, 0, YANMatrixHelper.projectionMatrix, 0, YANMatrixHelper.viewMatrix, 0);
+        Matrix.invertM(YANMatrixHelper.invertedViewProjectionMatrix, 0, YANMatrixHelper.viewProjectionMatrix, 0);
 
         drawNodes();
     }
 
     private void drawNodes() {
-        for (INode iNode : mCurrentScreen.getNodeList()) {
-            MatrixHelper.positionObjectInScene(iNode.getPosition().getX(), iNode.getPosition().getY());
+        for (YANIRenderableNode iNode : mCurrentScreen.getNodeList()) {
+            YANMatrixHelper.positionObjectInScene(iNode.getPosition().getX(), iNode.getPosition().getY());
             textureProgram.useProgram();
-            textureProgram.setUniforms(MatrixHelper.modelViewProjectionMatrix, mLoadedTableTextureHandle);
+            textureProgram.setUniforms(YANMatrixHelper.modelViewProjectionMatrix, mLoadedTableTextureHandle);
             iNode.bindData(textureProgram);
             iNode.draw();
         }

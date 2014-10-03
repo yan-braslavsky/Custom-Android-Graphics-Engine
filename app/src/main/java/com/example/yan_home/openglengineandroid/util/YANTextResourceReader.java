@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class TextResourceReader {
+public class YANTextResourceReader {
 	/**
 	 * Reads in text from a resource file and returns a String containing the
 	 * text.

@@ -5,7 +5,7 @@ import android.graphics.Color;
 /**
  * Created by Yan-Home on 10/3/2014.
  */
-public class YANColor implements IColor {
+public class YANColor implements YANIColor {
 
     private float mR;
     private float mG;

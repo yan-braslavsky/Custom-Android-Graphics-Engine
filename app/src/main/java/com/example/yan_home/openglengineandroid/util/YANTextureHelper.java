@@ -25,7 +25,7 @@ import static android.opengl.GLES20.glGenerateMipmap;
 import static android.opengl.GLES20.glTexParameteri;
 import static android.opengl.GLUtils.texImage2D;
 
-public class TextureHelper {
+public class YANTextureHelper {
     private static final String TAG = "TextureHelper";
     private static final boolean IS_LOGGING_ON = true;
 

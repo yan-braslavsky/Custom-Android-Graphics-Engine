@@ -1,7 +1,7 @@
 package com.example.yan_home.openglengineandroid.objects;
 
-import com.example.yan_home.openglengineandroid.data.VertexArray;
-import com.example.yan_home.openglengineandroid.programs.ColorShaderProgram;
+import com.example.yan_home.openglengineandroid.data.YANVertexArray;
+import com.example.yan_home.openglengineandroid.programs.YANColorShaderProgram;
 import com.example.yan_home.openglengineandroid.util.Geometry;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public class Puck {
 
     public final float radius, height;
 
-    private final VertexArray vertexArray;
+    private final YANVertexArray vertexArray;
     private final List<ObjectBuilder.DrawCommand> drawList;
 
     public Puck(float radius, float height, int numPointsAroundPuck) {
@@ -21,11 +21,11 @@ public class Puck {
         this.radius = radius;
         this.height = height;
 
-        vertexArray = new VertexArray(generatedData.vertexData);
+        vertexArray = new YANVertexArray(generatedData.vertexData);
         drawList = generatedData.drawList;
     }
 
-    public void bindData(ColorShaderProgram colorProgram) {
+    public void bindData(YANColorShaderProgram colorProgram) {
         vertexArray.setVertexAttribPointer(0,
                 colorProgram.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT, 0);

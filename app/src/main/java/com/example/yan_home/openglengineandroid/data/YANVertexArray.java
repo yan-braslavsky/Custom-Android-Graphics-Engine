@@ -15,13 +15,13 @@ import java.nio.FloatBuffer;
 import static android.opengl.GLES20.GL_FLOAT;
 import static android.opengl.GLES20.glEnableVertexAttribArray;
 import static android.opengl.GLES20.glVertexAttribPointer;
-import static com.example.yan_home.openglengineandroid.constants.Constants.BYTES_PER_FLOAT;
 
 
-public class VertexArray {    
+public class YANVertexArray {
     private final FloatBuffer floatBuffer;
+    public static final int BYTES_PER_FLOAT = 4;
 
-    public VertexArray(float[] vertexData) {
+    public YANVertexArray(float[] vertexData) {
         floatBuffer = ByteBuffer
             .allocateDirect(vertexData.length * BYTES_PER_FLOAT)
             .order(ByteOrder.nativeOrder())
