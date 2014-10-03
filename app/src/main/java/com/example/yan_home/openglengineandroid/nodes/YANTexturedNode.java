@@ -4,16 +4,18 @@
  */
 package com.example.yan_home.openglengineandroid.nodes;
 
+import com.example.yan_home.openglengineandroid.assets.YANTexture;
+
 public class YANTexturedNode extends YANBaseNode {
 
-    private final int spriteResourceId;
+    private final YANTexture mTexture;
 
-    public YANTexturedNode(int spriteResourceId) {
+    public YANTexturedNode(YANTexture texture) {
         super();
-        this.spriteResourceId = spriteResourceId;
+        mTexture = texture;
     }
 
-    public int getSpriteResourceId() {
-        return spriteResourceId;
+    public YANTexture getTexture() {
+        return mTexture;
     }
 }

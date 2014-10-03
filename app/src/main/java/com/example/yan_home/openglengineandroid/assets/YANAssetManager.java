@@ -1,0 +1,43 @@
+package com.example.yan_home.openglengineandroid.assets;
+
+import com.example.yan_home.openglengineandroid.GLEngineApp;
+import com.example.yan_home.openglengineandroid.util.YANTextureHelper;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Created by Yan-Home on 10/3/2014.
+ */
+public class YANAssetManager {
+
+    private static final YANAssetManager INSTANCE = new YANAssetManager();
+
+    public static final YANAssetManager getInstance() {
+        return INSTANCE;
+    }
+
+    private Map<YANTexture, Integer> mTextureHandlesMap;
+
+    private YANAssetManager() {
+        mTextureHandlesMap = new HashMap<YANTexture, Integer>();
+    }
+
+    public boolean isTextureLoaded(YANTexture texture) {
+        return mTextureHandlesMap.get(texture) != null;
+    }
+
+    public void loadTexture(YANTexture texture) {
+        int handle = YANTextureHelper.loadTexture(GLEngineApp.getAppContext(),
+                texture.getTextureResourceID());
+        mTextureHandlesMap.put(texture, handle);
+    }
+
+    public void unloadTexture(YANTexture texture) {
+        throw new UnsupportedOperationException("needs to be implemented");
+    }
+
+    public int getLoadedTextureHandle(YANTexture texture) {
+        return mTextureHandlesMap.get(texture);
+    }
+}
