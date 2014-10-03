@@ -15,6 +15,7 @@ import com.example.yan_home.openglengineandroid.screens.YANIScreen;
 import com.example.yan_home.openglengineandroid.screens.impl.YANTestScreen;
 import com.example.yan_home.openglengineandroid.util.YANMatrixHelper;
 import com.example.yan_home.openglengineandroid.util.colors.YANColor;
+import com.example.yan_home.openglengineandroid.util.math.Vector2;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -26,6 +27,8 @@ import javax.microedition.khronos.opengles.GL10;
 public class YANRenderer implements YANIRenderer {
 
     private YANIScreen mCurrentScreen;
+
+    private Vector2 mSurficeSize;
 
     // shader programs
     private YANTextureShaderProgram textureProgram;
@@ -43,13 +46,15 @@ public class YANRenderer implements YANIRenderer {
         // Set the OpenGL viewport to fill the entire surface.
         GLES20.glViewport(0, 0, width, height);
 
+        mSurficeSize = new Vector2(width,height);
+
         // Enable blending using pre-multiplied alpha.
         GLES20.glEnable(GL10.GL_BLEND);
         GLES20.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
         float aspectRatio = (float) width / (float) height;
-        float newWidth = 4;
-        float newHeight = newWidth / aspectRatio;
+        float newWidth = 10;//width;
+        float newHeight =  newWidth / aspectRatio;
 
         Matrix.orthoM(YANMatrixHelper.projectionMatrix, 0, -(newWidth / 2), (newWidth / 2), -(newHeight / 2), (newHeight / 2), 1, 100);
 
