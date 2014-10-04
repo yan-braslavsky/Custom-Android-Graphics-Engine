@@ -10,8 +10,8 @@ package com.example.yan_home.openglengineandroid;
 
 import android.opengl.GLSurfaceView.Renderer;
 
+import com.example.yan_home.openglengineandroid.renderer.YANGLRenderer;
 import com.example.yan_home.openglengineandroid.renderer.YANIRenderer;
-import com.example.yan_home.openglengineandroid.renderer.YANRenderer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -21,7 +21,7 @@ public class GLRenderer implements Renderer {
     private YANIRenderer mRenderer;
 
     public GLRenderer() {
-        mRenderer = new YANRenderer();
+        mRenderer = new YANGLRenderer();
     }
 
     public void handleTouchPress(float normalizedX, float normalizedY) {

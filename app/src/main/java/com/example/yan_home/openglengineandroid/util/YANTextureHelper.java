@@ -5,12 +5,13 @@
  * courses, books, articles, and the like. Contact us if you are in doubt.
  * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/kbogla for more book information.
-***/
+ ***/
 package com.example.yan_home.openglengineandroid.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.opengl.GLES20;
 import android.util.Log;
 
 import static android.opengl.GLES20.GL_LINEAR;
@@ -32,7 +33,7 @@ public class YANTextureHelper {
     /**
      * Loads a texture from a resource ID, returning the OpenGL ID for that
      * texture. Returns 0 if the load failed.
-     * 
+     *
      * @param context
      * @param resourceId
      * @return
@@ -46,14 +47,14 @@ public class YANTextureHelper {
                 Log.w(TAG, "Could not generate a new OpenGL texture object.");
             }
             return 0;
-        } 
-        
+        }
+
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
 
         // Read in the resource
         final Bitmap bitmap = BitmapFactory.decodeResource(
-            context.getResources(), resourceId, options);
+                context.getResources(), resourceId, options);
 
         if (bitmap == null) {
             if (IS_LOGGING_ON) {
@@ -62,7 +63,7 @@ public class YANTextureHelper {
 
             glDeleteTextures(1, textureObjectIds, 0);
             return 0;
-        } 
+        }
         // Bind to the texture in OpenGL
         glBindTexture(GL_TEXTURE_2D, textureObjectIds[0]);
 
@@ -91,5 +92,11 @@ public class YANTextureHelper {
         glBindTexture(GL_TEXTURE_2D, 0);
 
         return textureObjectIds[0];
+    }
+
+    public static void deleteTexture(Integer textureHandle) {
+        final int[] textureObjectIds = new int[1];
+        textureObjectIds[0] = textureHandle;
+        GLES20.glDeleteTextures(1, textureObjectIds, 0);
     }
 }

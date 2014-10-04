@@ -33,8 +33,16 @@ public class YANAssetManager {
         mTextureHandlesMap.put(texture, handle);
     }
 
+    public void unloadAllTextures(){
+        for (YANTexture yanTexture : mTextureHandlesMap.keySet()) {
+            YANTextureHelper.deleteTexture(mTextureHandlesMap.get(yanTexture));
+        }
+        mTextureHandlesMap.clear();
+    }
+
     public void unloadTexture(YANTexture texture) {
-        throw new UnsupportedOperationException("needs to be implemented");
+        YANTextureHelper.deleteTexture(mTextureHandlesMap.get(texture));
+        mTextureHandlesMap.remove(texture);
     }
 
     public int getLoadedTextureHandle(YANTexture texture) {
