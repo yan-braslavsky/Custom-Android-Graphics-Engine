@@ -10,6 +10,7 @@ package com.example.yan_home.openglengineandroid;
 
 import android.opengl.GLSurfaceView.Renderer;
 
+import com.example.yan_home.openglengineandroid.input.YANInputManager;
 import com.example.yan_home.openglengineandroid.renderer.YANGLRenderer;
 import com.example.yan_home.openglengineandroid.renderer.YANIRenderer;
 
@@ -18,18 +19,16 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class GLRenderer implements Renderer {
 
-    private YANIRenderer mRenderer;
-
-    public GLRenderer() {
-        mRenderer = new YANGLRenderer();
-    }
+    //Static reference kept , to prevent recreation of the
+    //implementator renderer each time screen is rotated
+    private static YANIRenderer mRenderer = new YANGLRenderer();
 
     public void handleTouchPress(float normalizedX, float normalizedY) {
-        //TODO : move those to input handler
+        YANInputManager.getInstance().handleTouchPress(normalizedX,normalizedY);
     }
 
     public void handleTouchDrag(float normalizedX, float normalizedY) {
-        //TODO : move those to input handler
+        YANInputManager.getInstance().handleTouchDrag(normalizedX,normalizedY);
     }
 
     @Override
