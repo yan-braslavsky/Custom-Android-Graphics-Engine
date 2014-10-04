@@ -11,7 +11,6 @@ package com.example.yan_home.openglengineandroid;
 import android.opengl.GLSurfaceView.Renderer;
 
 import com.example.yan_home.openglengineandroid.renderer.YANGLRenderer;
-import com.example.yan_home.openglengineandroid.renderer.YANIRenderer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
