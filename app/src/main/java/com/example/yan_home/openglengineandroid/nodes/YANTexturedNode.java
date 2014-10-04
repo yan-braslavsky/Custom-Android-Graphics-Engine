@@ -18,4 +18,5 @@ public class YANTexturedNode extends YANBaseNode {
     public YANTexture getTexture() {
         return mTexture;
     }
+
 }

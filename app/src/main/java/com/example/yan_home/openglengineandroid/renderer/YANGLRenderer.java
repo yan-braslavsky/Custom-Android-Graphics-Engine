@@ -11,7 +11,7 @@ import com.example.yan_home.openglengineandroid.nodes.YANTexturedNode;
 import com.example.yan_home.openglengineandroid.programs.YANColorShaderProgram;
 import com.example.yan_home.openglengineandroid.programs.YANTextureShaderProgram;
 import com.example.yan_home.openglengineandroid.screens.YANIScreen;
-import com.example.yan_home.openglengineandroid.screens.impl.YANTestScreen;
+import com.example.yan_home.openglengineandroid.screens.impl.YANTouchTestScreen;
 import com.example.yan_home.openglengineandroid.util.YANMatrixHelper;
 import com.example.yan_home.openglengineandroid.util.colors.YANColor;
 import com.example.yan_home.openglengineandroid.util.math.Vector2;
@@ -33,13 +33,17 @@ public class YANGLRenderer implements YANIRenderer {
     private YANTextureShaderProgram textureProgram;
     private YANColorShaderProgram colorProgram;
 
+    public YANGLRenderer() {
+        setActiveScreen(new YANTouchTestScreen());
+    }
+
     @Override
     public void onGLSurfaceCreated() {
         // Enable blending using pre-multiplied alpha.
 
         setGlInitialStates();
         loadShaderPrograms();
-        setActiveScreen(new YANTestScreen());
+//        setActiveScreen(new YANTouchTestScreen());
     }
 
     @Override
@@ -111,7 +115,7 @@ public class YANGLRenderer implements YANIRenderer {
         colorProgram = new YANColorShaderProgram(GLEngineApp.getAppContext());
     }
 
-    void setActiveScreen(YANIScreen screen) {
+    public void setActiveScreen(YANIScreen screen) {
 
         if (this.mCurrentScreen != null) {
             this.mCurrentScreen.onSetNotActive();
@@ -119,6 +123,10 @@ public class YANGLRenderer implements YANIRenderer {
 
         this.mCurrentScreen = screen;
         mCurrentScreen.onSetActive();
+
+        if (mSurficeSize != null) {
+            mCurrentScreen.onResize(mSurficeSize.getX(), mSurficeSize.getY());
+        }
     }
 
 }
