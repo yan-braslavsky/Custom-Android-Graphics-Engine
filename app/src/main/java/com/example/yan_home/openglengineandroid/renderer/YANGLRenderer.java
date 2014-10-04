@@ -5,7 +5,6 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import com.example.yan_home.openglengineandroid.GLEngineApp;
-import com.example.yan_home.openglengineandroid.YANIRenderer;
 import com.example.yan_home.openglengineandroid.assets.YANAssetManager;
 import com.example.yan_home.openglengineandroid.nodes.YANIRenderableNode;
 import com.example.yan_home.openglengineandroid.nodes.YANTexturedNode;
