@@ -6,6 +6,7 @@ import android.opengl.Matrix;
 
 import com.example.yan_home.openglengineandroid.GLEngineApp;
 import com.example.yan_home.openglengineandroid.assets.YANAssetManager;
+import com.example.yan_home.openglengineandroid.input.YANInputManager;
 import com.example.yan_home.openglengineandroid.nodes.YANIRenderableNode;
 import com.example.yan_home.openglengineandroid.nodes.YANTexturedNode;
 import com.example.yan_home.openglengineandroid.programs.YANColorShaderProgram;
@@ -27,23 +28,91 @@ public class YANGLRenderer implements YANIRenderer {
 
     private YANIScreen mCurrentScreen;
 
-    private Vector2 mSurficeSize;
+    private Vector2 mSurfaceSize;
 
     // shader programs
     private YANTextureShaderProgram textureProgram;
     private YANColorShaderProgram colorProgram;
 
     public YANGLRenderer() {
+
+        //Register touch handler
+        registerInputListener();
         setActiveScreen(new YANTouchTestScreen());
+    }
+
+    private void registerInputListener() {
+        YANInputManager.getInstance().addEventListener(new YANInputManager.TouchListener() {
+            @Override
+            public void onTouchDown(float normalizedX, float normalizedY) {
+                //when there is no screen or surface , no need to proceed
+                if (mSurfaceSize == null || mCurrentScreen == null)
+                    return;
+                //convert touch point to world coordinates
+                Vector2 realTouchPoint = YANInputManager.touchToWorld(normalizedX, normalizedY, mSurfaceSize.getX(), mSurfaceSize.getY());
+                //check collision with every node that has touch listener attached
+                for (YANIRenderableNode yaniRenderableNode : mCurrentScreen.getNodeList()) {
+                    //handle only nodes with touch listener attached
+                    if (yaniRenderableNode.getTouchListener() == null) {
+                        continue;
+                    }
+                    //check for collision
+                    if (yaniRenderableNode.getBoundingRectangle().contains(realTouchPoint)) {
+                        //notify node that it was touched
+                        yaniRenderableNode.getTouchListener().onTouchDown(realTouchPoint);
+                    }
+                }
+            }
+
+            @Override
+            public void onTouchUp(float normalizedX, float normalizedY) {
+                //when there is no screen or surface , no need to proceed
+                if (mSurfaceSize == null || mCurrentScreen == null)
+                    return;
+                //convert touch point to world coordinates
+                Vector2 realTouchPoint = YANInputManager.touchToWorld(normalizedX, normalizedY, mSurfaceSize.getX(), mSurfaceSize.getY());
+                //check collision with every node that has touch listener attached
+                for (YANIRenderableNode yaniRenderableNode : mCurrentScreen.getNodeList()) {
+                    //handle only nodes with touch listener attached
+                    if (yaniRenderableNode.getTouchListener() == null) {
+                        continue;
+                    }
+                    //check for collision
+                    if (yaniRenderableNode.getBoundingRectangle().contains(realTouchPoint)) {
+                        //notify node that it was touched
+                        yaniRenderableNode.getTouchListener().onTouchUp(realTouchPoint);
+                    }
+                }
+            }
+
+            @Override
+            public void onTouchDrag(float normalizedX, float normalizedY) {
+                //when there is no screen or surface , no need to proceed
+                if (mSurfaceSize == null || mCurrentScreen == null)
+                    return;
+                //convert touch point to world coordinates
+                Vector2 realTouchPoint = YANInputManager.touchToWorld(normalizedX, normalizedY, mSurfaceSize.getX(), mSurfaceSize.getY());
+                //check collision with every node that has touch listener attached
+                for (YANIRenderableNode yaniRenderableNode : mCurrentScreen.getNodeList()) {
+                    //handle only nodes with touch listener attached
+                    if (yaniRenderableNode.getTouchListener() == null) {
+                        continue;
+                    }
+                    //check for collision
+                    if (yaniRenderableNode.getBoundingRectangle().contains(realTouchPoint)) {
+                        //notify node that it was touched
+                        yaniRenderableNode.getTouchListener().onTouchDrag(realTouchPoint);
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public void onGLSurfaceCreated() {
         // Enable blending using pre-multiplied alpha.
-
         setGlInitialStates();
         loadShaderPrograms();
-//        setActiveScreen(new YANTouchTestScreen());
     }
 
     @Override
@@ -52,7 +121,7 @@ public class YANGLRenderer implements YANIRenderer {
         GLES20.glViewport(0, 0, width, height);
 
         //the size of the surface will be used by each screen
-        mSurficeSize = new Vector2(width, height);
+        mSurfaceSize = new Vector2(width, height);
 
         //when context is recreated all previously loaded textures must be cleaned.
         YANAssetManager.getInstance().unloadAllTextures();
@@ -116,16 +185,13 @@ public class YANGLRenderer implements YANIRenderer {
     }
 
     public void setActiveScreen(YANIScreen screen) {
-
-        if (this.mCurrentScreen != null) {
-            this.mCurrentScreen.onSetNotActive();
+        if (mCurrentScreen != null) {
+            mCurrentScreen.onSetNotActive();
         }
-
-        this.mCurrentScreen = screen;
+        mCurrentScreen = screen;
         mCurrentScreen.onSetActive();
-
-        if (mSurficeSize != null) {
-            mCurrentScreen.onResize(mSurficeSize.getX(), mSurficeSize.getY());
+        if (mSurfaceSize != null) {
+            mCurrentScreen.onResize(mSurfaceSize.getX(), mSurfaceSize.getY());
         }
     }
 

@@ -1,11 +1,4 @@
-/***
- * Excerpted from "OpenGL ES for Android",
- * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material, 
- * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose. 
- * Visit http://www.pragmaticprogrammer.com/titles/kbogla for more book information.
- ***/
+
 package com.example.yan_home.openglengineandroid;
 
 import android.opengl.GLSurfaceView.Renderer;
@@ -13,31 +6,42 @@ import android.opengl.GLSurfaceView.Renderer;
 import com.example.yan_home.openglengineandroid.input.YANInputManager;
 import com.example.yan_home.openglengineandroid.renderer.YANGLRenderer;
 import com.example.yan_home.openglengineandroid.renderer.YANIRenderer;
+import com.example.yan_home.openglengineandroid.util.YANLogger;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public class GLRenderer implements Renderer {
+/**
+ * This object serves as an entry point for android events ,
+ * which are going to be handled by different managers.
+ */
+public class EngineWrapper implements Renderer {
 
     //Static reference kept , to prevent recreation of the
     //implementator renderer each time screen is rotated
     private static YANIRenderer mRenderer = new YANGLRenderer();
 
     public void handleTouchPress(float normalizedX, float normalizedY) {
-        YANInputManager.getInstance().handleTouchPress(normalizedX,normalizedY);
+        YANInputManager.getInstance().handleTouchPress(normalizedX, normalizedY);
     }
 
     public void handleTouchDrag(float normalizedX, float normalizedY) {
-        YANInputManager.getInstance().handleTouchDrag(normalizedX,normalizedY);
+        YANInputManager.getInstance().handleTouchDrag(normalizedX, normalizedY);
+    }
+
+    public void handleTouchUp(float normalizedX, float normalizedY) {
+        YANInputManager.getInstance().handleTouchUp(normalizedX, normalizedY);
     }
 
     @Override
     public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
+        YANLogger.log("onSurfaceCreated");
         mRenderer.onGLSurfaceCreated();
     }
 
     @Override
     public void onSurfaceChanged(GL10 glUnused, int width, int height) {
+        YANLogger.log("onSurfaceChanged");
         mRenderer.onGLSurfaceChanged(width, height);
     }
 

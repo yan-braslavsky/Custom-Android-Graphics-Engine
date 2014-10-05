@@ -18,6 +18,7 @@ public class MainActivity extends Activity {
      * Hold a reference to our GLSurfaceView
      */
     private GLSurfaceView glSurfaceView;
+    private final EngineWrapper renderer = new EngineWrapper();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,8 +44,6 @@ public class MainActivity extends Activity {
                         || Build.MODEL.contains("google_sdk")
                         || Build.MODEL.contains("Emulator")
                         || Build.MODEL.contains("Android SDK built for x86")));
-
-        final GLRenderer renderer = new GLRenderer();
 
         if (supportsEs2) {
             // ...
@@ -97,6 +96,14 @@ public class MainActivity extends Activity {
                             @Override
                             public void run() {
                                 renderer.handleTouchDrag(
+                                        normalizedX, normalizedY);
+                            }
+                        });
+                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        glSurfaceView.queueEvent(new Runnable() {
+                            @Override
+                            public void run() {
+                                renderer.handleTouchUp(
                                         normalizedX, normalizedY);
                             }
                         });

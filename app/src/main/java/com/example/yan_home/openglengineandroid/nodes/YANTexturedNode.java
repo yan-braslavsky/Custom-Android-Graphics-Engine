@@ -8,7 +8,7 @@ import com.example.yan_home.openglengineandroid.assets.YANTexture;
 
 public class YANTexturedNode extends YANBaseNode {
 
-    private final YANTexture mTexture;
+    private YANTexture mTexture;
 
     public YANTexturedNode(YANTexture texture) {
         super();
@@ -19,4 +19,8 @@ public class YANTexturedNode extends YANBaseNode {
         return mTexture;
     }
 
+
+    public void setTexture(YANTexture texture) {
+        mTexture = texture;
+    }
 }

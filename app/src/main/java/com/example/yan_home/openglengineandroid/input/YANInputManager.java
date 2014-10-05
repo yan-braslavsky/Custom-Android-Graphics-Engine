@@ -1,6 +1,7 @@
 package com.example.yan_home.openglengineandroid.input;
 
 import com.example.yan_home.openglengineandroid.util.YANLogger;
+import com.example.yan_home.openglengineandroid.util.math.Vector2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,31 @@ public class YANInputManager {
         return INSTANCE;
     }
 
+    public static Vector2 touchToWorld(float normalizedX, float normalizedY, float worldWidth, float worldHeight) {
+        //convert touch point to world coordinates
+        float realTouchX = normalizedX * (worldWidth / 2);
+        float realTouchY = normalizedY * (worldHeight / 2);
+        return new Vector2(realTouchX, realTouchY);
+    }
+
+    public void handleTouchUp(float normalizedX, float normalizedY) {
+        YANLogger.log("touched Up at : " + normalizedX + ":" + normalizedY);
+        for (TouchListener listener : mListeners) {
+            listener.onTouchUp(normalizedX, normalizedY);
+        }
+    }
+
+    public void handleTouchDrag(float normalizedX, float normalizedY) {
+        YANLogger.log("touched DRAG at : " + normalizedX + ":" + normalizedY);
+        for (TouchListener listener : mListeners) {
+            listener.onTouchDrag(normalizedX, normalizedY);
+        }
+    }
+
     public interface TouchListener {
-        void onTouch(float normalizedX, float normalizedY);
+        void onTouchDown(float normalizedX, float normalizedY);
+        void onTouchUp(float normalizedX, float normalizedY);
+        void onTouchDrag(float normalizedX, float normalizedY);
     }
 
     private List<TouchListener> mListeners;
@@ -26,21 +50,15 @@ public class YANInputManager {
     }
 
     public void handleTouchPress(float normalizedX, float normalizedY) {
-        YANLogger.log("touched at : " + normalizedX + ":" + normalizedY);
-
+        YANLogger.log("touched DOWN at : " + normalizedX + ":" + normalizedY);
         for (TouchListener listener : mListeners) {
-            listener.onTouch(normalizedX, normalizedY);
+            listener.onTouchDown(normalizedX, normalizedY);
         }
-    }
-
-    public void handleTouchDrag(float normalizedX, float normalizedY) {
-        //TODO : implement
     }
 
     public void addEventListener(TouchListener listener) {
         mListeners.add(listener);
     }
-
     public void removeEventListener(TouchListener listener) {
         mListeners.remove(listener);
     }

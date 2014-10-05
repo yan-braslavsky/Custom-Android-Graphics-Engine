@@ -1,7 +1,9 @@
 package com.example.yan_home.openglengineandroid.nodes;
 
 import com.example.yan_home.openglengineandroid.data.YANVertexArray;
+import com.example.yan_home.openglengineandroid.input.YANNodeTouchListener;
 import com.example.yan_home.openglengineandroid.programs.YANTextureShaderProgram;
+import com.example.yan_home.openglengineandroid.util.math.Rectangle;
 import com.example.yan_home.openglengineandroid.util.math.Vector2;
 
 import static android.opengl.GLES20.GL_TRIANGLE_FAN;
@@ -9,7 +11,7 @@ import static android.opengl.GLES20.glDrawArrays;
 
 /**
  * Created by Yan-Home on 10/3/2014.
- *
+ * <p/>
  * Basic implementation of renderable node.
  */
 public abstract class YANBaseNode implements YANIRenderableNode {
@@ -21,6 +23,7 @@ public abstract class YANBaseNode implements YANIRenderableNode {
     private YANVertexArray vertexArray;
     private Vector2 mPosition;
     private Vector2 mSize;
+    private YANNodeTouchListener mNodeTouchListener;
 
 
     protected YANBaseNode() {
@@ -96,4 +99,23 @@ public abstract class YANBaseNode implements YANIRenderableNode {
     private void recalculateDimensions() {
         vertexArray = new YANVertexArray(createVertexData());
     }
+
+    @Override
+    public YANNodeTouchListener getTouchListener() {
+        return mNodeTouchListener;
+    }
+
+    @Override
+    public Rectangle getBoundingRectangle() {
+        Vector2 leftTop = new Vector2(getPosition().getX() - getSize().getX() / 2,
+                getPosition().getY() + getSize().getY() / 2);
+        Vector2 rightBottom = new Vector2(getPosition().getX() + getSize().getX() / 2,
+                getPosition().getY() - getSize().getY() / 2);
+        return new Rectangle(leftTop, rightBottom);
+    }
+
+    public void setNodeTouchListener(YANNodeTouchListener nodeTouchListener) {
+        mNodeTouchListener = nodeTouchListener;
+    }
+
 }

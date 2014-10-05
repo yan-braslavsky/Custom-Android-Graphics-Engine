@@ -3,12 +3,10 @@ package com.example.yan_home.openglengineandroid.screens.impl;
 import com.example.yan_home.openglengineandroid.R;
 import com.example.yan_home.openglengineandroid.assets.YANAssetManager;
 import com.example.yan_home.openglengineandroid.assets.YANTexture;
-import com.example.yan_home.openglengineandroid.input.YANInputManager;
+import com.example.yan_home.openglengineandroid.input.YANNodeTouchListener;
 import com.example.yan_home.openglengineandroid.nodes.YANIRenderableNode;
 import com.example.yan_home.openglengineandroid.nodes.YANTexturedNode;
 import com.example.yan_home.openglengineandroid.screens.YANBaseScreen;
-import com.example.yan_home.openglengineandroid.util.YANLogger;
-import com.example.yan_home.openglengineandroid.util.math.Rectangle;
 import com.example.yan_home.openglengineandroid.util.math.Vector2;
 
 /**
@@ -36,6 +34,11 @@ public class YANTouchTestScreen extends YANBaseScreen {
         }
 
         loadScreenTextures();
+
+        YANTexture texture = new YANTexture(R.drawable.bowlingball);
+        if (!(YANAssetManager.getInstance().isTextureLoaded(texture))) {
+            YANAssetManager.getInstance().loadTexture(texture);
+        }
     }
 
     private void loadScreenTextures() {
@@ -57,7 +60,7 @@ public class YANTouchTestScreen extends YANBaseScreen {
                 YANTexturedNode node = (YANTexturedNode) iNode;
                 YANTexture nodeTexture = node.getTexture();
                 //if texture for current node is note loaded , load it into GLContext
-                if (!(YANAssetManager.getInstance().isTextureLoaded(nodeTexture))) {
+                if ((YANAssetManager.getInstance().isTextureLoaded(nodeTexture))) {
                     YANAssetManager.getInstance().unloadTexture(nodeTexture);
                 }
             }
@@ -74,33 +77,23 @@ public class YANTouchTestScreen extends YANBaseScreen {
         for (int i = 0; i < mImageResources.length; i++) {
             final YANTexturedNode texturedNode = new YANTexturedNode(new YANTexture(mImageResources[i]));
 
-            YANInputManager.getInstance().addEventListener(new YANInputManager.TouchListener() {
+            texturedNode.setNodeTouchListener(new YANNodeTouchListener() {
                 @Override
-                public void onTouch(float normalizedX, float normalizedY) {
+                public void onTouchDown(Vector2 worldTouchPoint) {
+                    texturedNode.setTexture(new YANTexture(R.drawable.bowlingball));
+                }
 
-                    float realTouchX = normalizedX * (getSceneSize().getX() / 2);
-                    float realTouchY = normalizedY * (getSceneSize().getY() / 2);
+                @Override
+                public void onTouchUp(Vector2 worldTouchPoint) {
+                    texturedNode.setTexture(new YANTexture(R.drawable.football));
+                }
 
-                    Vector2 realTouchPoint = new Vector2(realTouchX, realTouchY);
-
-                    Vector2 leftTop = new Vector2(texturedNode.getPosition().getX() - texturedNode.getSize().getX() / 2,
-                            texturedNode.getPosition().getY() + texturedNode.getSize().getY() / 2);
-
-                    Vector2 rightBottom = new Vector2(texturedNode.getPosition().getX() + texturedNode.getSize().getX() / 2,
-                            texturedNode.getPosition().getY() - texturedNode.getSize().getY() / 2);
-
-                    Rectangle boundingRectangle = new Rectangle(leftTop, rightBottom);
-
-                    if (boundingRectangle.contains(realTouchPoint)) {
-                        YANLogger.log("Touched the sprite !");
-                    }else{
-                        texturedNode.getPosition().setX(realTouchX);
-                        texturedNode.getPosition().setY(realTouchY);
-                    }
-
+                @Override
+                public void onTouchDrag(Vector2 worldTouchPoint) {
+                    texturedNode.getPosition().setX(worldTouchPoint.getX());
+                    texturedNode.getPosition().setY(worldTouchPoint.getY());
                 }
             });
-
 
             getNodeList().add(texturedNode);
         }

@@ -32,7 +32,7 @@ import static android.opengl.GLES20.glValidateProgram;
 public class YANShaderHelper {
     private static final String TAG = "ShaderHelper";
 
-    private static final boolean IS_LOGGING_ON = true;
+    private static final boolean IS_LOGGING_ON = false;
 
     /**
      * Loads and compiles a vertex shader, returning the OpenGL object ID.
