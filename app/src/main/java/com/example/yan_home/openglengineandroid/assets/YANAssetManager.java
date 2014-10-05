@@ -33,7 +33,7 @@ public class YANAssetManager {
         mTextureHandlesMap.put(texture, handle);
     }
 
-    public void unloadAllTextures(){
+    public void unloadAllTextures() {
         for (YANTexture yanTexture : mTextureHandlesMap.keySet()) {
             YANTextureHelper.deleteTexture(mTextureHandlesMap.get(yanTexture));
         }
@@ -47,5 +47,20 @@ public class YANAssetManager {
 
     public int getLoadedTextureHandle(YANTexture texture) {
         return mTextureHandlesMap.get(texture);
+    }
+
+    /**
+     * Deletes all loaded textures from the context and reloads them again
+     */
+    public void reloadAllLoadedTextures() {
+        for (YANTexture texture : mTextureHandlesMap.keySet()) {
+
+            //FIXME : causes random deletion of the sprite
+            //delete texture rom GL context
+//            YANTextureHelper.deleteTexture(mTextureHandlesMap.get(texture));
+
+            //reload the texture into gl context again
+            loadTexture(texture);
+        }
     }
 }

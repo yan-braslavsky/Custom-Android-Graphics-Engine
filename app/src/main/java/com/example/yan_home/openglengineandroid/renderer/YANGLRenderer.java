@@ -33,8 +33,8 @@ public class YANGLRenderer implements IRenderer {
     private YANTextureShaderProgram textureProgram;
     private YANColorShaderProgram colorProgram;
 
-    public YANGLRenderer() {
-        setActiveScreen(new YANTouchTestScreen());
+    private YANTouchTestScreen getStartingScreen() {
+        return new YANTouchTestScreen(this);
     }
 
     @Override
@@ -53,14 +53,20 @@ public class YANGLRenderer implements IRenderer {
         mSurfaceSize = new Vector2(width, height);
 
         //when context is recreated all previously loaded textures must be cleaned.
-        YANAssetManager.getInstance().unloadAllTextures();
+        YANAssetManager.getInstance().reloadAllLoadedTextures();
 
         //set orthographic projection
         Matrix.orthoM(YANMatrixHelper.projectionMatrix, 0, -(width / 2), (width / 2), -(height / 2), (height / 2), 1, 100);
 
         //fill view matrix
         Matrix.setLookAtM(YANMatrixHelper.viewMatrix, 0, 0f, 0.0f, 2.0f, 0f, 0f, 0f, 0f, 1f, 0f);
-        mCurrentScreen.onResize(width, height);
+
+        if (mCurrentScreen == null) {
+            setActiveScreen(getStartingScreen());
+        }else {
+            //call screen on resize method
+            mCurrentScreen.onResize(mSurfaceSize.getX(), mSurfaceSize.getY());
+        }
     }
 
     @Override
@@ -119,9 +125,9 @@ public class YANGLRenderer implements IRenderer {
         }
         mCurrentScreen = screen;
         mCurrentScreen.onSetActive();
-        if (mSurfaceSize != null) {
-            mCurrentScreen.onResize(mSurfaceSize.getX(), mSurfaceSize.getY());
-        }
     }
 
+    public Vector2 getSurfaceSize() {
+        return mSurfaceSize;
+    }
 }
