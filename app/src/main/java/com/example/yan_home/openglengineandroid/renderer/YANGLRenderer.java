@@ -6,7 +6,6 @@ import android.opengl.Matrix;
 
 import com.example.yan_home.openglengineandroid.GLEngineApp;
 import com.example.yan_home.openglengineandroid.assets.YANAssetManager;
-import com.example.yan_home.openglengineandroid.input.YANInputManager;
 import com.example.yan_home.openglengineandroid.nodes.YANIRenderableNode;
 import com.example.yan_home.openglengineandroid.nodes.YANTexturedNode;
 import com.example.yan_home.openglengineandroid.programs.YANColorShaderProgram;
@@ -35,77 +34,7 @@ public class YANGLRenderer implements IRenderer {
     private YANColorShaderProgram colorProgram;
 
     public YANGLRenderer() {
-
-        //Register touch handler
-        registerInputListener();
         setActiveScreen(new YANTouchTestScreen());
-    }
-
-    private void registerInputListener() {
-        YANInputManager.getInstance().addEventListener(new YANInputManager.TouchListener() {
-            @Override
-            public void onTouchDown(float normalizedX, float normalizedY) {
-                //when there is no screen or surface , no need to proceed
-                if (mSurfaceSize == null || mCurrentScreen == null)
-                    return;
-                //convert touch point to world coordinates
-                Vector2 realTouchPoint = YANInputManager.touchToWorld(normalizedX, normalizedY, mSurfaceSize.getX(), mSurfaceSize.getY());
-                //check collision with every node that has touch listener attached
-                for (YANIRenderableNode yaniRenderableNode : mCurrentScreen.getNodeList()) {
-                    //handle only nodes with touch listener attached
-                    if (yaniRenderableNode.getTouchListener() == null) {
-                        continue;
-                    }
-                    //check for collision
-                    if (yaniRenderableNode.getBoundingRectangle().contains(realTouchPoint)) {
-                        //notify node that it was touched
-                        yaniRenderableNode.getTouchListener().onTouchDown(realTouchPoint);
-                    }
-                }
-            }
-
-            @Override
-            public void onTouchUp(float normalizedX, float normalizedY) {
-                //when there is no screen or surface , no need to proceed
-                if (mSurfaceSize == null || mCurrentScreen == null)
-                    return;
-                //convert touch point to world coordinates
-                Vector2 realTouchPoint = YANInputManager.touchToWorld(normalizedX, normalizedY, mSurfaceSize.getX(), mSurfaceSize.getY());
-                //check collision with every node that has touch listener attached
-                for (YANIRenderableNode yaniRenderableNode : mCurrentScreen.getNodeList()) {
-                    //handle only nodes with touch listener attached
-                    if (yaniRenderableNode.getTouchListener() == null) {
-                        continue;
-                    }
-                    //check for collision
-                    if (yaniRenderableNode.getBoundingRectangle().contains(realTouchPoint)) {
-                        //notify node that it was touched
-                        yaniRenderableNode.getTouchListener().onTouchUp(realTouchPoint);
-                    }
-                }
-            }
-
-            @Override
-            public void onTouchDrag(float normalizedX, float normalizedY) {
-                //when there is no screen or surface , no need to proceed
-                if (mSurfaceSize == null || mCurrentScreen == null)
-                    return;
-                //convert touch point to world coordinates
-                Vector2 realTouchPoint = YANInputManager.touchToWorld(normalizedX, normalizedY, mSurfaceSize.getX(), mSurfaceSize.getY());
-                //check collision with every node that has touch listener attached
-                for (YANIRenderableNode yaniRenderableNode : mCurrentScreen.getNodeList()) {
-                    //handle only nodes with touch listener attached
-                    if (yaniRenderableNode.getTouchListener() == null) {
-                        continue;
-                    }
-                    //check for collision
-                    if (yaniRenderableNode.getBoundingRectangle().contains(realTouchPoint)) {
-                        //notify node that it was touched
-                        yaniRenderableNode.getTouchListener().onTouchDrag(realTouchPoint);
-                    }
-                }
-            }
-        });
     }
 
     @Override

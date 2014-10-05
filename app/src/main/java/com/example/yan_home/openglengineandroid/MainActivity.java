@@ -87,7 +87,7 @@ public class MainActivity extends Activity {
                         glSurfaceView.queueEvent(new Runnable() {
                             @Override
                             public void run() {
-                                renderer.handleTouchPress(
+                                renderer.handleTouchDown(
                                         normalizedX, normalizedY);
                             }
                         });

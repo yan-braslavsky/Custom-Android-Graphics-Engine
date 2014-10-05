@@ -1,6 +1,5 @@
 package com.example.yan_home.openglengineandroid.nodes;
 
-import com.example.yan_home.openglengineandroid.input.YANNodeTouchListener;
 import com.example.yan_home.openglengineandroid.programs.YANTextureShaderProgram;
 import com.example.yan_home.openglengineandroid.util.math.Rectangle;
 import com.example.yan_home.openglengineandroid.util.math.Vector2;
@@ -18,8 +17,5 @@ public interface YANIRenderableNode {
     Vector2 getPosition();
     Vector2 getSize();
     void setSize(Vector2 size);
-
-    YANNodeTouchListener getTouchListener();
-
     Rectangle getBoundingRectangle();
 }

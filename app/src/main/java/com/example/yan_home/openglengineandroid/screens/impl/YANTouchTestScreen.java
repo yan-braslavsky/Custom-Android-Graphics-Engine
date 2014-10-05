@@ -3,10 +3,11 @@ package com.example.yan_home.openglengineandroid.screens.impl;
 import com.example.yan_home.openglengineandroid.R;
 import com.example.yan_home.openglengineandroid.assets.YANAssetManager;
 import com.example.yan_home.openglengineandroid.assets.YANTexture;
-import com.example.yan_home.openglengineandroid.input.YANNodeTouchListener;
+import com.example.yan_home.openglengineandroid.input.YANInputManager;
 import com.example.yan_home.openglengineandroid.nodes.YANIRenderableNode;
 import com.example.yan_home.openglengineandroid.nodes.YANTexturedNode;
 import com.example.yan_home.openglengineandroid.screens.YANBaseScreen;
+import com.example.yan_home.openglengineandroid.util.MyLogger;
 import com.example.yan_home.openglengineandroid.util.math.Vector2;
 
 /**
@@ -16,6 +17,7 @@ public class YANTouchTestScreen extends YANBaseScreen {
 
     private int[] mImageResources = {
             R.drawable.football,
+            R.drawable.volleyball,
     };
 
     public YANTouchTestScreen() {
@@ -26,7 +28,7 @@ public class YANTouchTestScreen extends YANBaseScreen {
     public void onResize(float newWidth, float newHeight) {
         super.onResize(newWidth, newHeight);
 
-        float spriteSize = getSceneSize().getX() * 0.1f;
+        float spriteSize = Math.min(getSceneSize().getX(),getSceneSize().getY()) * 0.2f;
 
         //position sprites in line
         for (YANIRenderableNode sprite : getNodeList()) {
@@ -34,36 +36,17 @@ public class YANTouchTestScreen extends YANBaseScreen {
         }
 
         loadScreenTextures();
-
-        YANTexture texture = new YANTexture(R.drawable.bowlingball);
-        if (!(YANAssetManager.getInstance().isTextureLoaded(texture))) {
-            YANAssetManager.getInstance().loadTexture(texture);
-        }
     }
 
     private void loadScreenTextures() {
-        for (YANIRenderableNode iNode : getNodeList()) {
-            if (iNode instanceof YANTexturedNode) {
-                YANTexturedNode node = (YANTexturedNode) iNode;
-                YANTexture nodeTexture = node.getTexture();
-                //if texture for current node is note loaded , load it into GLContext
-                if (!(YANAssetManager.getInstance().isTextureLoaded(nodeTexture))) {
-                    YANAssetManager.getInstance().loadTexture(nodeTexture);
-                }
-            }
+        for (int imageResource : mImageResources) {
+            YANAssetManager.getInstance().loadTexture(new YANTexture(imageResource));
         }
     }
 
     private void unloadScreenTextures() {
-        for (YANIRenderableNode iNode : getNodeList()) {
-            if (iNode instanceof YANTexturedNode) {
-                YANTexturedNode node = (YANTexturedNode) iNode;
-                YANTexture nodeTexture = node.getTexture();
-                //if texture for current node is note loaded , load it into GLContext
-                if ((YANAssetManager.getInstance().isTextureLoaded(nodeTexture))) {
-                    YANAssetManager.getInstance().unloadTexture(nodeTexture);
-                }
-            }
+        for (int imageResource : mImageResources) {
+            YANAssetManager.getInstance().unloadTexture(new YANTexture(imageResource));
         }
     }
 
@@ -74,29 +57,35 @@ public class YANTouchTestScreen extends YANBaseScreen {
 
     @Override
     public void onSetActive() {
-        for (int i = 0; i < mImageResources.length; i++) {
-            final YANTexturedNode texturedNode = new YANTexturedNode(new YANTexture(mImageResources[i]));
+        final YANTexturedNode texturedNode = new YANTexturedNode(new YANTexture(mImageResources[0]));
 
-            texturedNode.setNodeTouchListener(new YANNodeTouchListener() {
-                @Override
-                public void onTouchDown(Vector2 worldTouchPoint) {
-                    texturedNode.setTexture(new YANTexture(R.drawable.bowlingball));
+        YANInputManager.getInstance().addEventListener(new YANInputManager.TouchListener() {
+            private boolean isDragged = false;
+
+            @Override
+            public void onTouchDown(float normalizedX, float normalizedY) {
+                if (texturedNode.getBoundingRectangle().contains(YANInputManager.touchToWorld(normalizedX, normalizedY, getSceneSize().getX(), getSceneSize().getY()))) {
+                    MyLogger.log("node is touched !!!");
+                    isDragged = true;
+                    texturedNode.setTexture(new YANTexture(mImageResources[1]));
                 }
+            }
 
-                @Override
-                public void onTouchUp(Vector2 worldTouchPoint) {
-                    texturedNode.setTexture(new YANTexture(R.drawable.football));
-                }
+            @Override
+            public void onTouchUp(float normalizedX, float normalizedY) {
+                isDragged = false;
+                texturedNode.setTexture(new YANTexture(mImageResources[0]));
+            }
 
-                @Override
-                public void onTouchDrag(Vector2 worldTouchPoint) {
-                    texturedNode.getPosition().setX(worldTouchPoint.getX());
-                    texturedNode.getPosition().setY(worldTouchPoint.getY());
-                }
-            });
+            @Override
+            public void onTouchDrag(float normalizedX, float normalizedY) {
+                Vector2 worldTouchPoint = YANInputManager.touchToWorld(normalizedX, normalizedY, getSceneSize().getX(), getSceneSize().getY());
+                texturedNode.getPosition().setX(worldTouchPoint.getX());
+                texturedNode.getPosition().setY(worldTouchPoint.getY());
+            }
+        });
 
-            getNodeList().add(texturedNode);
-        }
+        getNodeList().add(texturedNode);
     }
 
     @Override

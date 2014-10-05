@@ -21,7 +21,7 @@ public class EngineWrapper implements Renderer {
     //implementator renderer each time screen is rotated
     private static IRenderer mRenderer = new YANGLRenderer();
 
-    public void handleTouchPress(float normalizedX, float normalizedY) {
+    public void handleTouchDown(float normalizedX, float normalizedY) {
         YANInputManager.getInstance().handleTouchPress(normalizedX, normalizedY);
     }
 

@@ -101,11 +101,6 @@ public abstract class YANBaseNode implements YANIRenderableNode {
     }
 
     @Override
-    public YANNodeTouchListener getTouchListener() {
-        return mNodeTouchListener;
-    }
-
-    @Override
     public Rectangle getBoundingRectangle() {
         Vector2 leftTop = new Vector2(getPosition().getX() - getSize().getX() / 2,
                 getPosition().getY() + getSize().getY() / 2);
