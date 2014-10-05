@@ -24,7 +24,7 @@ import javax.microedition.khronos.opengles.GL10;
  * <p/>
  * Implementer of graphics rendering using openGL
  */
-public class YANGLRenderer implements YANIRenderer {
+public class YANGLRenderer implements IRenderer {
 
     private YANIScreen mCurrentScreen;
 
