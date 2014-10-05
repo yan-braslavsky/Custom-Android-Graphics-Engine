@@ -4,9 +4,9 @@ package com.example.yan_home.openglengineandroid;
 import android.opengl.GLSurfaceView.Renderer;
 
 import com.example.yan_home.openglengineandroid.input.YANInputManager;
+import com.example.yan_home.openglengineandroid.renderer.IRenderer;
 import com.example.yan_home.openglengineandroid.renderer.YANGLRenderer;
-import com.example.yan_home.openglengineandroid.renderer.YANIRenderer;
-import com.example.yan_home.openglengineandroid.util.YANLogger;
+import com.example.yan_home.openglengineandroid.util.MyLogger;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -19,7 +19,7 @@ public class EngineWrapper implements Renderer {
 
     //Static reference kept , to prevent recreation of the
     //implementator renderer each time screen is rotated
-    private static YANIRenderer mRenderer = new YANGLRenderer();
+    private static IRenderer mRenderer = new YANGLRenderer();
 
     public void handleTouchPress(float normalizedX, float normalizedY) {
         YANInputManager.getInstance().handleTouchPress(normalizedX, normalizedY);
@@ -35,13 +35,13 @@ public class EngineWrapper implements Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
-        YANLogger.log("onSurfaceCreated");
+        MyLogger.log("onSurfaceCreated");
         mRenderer.onGLSurfaceCreated();
     }
 
     @Override
     public void onSurfaceChanged(GL10 glUnused, int width, int height) {
-        YANLogger.log("onSurfaceChanged");
+        MyLogger.log("onSurfaceChanged");
         mRenderer.onGLSurfaceChanged(width, height);
     }
 
