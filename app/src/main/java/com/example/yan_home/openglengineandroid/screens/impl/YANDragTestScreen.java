@@ -13,11 +13,11 @@ import com.example.yan_home.openglengineandroid.util.math.Vector2;
 /**
  * Created by Yan-Home on 10/3/2014.
  */
-public class YANTouchTestScreen extends YANNodeScreen {
+public class YANDragTestScreen extends YANNodeScreen {
 
     private YANTexturedNode mBallNode;
 
-    public YANTouchTestScreen(YANGLRenderer renderer) {
+    public YANDragTestScreen(YANGLRenderer renderer) {
         super(renderer);
     }
 
