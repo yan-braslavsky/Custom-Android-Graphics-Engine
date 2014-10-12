@@ -6,12 +6,13 @@ import android.opengl.Matrix;
 
 import com.example.yan_home.openglengineandroid.GLEngineApp;
 import com.example.yan_home.openglengineandroid.assets.YANAssetManager;
+import com.example.yan_home.openglengineandroid.nodes.YANButtonNode;
 import com.example.yan_home.openglengineandroid.nodes.YANIRenderableNode;
 import com.example.yan_home.openglengineandroid.nodes.YANTexturedNode;
 import com.example.yan_home.openglengineandroid.programs.YANColorShaderProgram;
 import com.example.yan_home.openglengineandroid.programs.YANTextureShaderProgram;
 import com.example.yan_home.openglengineandroid.screens.YANIScreen;
-import com.example.yan_home.openglengineandroid.screens.impl.YANTouchTestScreen;
+import com.example.yan_home.openglengineandroid.screens.impl.YANButtonTestScreen;
 import com.example.yan_home.openglengineandroid.util.YANMatrixHelper;
 import com.example.yan_home.openglengineandroid.util.colors.YANColor;
 import com.example.yan_home.openglengineandroid.util.math.Vector2;
@@ -26,15 +27,16 @@ import javax.microedition.khronos.opengles.GL10;
 public class YANGLRenderer implements IRenderer {
 
     private YANIScreen mCurrentScreen;
-
     private Vector2 mSurfaceSize;
 
     // shader programs
     private YANTextureShaderProgram textureProgram;
     private YANColorShaderProgram colorProgram;
+    private float mPreviousFrameTime;
 
-    private YANTouchTestScreen getStartingScreen() {
-        return new YANTouchTestScreen(this);
+    private YANIScreen getStartingScreen() {
+        return new YANButtonTestScreen(this);
+//        return new YANTouchTestScreen(this);
     }
 
     @Override
@@ -42,6 +44,8 @@ public class YANGLRenderer implements IRenderer {
         // Enable blending using pre-multiplied alpha.
         setGlInitialStates();
         loadShaderPrograms();
+
+        mPreviousFrameTime = System.currentTimeMillis();
     }
 
     @Override
@@ -63,7 +67,7 @@ public class YANGLRenderer implements IRenderer {
 
         if (mCurrentScreen == null) {
             setActiveScreen(getStartingScreen());
-        }else {
+        } else {
             //call screen on resize method
             mCurrentScreen.onResize(mSurfaceSize.getX(), mSurfaceSize.getY());
         }
@@ -73,7 +77,7 @@ public class YANGLRenderer implements IRenderer {
     public void onDrawFrame() {
 
         //update screen state
-        mCurrentScreen.onUpdate();
+        mCurrentScreen.onUpdate(System.currentTimeMillis() - mPreviousFrameTime);
 
         // Clear the rendering surface.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
@@ -85,6 +89,8 @@ public class YANGLRenderer implements IRenderer {
 
         //draw each node
         drawNodes();
+
+        mPreviousFrameTime = System.currentTimeMillis();
     }
 
     private void drawNodes() {
@@ -94,6 +100,9 @@ public class YANGLRenderer implements IRenderer {
             if (iNode instanceof YANTexturedNode) {
                 textureProgram.useProgram();
                 textureProgram.setUniforms(YANMatrixHelper.modelViewProjectionMatrix, YANAssetManager.getInstance().getLoadedTextureHandle(((YANTexturedNode) iNode).getTexture()));
+            } else if (iNode instanceof YANButtonNode) {
+                textureProgram.useProgram();
+                textureProgram.setUniforms(YANMatrixHelper.modelViewProjectionMatrix, YANAssetManager.getInstance().getLoadedTextureHandle(((YANButtonNode) iNode).getCurrentStateTexture()));
             } else {
                 throw new RuntimeException("Don't know how to render node of type " + iNode.getClass().getSimpleName());
             }
@@ -127,6 +136,7 @@ public class YANGLRenderer implements IRenderer {
         mCurrentScreen.onSetActive();
     }
 
+    @Override
     public Vector2 getSurfaceSize() {
         return mSurfaceSize;
     }

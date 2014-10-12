@@ -35,7 +35,13 @@ public abstract class YANNodeScreen implements YANIScreen {
     protected abstract void onCreateNodes();
 
     protected void addNode(YANIRenderableNode node) {
+        node.onAttachedToScreen();
         getNodeList().add(node);
+    }
+
+    protected void removeNode(YANIRenderableNode node) {
+        node.onDetachedFromScreen();
+        getNodeList().remove(node);
     }
 
     @Override

@@ -85,7 +85,7 @@ public class YANTouchTestScreen extends YANNodeScreen {
     }
 
     @Override
-    public void onUpdate() {
+    public void onUpdate(float deltaTime) {
         //TODO : update nodes state
     }
 

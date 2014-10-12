@@ -18,4 +18,7 @@ public interface YANIRenderableNode {
     Vector2 getSize();
     void setSize(Vector2 size);
     Rectangle getBoundingRectangle();
+
+    void onAttachedToScreen();
+    void onDetachedFromScreen();
 }

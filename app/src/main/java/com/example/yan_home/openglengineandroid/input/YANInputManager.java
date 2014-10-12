@@ -1,6 +1,5 @@
 package com.example.yan_home.openglengineandroid.input;
 
-import com.example.yan_home.openglengineandroid.util.MyLogger;
 import com.example.yan_home.openglengineandroid.util.math.Vector2;
 
 import java.util.ArrayList;
@@ -25,14 +24,14 @@ public class YANInputManager {
     }
 
     public void handleTouchUp(float normalizedX, float normalizedY) {
-        MyLogger.log("touched Up at : " + normalizedX + ":" + normalizedY);
+//        MyLogger.log("touched Up at : " + normalizedX + ":" + normalizedY);
         for (TouchListener listener : mListeners) {
             listener.onTouchUp(normalizedX, normalizedY);
         }
     }
 
     public void handleTouchDrag(float normalizedX, float normalizedY) {
-        MyLogger.log("touched DRAG at : " + normalizedX + ":" + normalizedY);
+//        MyLogger.log("touched DRAG at : " + normalizedX + ":" + normalizedY);
         for (TouchListener listener : mListeners) {
             listener.onTouchDrag(normalizedX, normalizedY);
         }
@@ -50,7 +49,7 @@ public class YANInputManager {
     }
 
     public void handleTouchPress(float normalizedX, float normalizedY) {
-        MyLogger.log("touched DOWN at : " + normalizedX + ":" + normalizedY);
+//        MyLogger.log("touched DOWN at : " + normalizedX + ":" + normalizedY);
         for (TouchListener listener : mListeners) {
             listener.onTouchDown(normalizedX, normalizedY);
         }

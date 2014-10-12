@@ -32,6 +32,16 @@ public abstract class YANBaseNode implements YANIRenderableNode {
         recalculateDimensions();
     }
 
+    @Override
+    public void onAttachedToScreen() {
+        //TODO : Override
+    }
+
+    @Override
+    public void onDetachedFromScreen() {
+        //TODO : Override
+    }
+
 
     @Override
     public Vector2 getPosition() {
