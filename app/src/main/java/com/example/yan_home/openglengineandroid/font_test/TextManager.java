@@ -78,8 +78,8 @@ public class TextManager {
 
     public void AddCharRenderInformation(float[] vec, float[] cs, float[] uv, short[] indi) {
         // We need a base value because the object has mIndices related to
-        // that object and not to this collection so basicly we need to
-        // translate the mIndices to align with the vertexlocation in ou
+        // that object and not to this collection so basically we need to
+        // translate the mIndices to align with the vertex location in
         // mVecs array of vectors.
         short base = (short) (index_vecs / 3);
 

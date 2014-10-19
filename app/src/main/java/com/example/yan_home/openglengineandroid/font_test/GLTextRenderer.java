@@ -79,25 +79,12 @@ public class GLTextRenderer implements Renderer {
         GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 
         //create shader programs
-        createImageShaderProgram();
         createTextShaderProgram();
 
         // Set our shader program
         GLES20.glUseProgram(ShaderHelperTools.sp_Image);
     }
 
-    private void createImageShaderProgram() {
-
-//        //Load shader strings from glsl files
-//        String textVertexShader = YANTextResourceReader
-//                .readTextFileFromResource(GLEngineApp.getAppContext(), R.raw.text_vertext_shader);
-//
-//        String textFragmentShader = YANTextResourceReader
-//                .readTextFileFromResource(GLEngineApp.getAppContext(), R.raw.text_fragment_shader);
-
-        //create shader program from sources
-        ShaderHelperTools.sp_Image = YANShaderHelper.buildProgram(ShaderHelperTools.vs_Image, ShaderHelperTools.fs_Image);
-    }
 
     private void createTextShaderProgram() {
         //Load shader strings from glsl files
