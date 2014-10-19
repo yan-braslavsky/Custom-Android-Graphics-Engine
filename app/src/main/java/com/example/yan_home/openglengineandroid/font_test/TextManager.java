@@ -17,10 +17,10 @@ public class TextManager {
     private static final float RI_TEXT_SPACE_SIZE = 20f;
 
     //shader location ids
-    public static final String U_MVP_MATRIX = "uMVPMatrix";
-    public static final String V_POSITION = "vPosition";
-    public static final String A_TEX_COORD = "a_texCoord";
-    public static final String S_TEXTURE = "s_texture";
+    public static final String U_MVP_MATRIX = "u_Matrix";
+    public static final String V_POSITION = "a_Position";
+    public static final String A_TEX_COORD = "a_TextureCoordinates";
+    public static final String S_TEXTURE = "u_TextureUnit";
 
     private FloatBuffer vertexBuffer;
     private FloatBuffer textureBuffer;

@@ -15,21 +15,21 @@ public class ShaderHelperTools {
      *
      */
     public static final String vs_Image =
-            "uniform mat4 uMVPMatrix;" +
-                    "attribute vec4 vPosition;" +
-                    "attribute vec2 a_texCoord;" +
-                    "varying vec2 v_texCoord;" +
+            "uniform mat4 u_Matrix;" +
+                    "attribute vec4 a_Position;" +
+                    "attribute vec2 a_TextureCoordinates;" +
+                    "varying vec2 v_TextureCoordinates;" +
                     "void main() {" +
-                    "  gl_Position = uMVPMatrix * vPosition;" +
-                    "  v_texCoord = a_texCoord;" +
+                    "  gl_Position = u_Matrix * a_Position;" +
+                    "  v_TextureCoordinates = a_TextureCoordinates;" +
                     "}";
 
     public static final String fs_Image =
             "precision mediump float;" +
-                    "varying vec2 v_texCoord;" +
-                    "uniform sampler2D s_texture;" +
+                    "varying vec2 v_TextureCoordinates;" +
+                    "uniform sampler2D u_TextureUnit;" +
                     "void main() {" +
-                    "  gl_FragColor = texture2D( s_texture, v_texCoord );" +
+                    "  gl_FragColor = texture2D( u_TextureUnit, v_TextureCoordinates );" +
                     "}";
 
 //    /* SHADER Text
