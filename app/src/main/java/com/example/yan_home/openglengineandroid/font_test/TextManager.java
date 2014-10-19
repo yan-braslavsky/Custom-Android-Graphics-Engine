@@ -16,6 +16,12 @@ public class TextManager {
     private static final float RI_TEXT_WIDTH = 32.0f;
     private static final float RI_TEXT_SPACE_SIZE = 20f;
 
+    //shader location ids
+    public static final String U_MVP_MATRIX = "uMVPMatrix";
+    public static final String V_POSITION = "vPosition";
+    public static final String A_TEX_COORD = "a_texCoord";
+    public static final String S_TEXTURE = "s_texture";
+
     private FloatBuffer vertexBuffer;
     private FloatBuffer textureBuffer;
     private FloatBuffer colorBuffer;
@@ -179,7 +185,7 @@ public class TextManager {
         drawListBuffer.position(0);
 
         // get handle to vertex shader's vPosition member
-        int positionHandle = GLES20.glGetAttribLocation(ShaderHelperTools.sp_Text, "vPosition");
+        int positionHandle = GLES20.glGetAttribLocation(ShaderHelperTools.sp_Text, V_POSITION);
 
         // Enable a handle to the triangle vertices
         GLES20.glEnableVertexAttribArray(positionHandle);
@@ -189,7 +195,7 @@ public class TextManager {
                 GLES20.GL_FLOAT, false,
                 0, vertexBuffer);
 
-        int texCoordHandle = GLES20.glGetAttribLocation(ShaderHelperTools.sp_Text, "a_texCoord");
+        int texCoordHandle = GLES20.glGetAttribLocation(ShaderHelperTools.sp_Text, A_TEX_COORD);
 
         // Prepare the texturecoordinates
         GLES20.glVertexAttribPointer(texCoordHandle, 2, GLES20.GL_FLOAT,
@@ -210,12 +216,12 @@ public class TextManager {
                 0, colorBuffer);
 
         // get handle to shape's transformation matrix
-        int mtrxHandle = GLES20.glGetUniformLocation(ShaderHelperTools.sp_Text, "uMVPMatrix");
+        int mtrxHandle = GLES20.glGetUniformLocation(ShaderHelperTools.sp_Text, U_MVP_MATRIX);
 
         // Apply the projection and view transformation
         GLES20.glUniformMatrix4fv(mtrxHandle, 1, false, mvpMatrix, 0);
 
-        int mSamplerLoc = GLES20.glGetUniformLocation(ShaderHelperTools.sp_Text, "s_texture");
+        int mSamplerLoc = GLES20.glGetUniformLocation(ShaderHelperTools.sp_Text, S_TEXTURE);
 
         // Set the sampler texture unit to our selected id
         GLES20.glUniform1i(mSamplerLoc, textureHandleId);
