@@ -28,8 +28,11 @@ public class YANButtonNode extends YANBaseNode {
             if (getBoundingRectangle().contains(YANInputManager.touchToWorld(normalizedX, normalizedY,
                     EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY()))) {
 
+                //on click will be called only if we press up happens after press down
+                boolean wasPressed = YANButtonState.PRESSED == mState;
                 changeState(YANButtonState.DEFAULT);
-                if (mClickListener != null) {
+
+                if (wasPressed && mClickListener != null) {
                     mClickListener.onButtonClick();
                 }
             }
