@@ -1,16 +1,16 @@
 package com.example.yan_home.openglengineandroid.nodes;
 
 import com.example.yan_home.openglengineandroid.EngineWrapper;
-import com.example.yan_home.openglengineandroid.assets.YANTexture;
+import com.example.yan_home.openglengineandroid.assets.atlas.YANTextureRegion;
 import com.example.yan_home.openglengineandroid.input.YANInputManager;
 
 /**
  * Created by Yan-Home on 10/12/2014.
  */
-public class YANButtonNode extends YANBaseNode {
+public class YANButtonNode extends YANTexturedNode {
 
-    private YANTexture mDefaultTexture;
-    private YANTexture mPressedTexture;
+    private YANTextureRegion mDefaultTextureRegion;
+    private YANTextureRegion mPressedTextureRegion;
     private YANButtonState mState;
     private YanButtonNodeClickListener mClickListener;
     private YANInputManager.TouchListener mInputManagerTouchListener = new YANInputManager.TouchListener() {
@@ -59,22 +59,23 @@ public class YANButtonNode extends YANBaseNode {
         if (mState == state)
             return;
         mState = state;
+        setTextureRegion(getCurrentStateTextureRegion());
     }
 
-    public YANTexture getCurrentStateTexture() {
+    public YANTextureRegion getCurrentStateTextureRegion() {
         if (mState == YANButtonState.DEFAULT)
-            return mDefaultTexture;
-        else return mPressedTexture;
+            return mDefaultTextureRegion;
+        else return mPressedTextureRegion;
     }
 
     public interface YanButtonNodeClickListener {
         void onButtonClick();
     }
 
-    public YANButtonNode(YANTexture defaultTexture, YANTexture pressedTexture) {
-        super();
-        mDefaultTexture = defaultTexture;
-        mPressedTexture = pressedTexture;
+    public YANButtonNode(YANTextureRegion defaultTextureRegion, YANTextureRegion pressedTextureRegion) {
+        super(defaultTextureRegion);
+        mDefaultTextureRegion = defaultTextureRegion;
+        mPressedTextureRegion = pressedTextureRegion;
         mState = YANButtonState.DEFAULT;
     }
 
@@ -98,12 +99,12 @@ public class YANButtonNode extends YANBaseNode {
         PRESSED, DEFAULT;
     }
 
-    public YANTexture getDefaultTexture() {
-        return mDefaultTexture;
+    public YANTextureRegion getDefaultTextureRegion() {
+        return mDefaultTextureRegion;
     }
 
-    public YANTexture getPressedTexture() {
-        return mPressedTexture;
+    public YANTextureRegion getPressedTextureRegion() {
+        return mPressedTextureRegion;
     }
 
     public YANButtonState getState() {
@@ -114,12 +115,12 @@ public class YANButtonNode extends YANBaseNode {
         mState = state;
     }
 
-    public void setDefaultTexture(YANTexture defaultTexture) {
-        mDefaultTexture = defaultTexture;
+    public void setDefaultTextureRegion(YANTextureRegion defaultTextureRegion) {
+        mDefaultTextureRegion = defaultTextureRegion;
     }
 
-    public void setPressedTexture(YANTexture pressedTexture) {
-        mPressedTexture = pressedTexture;
+    public void setPressedTextureRegion(YANTextureRegion pressedTextureRegion) {
+        mPressedTextureRegion = pressedTextureRegion;
     }
 
     public YanButtonNodeClickListener getClickListener() {

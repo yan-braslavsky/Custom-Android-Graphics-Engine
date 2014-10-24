@@ -35,6 +35,7 @@ public class YANGLRenderer implements IRenderer {
     private float mPreviousFrameTime;
 
     private YANIScreen getStartingScreen() {
+//        return new YANTextureAtlasTestScreen(this);
         return new YANButtonTestScreen(this);
 //        return new YANTouchTestScreen(this);
     }
@@ -60,7 +61,7 @@ public class YANGLRenderer implements IRenderer {
         YANAssetManager.getInstance().reloadAllLoadedTextures();
 
         //set orthographic projection
-        Matrix.orthoM(YANMatrixHelper.projectionMatrix, 0, 0, width, height,0 , 1, 100);
+        Matrix.orthoM(YANMatrixHelper.projectionMatrix, 0, 0, width, height, 0, 1, 100);
 
         //fill view matrix
         Matrix.setLookAtM(YANMatrixHelper.viewMatrix, 0, 0f, 0.0f, 2.0f, 0f, 0f, 0f, 0f, 1f, 0f);
@@ -99,10 +100,10 @@ public class YANGLRenderer implements IRenderer {
 
             if (iNode instanceof YANTexturedNode) {
                 textureProgram.useProgram();
-                textureProgram.setUniforms(YANMatrixHelper.modelViewProjectionMatrix, YANAssetManager.getInstance().getLoadedTextureHandle(((YANTexturedNode) iNode).getTexture()));
+                textureProgram.setUniforms(YANMatrixHelper.modelViewProjectionMatrix, YANAssetManager.getInstance().getLoadedTextureHandle(((YANTexturedNode) iNode).getTextureRegion().getAtlasImageResourceId()));
             } else if (iNode instanceof YANButtonNode) {
                 textureProgram.useProgram();
-                textureProgram.setUniforms(YANMatrixHelper.modelViewProjectionMatrix, YANAssetManager.getInstance().getLoadedTextureHandle(((YANButtonNode) iNode).getCurrentStateTexture()));
+                textureProgram.setUniforms(YANMatrixHelper.modelViewProjectionMatrix, YANAssetManager.getInstance().getLoadedTextureHandle(((YANButtonNode) iNode).getCurrentStateTextureRegion().getAtlasImageResourceId()));
             } else {
                 throw new RuntimeException("Don't know how to render node of type " + iNode.getClass().getSimpleName());
             }

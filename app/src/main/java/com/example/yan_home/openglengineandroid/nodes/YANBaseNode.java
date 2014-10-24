@@ -18,7 +18,7 @@ public abstract class YANBaseNode implements YANIRenderableNode {
 
     private static final int POSITION_COMPONENT_COUNT = 2;
     private static final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
-    public static final int BYTES_PER_FLOAT = 4;
+    private static final int BYTES_PER_FLOAT = 4;
     private static final int STRIDE = (POSITION_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT) * BYTES_PER_FLOAT;
     private YANVertexArray vertexArray;
     private Vector2 mPosition;
@@ -26,12 +26,11 @@ public abstract class YANBaseNode implements YANIRenderableNode {
     private YANNodeTouchListener mNodeTouchListener;
     private Vector2 mAnchorPoint;
 
-
     protected YANBaseNode() {
         mSize = new Vector2(1, 2);
         mPosition = new Vector2();
         mAnchorPoint = new Vector2();
-        recalculateDimensions();
+//        recalculateDimensions();
     }
 
     @Override
@@ -81,36 +80,11 @@ public abstract class YANBaseNode implements YANIRenderableNode {
         glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
     }
 
-    private float[] createVertexData() {
-        float halfWidth = mSize.getX() / 2f;
-        float halfHeight = mSize.getY() / 2f;
-        return new float[]{
-                // Order of coordinates: X, Y, S, T
-                // Triangle Fan
-
-                //first vertex (center)
-                0f, 0f, 0.5f, 0.5f,
-
-                //second vertex (bottom left)
-                -halfWidth, -halfHeight, 0f, 0f,
-
-                //third vertex (top left)
-                -halfWidth, halfHeight, 0f, 1.0f,
-
-                //fourth vertex (top right)
-                halfWidth, halfHeight, 1f, 1.0f,
-
-                //fifth vertex (bottom right)
-                halfWidth, -halfHeight, 1.0f, 0f,
-
-                //sixth vertex (bottom left)
-                -halfWidth, -halfHeight, 0f, 0f,
-        };
-    }
-
-    private void recalculateDimensions() {
+    protected void recalculateDimensions() {
         vertexArray = new YANVertexArray(createVertexData());
     }
+
+    protected abstract float[] createVertexData();
 
     @Override
     public Rectangle getBoundingRectangle() {

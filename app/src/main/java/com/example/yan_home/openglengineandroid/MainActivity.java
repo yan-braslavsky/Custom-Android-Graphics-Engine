@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Toast;
 
+import com.example.yan_home.openglengineandroid.assets.YANAssetManager;
+
 public class MainActivity extends Activity {
 
     /**
@@ -24,6 +26,16 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        YANAssetManager.getInstance().preloadAssets(new YANAssetManager.YANAssetManagerListener() {
+            @Override
+            public void onAssetsPreloaded() {
+                //TODO : maybe it is better to remove to other place ?
+                init();
+            }
+        });
+    }
+
+    private void init() {
         glSurfaceView = new GLSurfaceView(this);
 
         // Check if the system supports OpenGL ES 2.0.
@@ -55,14 +67,14 @@ public class MainActivity extends Activity {
         } else {
             /*
              * This is where you could create an OpenGL ES 1.x compatible
-             * renderer if you wanted to support both ES 1 and ES 2. Since 
-             * we're not doing anything, the app will crash if the device 
-             * doesn't support OpenGL ES 2.0. If we publish on the market, we 
+             * renderer if you wanted to support both ES 1 and ES 2. Since
+             * we're not doing anything, the app will crash if the device
+             * doesn't support OpenGL ES 2.0. If we publish on the market, we
              * should also add the following to AndroidManifest.xml:
-             * 
+             *
              * <uses-feature android:glEsVersion="0x00020000"
              * android:required="true" />
-             * 
+             *
              * This hides our app from those devices which don't support OpenGL
              * ES 2.0.
              */
@@ -79,7 +91,7 @@ public class MainActivity extends Activity {
                     // coordinates, keeping in mind that Android's Y
                     // coordinates are inverted.
                     final float normalizedX =
-                            (event.getX() / (float) v.getWidth()) ;
+                            (event.getX() / (float) v.getWidth());
                     final float normalizedY =
                             ((event.getY() / (float) v.getHeight()));
 

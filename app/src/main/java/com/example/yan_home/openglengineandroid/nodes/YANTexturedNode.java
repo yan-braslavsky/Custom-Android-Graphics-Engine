@@ -4,23 +4,55 @@
  */
 package com.example.yan_home.openglengineandroid.nodes;
 
-import com.example.yan_home.openglengineandroid.assets.YANTexture;
+import com.example.yan_home.openglengineandroid.assets.atlas.YANTextureRegion;
 
 public class YANTexturedNode extends YANBaseNode {
 
-    private YANTexture mTexture;
+    private YANTextureRegion mTextureRegion;
 
-    public YANTexturedNode(YANTexture texture) {
+    public YANTexturedNode(YANTextureRegion textureRegion) {
         super();
-        mTexture = texture;
+        mTextureRegion = textureRegion;
     }
 
-    public YANTexture getTexture() {
-        return mTexture;
+    public YANTextureRegion getTextureRegion() {
+        return mTextureRegion;
+    }
+
+    public void setTextureRegion(YANTextureRegion textureRegion) {
+        mTextureRegion = textureRegion;
+        recalculateDimensions();
+    }
+
+    @Override
+    protected float[] createVertexData() {
+        float halfWidth = getSize().getX() / 2f;
+        float halfHeight = getSize().getY() / 2f;
+
+        return new float[]{
+                // Order of coordinates: X, Y, U, V
+                // Triangle Fan
+
+                //first vertex (center)
+                0f, 0f, mTextureRegion.getU0() + ((mTextureRegion.getU1() - mTextureRegion.getU0()) / 2), mTextureRegion.getV0() + ((mTextureRegion.getV1() - mTextureRegion.getV0()) / 2),
+
+                //second vertex (bottom left)
+                -halfWidth, -halfHeight, mTextureRegion.getU0(), mTextureRegion.getV0(),
+
+                //third vertex (top left)
+                -halfWidth, halfHeight, mTextureRegion.getU0(), mTextureRegion.getV1(),
+
+                //fourth vertex (top right)
+                halfWidth, halfHeight, mTextureRegion.getU1(), mTextureRegion.getV1(),
+
+                //fifth vertex (bottom right)
+                halfWidth, -halfHeight, mTextureRegion.getU1(), mTextureRegion.getV0(),
+
+                //sixth vertex (bottom left)
+                -halfWidth, -halfHeight, mTextureRegion.getU0(), mTextureRegion.getV0(),
+        };
     }
 
 
-    public void setTexture(YANTexture texture) {
-        mTexture = texture;
-    }
+
 }

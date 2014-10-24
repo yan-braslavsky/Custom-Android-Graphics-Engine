@@ -1,5 +1,8 @@
 package com.example.yan_home.openglengineandroid.screens;
 
+import com.example.yan_home.openglengineandroid.R;
+import com.example.yan_home.openglengineandroid.assets.YANAssetManager;
+import com.example.yan_home.openglengineandroid.assets.atlas.YANTextureAtlas;
 import com.example.yan_home.openglengineandroid.nodes.YANIRenderableNode;
 import com.example.yan_home.openglengineandroid.renderer.YANGLRenderer;
 import com.example.yan_home.openglengineandroid.util.math.Vector2;
@@ -14,10 +17,12 @@ public abstract class YANNodeScreen implements YANIScreen {
 
     private final YANGLRenderer mRenderer;
     private List<YANIRenderableNode> mNodeList;
+    YANTextureAtlas mAtlas;
 
     public YANNodeScreen(YANGLRenderer renderer) {
         mRenderer = renderer;
         mNodeList = new ArrayList<YANIRenderableNode>();
+        mAtlas = YANAssetManager.getInstance().getLoadedAtlas(R.raw.ui_atlas);
 
         //at this point nodes can be created
         onCreateNodes();
@@ -44,9 +49,18 @@ public abstract class YANNodeScreen implements YANIScreen {
         getNodeList().remove(node);
     }
 
+    public YANTextureAtlas getTextureAtlas() {
+        return mAtlas;
+    }
+
     @Override
     public void onSetActive() {
-        //TODO : here screen became active... do something ?
+        loadScreenTextures();
+    }
+
+    @Override
+    public void onSetNotActive() {
+        unloadScreenTextures();
     }
 
     protected Vector2 getSceneSize() {
@@ -62,6 +76,14 @@ public abstract class YANNodeScreen implements YANIScreen {
     @Override
     public List<YANIRenderableNode> getNodeList() {
         return mNodeList;
+    }
+
+    private void loadScreenTextures() {
+        YANAssetManager.getInstance().loadTexture(mAtlas.getAtlasImageResourceID());
+    }
+
+    private void unloadScreenTextures() {
+        YANAssetManager.getInstance().unloadTexture(mAtlas.getAtlasImageResourceID());
     }
 
 

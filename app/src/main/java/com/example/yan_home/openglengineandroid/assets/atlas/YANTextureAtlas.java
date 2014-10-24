@@ -1,7 +1,5 @@
 package com.example.yan_home.openglengineandroid.assets.atlas;
 
-import com.example.yan_home.openglengineandroid.assets.YANTexture;
-
 import java.util.Map;
 
 /**
@@ -10,24 +8,24 @@ import java.util.Map;
 public class YANTextureAtlas {
 
     private int mAtlasResourceID;
-    private YANTexture mAtlasTexture;
+    private int mAtlasImageResourceID;
     private Map<String, YANTextureRegion> mTextureRegions;
 
-    public YANTextureAtlas(int atlasResourceID, YANTexture yanTexture, Map<String, YANTextureRegion> textureRegions) {
+    public YANTextureAtlas(int atlasResourceID,int atlasImageResourceID,  Map<String, YANTextureRegion> textureRegions) {
         mAtlasResourceID = atlasResourceID;
-        mAtlasTexture = yanTexture;
         mTextureRegions = textureRegions;
+        mAtlasImageResourceID = atlasImageResourceID;
     }
 
     public int getAtlasResourceID() {
         return mAtlasResourceID;
     }
 
-    public YANTexture getAtlasTexture() {
-        return mAtlasTexture;
-    }
-
     public YANTextureRegion getTextureRegion(String name) {
         return mTextureRegions.get(name);
+    }
+
+    public int getAtlasImageResourceID() {
+        return mAtlasImageResourceID;
     }
 }

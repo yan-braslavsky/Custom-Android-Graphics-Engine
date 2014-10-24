@@ -1,9 +1,5 @@
 package com.example.yan_home.openglengineandroid.screens.impl;
 
-import com.example.yan_home.openglengineandroid.R;
-import com.example.yan_home.openglengineandroid.assets.YANAssetManager;
-import com.example.yan_home.openglengineandroid.assets.YANTexture;
-import com.example.yan_home.openglengineandroid.assets.atlas.YANTextureAtlas;
 import com.example.yan_home.openglengineandroid.nodes.YANButtonNode;
 import com.example.yan_home.openglengineandroid.renderer.YANGLRenderer;
 import com.example.yan_home.openglengineandroid.screens.YANNodeScreen;
@@ -15,7 +11,7 @@ import com.example.yan_home.openglengineandroid.util.math.Vector2;
  */
 public class YANButtonTestScreen extends YANNodeScreen {
 
-    private YANButtonNode mButtonNode;
+    YANButtonNode mButtonNode;
 
     public YANButtonTestScreen(YANGLRenderer renderer) {
         super(renderer);
@@ -28,8 +24,8 @@ public class YANButtonTestScreen extends YANNodeScreen {
 
     @Override
     protected void onLayoutNodes() {
-//        mButtonNode.getPosition().setX(/*getSceneSize().getX() - */mButtonNode.getSize().getX());
-//        mButtonNode.getPosition().setY((/*getSceneSize().getY() - */mButtonNode.getSize().getY()));
+        mButtonNode.getPosition().setX(150);
+        mButtonNode.getPosition().setY(150);
     }
 
     @Override
@@ -43,8 +39,7 @@ public class YANButtonTestScreen extends YANNodeScreen {
     protected void onCreateNodes() {
 
         //create node
-        mButtonNode = new YANButtonNode(new YANTexture(R.drawable.call_btn_default),
-                new YANTexture(R.drawable.call_btn_pressed));
+        mButtonNode = new YANButtonNode(getTextureAtlas().getTextureRegion("call_btn_default.png"), getTextureAtlas().getTextureRegion("call_btn_pressed.png"));
 
         mButtonNode.setClickListener(new YANButtonNode.YanButtonNodeClickListener() {
             @Override
@@ -59,29 +54,6 @@ public class YANButtonTestScreen extends YANNodeScreen {
         });
     }
 
-    private void loadScreenTextures() {
-
-        YANAssetManager.getInstance().loadTextureAtlas(R.raw.ui_atlas,R.drawable.ui_atlas,new YANAssetManager.YANTextureAtlasLoadListener() {
-            @Override
-            public void onAtlasLoaded(YANTextureAtlas atlas) {
-                MyLogger.log("atlas is loaded");
-            }
-
-            @Override
-            public void onProgress(float percentLoaded) {
-
-            }
-        });
-
-        YANAssetManager.getInstance().loadTexture(new YANTexture(R.drawable.call_btn_default));
-        YANAssetManager.getInstance().loadTexture(new YANTexture(R.drawable.call_btn_pressed));
-    }
-
-    private void unloadScreenTextures() {
-        YANAssetManager.getInstance().unloadTexture(new YANTexture(R.drawable.call_btn_default));
-        YANAssetManager.getInstance().unloadTexture(new YANTexture(R.drawable.call_btn_pressed));
-    }
-
     @Override
     public void onUpdate(float deltaTime) {
         //TODO : update nodes state
@@ -90,11 +62,10 @@ public class YANButtonTestScreen extends YANNodeScreen {
     @Override
     public void onSetActive() {
         super.onSetActive();
-        loadScreenTextures();
     }
 
     @Override
     public void onSetNotActive() {
-        unloadScreenTextures();
+        super.onSetNotActive();
     }
 }
