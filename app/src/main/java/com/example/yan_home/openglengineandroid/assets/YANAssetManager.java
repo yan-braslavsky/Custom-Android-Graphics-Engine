@@ -1,6 +1,8 @@
 package com.example.yan_home.openglengineandroid.assets;
 
 import com.example.yan_home.openglengineandroid.GLEngineApp;
+import com.example.yan_home.openglengineandroid.assets.atlas.YANLoadAtlasTask;
+import com.example.yan_home.openglengineandroid.assets.atlas.YANTextureAtlas;
 import com.example.yan_home.openglengineandroid.util.YANTextureHelper;
 
 import java.util.HashMap;
@@ -10,6 +12,11 @@ import java.util.Map;
  * Created by Yan-Home on 10/3/2014.
  */
 public class YANAssetManager {
+
+    public interface YANTextureAtlasLoadListener {
+        void onAtlasLoaded(YANTextureAtlas atlas);
+        void onProgress(float percentLoaded);
+    }
 
     private static final YANAssetManager INSTANCE = new YANAssetManager();
 
@@ -21,6 +28,11 @@ public class YANAssetManager {
 
     private YANAssetManager() {
         mTextureHandlesMap = new HashMap<YANTexture, Integer>();
+    }
+
+
+    public void loadTextureAtlas(int atlasJsonResourceID, int atlasImageID, YANTextureAtlasLoadListener listener) {
+        (new YANLoadAtlasTask(atlasJsonResourceID, atlasImageID, listener)).execute();
     }
 
     public boolean isTextureLoaded(YANTexture texture) {
@@ -57,10 +69,11 @@ public class YANAssetManager {
 
             //FIXME : causes random deletion of the sprite
             //delete texture rom GL context
-//            YANTextureHelper.deleteTexture(mTextureHandlesMap.get(texture));
+//           YANTextureHelper.deleteTexture(mTextureHandlesMap.get(texture));
 
             //reload the texture into gl context again
             loadTexture(texture);
         }
     }
+
 }

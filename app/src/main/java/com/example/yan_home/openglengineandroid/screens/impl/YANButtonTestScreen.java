@@ -3,6 +3,7 @@ package com.example.yan_home.openglengineandroid.screens.impl;
 import com.example.yan_home.openglengineandroid.R;
 import com.example.yan_home.openglengineandroid.assets.YANAssetManager;
 import com.example.yan_home.openglengineandroid.assets.YANTexture;
+import com.example.yan_home.openglengineandroid.assets.atlas.YANTextureAtlas;
 import com.example.yan_home.openglengineandroid.nodes.YANButtonNode;
 import com.example.yan_home.openglengineandroid.renderer.YANGLRenderer;
 import com.example.yan_home.openglengineandroid.screens.YANNodeScreen;
@@ -59,6 +60,19 @@ public class YANButtonTestScreen extends YANNodeScreen {
     }
 
     private void loadScreenTextures() {
+
+        YANAssetManager.getInstance().loadTextureAtlas(R.raw.ui_atlas,R.drawable.ui_atlas,new YANAssetManager.YANTextureAtlasLoadListener() {
+            @Override
+            public void onAtlasLoaded(YANTextureAtlas atlas) {
+                MyLogger.log("atlas is loaded");
+            }
+
+            @Override
+            public void onProgress(float percentLoaded) {
+
+            }
+        });
+
         YANAssetManager.getInstance().loadTexture(new YANTexture(R.drawable.call_btn_default));
         YANAssetManager.getInstance().loadTexture(new YANTexture(R.drawable.call_btn_pressed));
     }
