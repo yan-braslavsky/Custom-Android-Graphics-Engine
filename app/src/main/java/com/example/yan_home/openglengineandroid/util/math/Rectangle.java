@@ -22,7 +22,7 @@ public class Rectangle {
 
     public boolean contains(float x, float y) {
         boolean isXinBounds = x > leftTop.getX() && x < rightBottom.getX();
-        boolean isYinBounds = y < leftTop.getY() && y > rightBottom.getY();
+        boolean isYinBounds = y > leftTop.getY() && y < rightBottom.getY();
         return isXinBounds && isYinBounds;
     }
 

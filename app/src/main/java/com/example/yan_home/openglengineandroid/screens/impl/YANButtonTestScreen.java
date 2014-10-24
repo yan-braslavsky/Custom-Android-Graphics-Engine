@@ -27,8 +27,8 @@ public class YANButtonTestScreen extends YANNodeScreen {
 
     @Override
     protected void onLayoutNodes() {
-//        mButtonNode.getPosition().setX(mButtonNode.getSize().getX() - (getSceneSize().getX() / 2));
-//        mButtonNode.getPosition().setY(mButtonNode.getSize().getY() - (getSceneSize().getY() / 2));
+//        mButtonNode.getPosition().setX(/*getSceneSize().getX() - */mButtonNode.getSize().getX());
+//        mButtonNode.getPosition().setY((/*getSceneSize().getY() - */mButtonNode.getSize().getY()));
     }
 
     @Override

@@ -21,4 +21,5 @@ public interface YANIRenderableNode {
 
     void onAttachedToScreen();
     void onDetachedFromScreen();
+    Vector2 getAnchorPoint();
 }

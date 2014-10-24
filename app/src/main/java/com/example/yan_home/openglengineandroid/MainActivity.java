@@ -79,9 +79,9 @@ public class MainActivity extends Activity {
                     // coordinates, keeping in mind that Android's Y
                     // coordinates are inverted.
                     final float normalizedX =
-                            (event.getX() / (float) v.getWidth()) * 2 - 1;
+                            (event.getX() / (float) v.getWidth()) ;
                     final float normalizedY =
-                            -((event.getY() / (float) v.getHeight()) * 2 - 1);
+                            ((event.getY() / (float) v.getHeight()));
 
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {
                         glSurfaceView.queueEvent(new Runnable() {

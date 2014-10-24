@@ -60,7 +60,7 @@ public class YANGLRenderer implements IRenderer {
         YANAssetManager.getInstance().reloadAllLoadedTextures();
 
         //set orthographic projection
-        Matrix.orthoM(YANMatrixHelper.projectionMatrix, 0, -(width / 2), (width / 2), -(height / 2), (height / 2), 1, 100);
+        Matrix.orthoM(YANMatrixHelper.projectionMatrix, 0, 0, width, height,0 , 1, 100);
 
         //fill view matrix
         Matrix.setLookAtM(YANMatrixHelper.viewMatrix, 0, 0f, 0.0f, 2.0f, 0f, 0f, 0f, 0f, 1f, 0f);
@@ -95,7 +95,7 @@ public class YANGLRenderer implements IRenderer {
 
     private void drawNodes() {
         for (YANIRenderableNode iNode : mCurrentScreen.getNodeList()) {
-            YANMatrixHelper.positionObjectInScene(iNode.getPosition().getX(), iNode.getPosition().getY());
+            YANMatrixHelper.positionObjectInScene(iNode);
 
             if (iNode instanceof YANTexturedNode) {
                 textureProgram.useProgram();

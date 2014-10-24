@@ -18,20 +18,18 @@ public class YANInputManager {
 
     public static Vector2 touchToWorld(float normalizedX, float normalizedY, float worldWidth, float worldHeight) {
         //convert touch point to world coordinates
-        float realTouchX = normalizedX * (worldWidth / 2);
-        float realTouchY = normalizedY * (worldHeight / 2);
+        float realTouchX = normalizedX * worldWidth;
+        float realTouchY = normalizedY * worldHeight;
         return new Vector2(realTouchX, realTouchY);
     }
 
     public void handleTouchUp(float normalizedX, float normalizedY) {
-//        MyLogger.log("touched Up at : " + normalizedX + ":" + normalizedY);
         for (TouchListener listener : mListeners) {
             listener.onTouchUp(normalizedX, normalizedY);
         }
     }
 
     public void handleTouchDrag(float normalizedX, float normalizedY) {
-//        MyLogger.log("touched DRAG at : " + normalizedX + ":" + normalizedY);
         for (TouchListener listener : mListeners) {
             listener.onTouchDrag(normalizedX, normalizedY);
         }
@@ -39,17 +37,19 @@ public class YANInputManager {
 
     public interface TouchListener {
         void onTouchDown(float normalizedX, float normalizedY);
+
         void onTouchUp(float normalizedX, float normalizedY);
+
         void onTouchDrag(float normalizedX, float normalizedY);
     }
 
     private List<TouchListener> mListeners;
+
     private YANInputManager() {
         mListeners = new ArrayList<TouchListener>();
     }
 
     public void handleTouchPress(float normalizedX, float normalizedY) {
-//        MyLogger.log("touched DOWN at : " + normalizedX + ":" + normalizedY);
         for (TouchListener listener : mListeners) {
             listener.onTouchDown(normalizedX, normalizedY);
         }
@@ -58,6 +58,7 @@ public class YANInputManager {
     public void addEventListener(TouchListener listener) {
         mListeners.add(listener);
     }
+
     public void removeEventListener(TouchListener listener) {
         mListeners.remove(listener);
     }

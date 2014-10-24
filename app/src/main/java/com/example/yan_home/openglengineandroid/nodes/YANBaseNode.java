@@ -24,11 +24,13 @@ public abstract class YANBaseNode implements YANIRenderableNode {
     private Vector2 mPosition;
     private Vector2 mSize;
     private YANNodeTouchListener mNodeTouchListener;
+    private Vector2 mAnchorPoint;
 
 
     protected YANBaseNode() {
         mSize = new Vector2(1, 2);
         mPosition = new Vector2();
+        mAnchorPoint = new Vector2();
         recalculateDimensions();
     }
 
@@ -90,19 +92,19 @@ public abstract class YANBaseNode implements YANIRenderableNode {
                 0f, 0f, 0.5f, 0.5f,
 
                 //second vertex (bottom left)
-                -halfWidth, -halfHeight, 0f, 1.0f,
+                -halfWidth, -halfHeight, 0f, 0f,
 
                 //third vertex (top left)
-                -halfWidth, halfHeight, 0f, 0f,
+                -halfWidth, halfHeight, 0f, 1.0f,
 
                 //fourth vertex (top right)
-                halfWidth, halfHeight, 1f, 0.0f,
+                halfWidth, halfHeight, 1f, 1.0f,
 
                 //fifth vertex (bottom right)
-                halfWidth, -halfHeight, 1f, 1f,
+                halfWidth, -halfHeight, 1.0f, 0f,
 
                 //sixth vertex (bottom left)
-                -halfWidth, -halfHeight, 0f, 1.0f,
+                -halfWidth, -halfHeight, 0f, 0f,
         };
     }
 
@@ -112,15 +114,29 @@ public abstract class YANBaseNode implements YANIRenderableNode {
 
     @Override
     public Rectangle getBoundingRectangle() {
-        Vector2 leftTop = new Vector2(getPosition().getX() - getSize().getX() / 2,
-                getPosition().getY() + getSize().getY() / 2);
-        Vector2 rightBottom = new Vector2(getPosition().getX() + getSize().getX() / 2,
-                getPosition().getY() - getSize().getY() / 2);
+
+        Vector2 leftTop = new Vector2(getPosition().getX() + getSize().getX() * getAnchorPoint().getX(),
+                getPosition().getY() + getSize().getY() * getAnchorPoint().getY());
+
+        Vector2 rightBottom = new Vector2(getPosition().getX() + getSize().getX() + getSize().getX() * getAnchorPoint().getX(),
+                getPosition().getY() + getSize().getY()  + getSize().getY() * getAnchorPoint().getY());
+
         return new Rectangle(leftTop, rightBottom);
     }
 
     public void setNodeTouchListener(YANNodeTouchListener nodeTouchListener) {
         mNodeTouchListener = nodeTouchListener;
     }
+
+    public void setAnchorPoint(float x, float y) {
+        mAnchorPoint.setX(x);
+        mAnchorPoint.setY(y);
+    }
+
+    @Override
+    public Vector2 getAnchorPoint() {
+        return mAnchorPoint;
+    }
+
 
 }
