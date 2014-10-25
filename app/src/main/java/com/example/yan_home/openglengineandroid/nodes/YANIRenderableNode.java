@@ -19,6 +19,7 @@ public interface YANIRenderableNode {
 
     Vector2 getSize();
 
+    //TODO : Optimize with scale!
     void setSize(Vector2 size);
 
     Rectangle getBoundingRectangle();
@@ -34,5 +35,9 @@ public interface YANIRenderableNode {
     /**
      * Defined in degrees
      */
-    public float setRotation(float rotation);
+    void setRotation(float rotation);
+
+    float getOpacity();
+
+    void setOpacity(float opacity);
 }

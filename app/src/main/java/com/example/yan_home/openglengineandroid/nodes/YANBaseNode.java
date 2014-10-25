@@ -26,12 +26,14 @@ public abstract class YANBaseNode implements YANIRenderableNode {
     private YANNodeTouchListener mNodeTouchListener;
     private Vector2 mAnchorPoint;
     private float mRotation;
+    private float mOpacity;
 
     protected YANBaseNode() {
         mSize = new Vector2(1, 2);
         mPosition = new Vector2();
         mAnchorPoint = new Vector2();
         mRotation = 0;
+        mOpacity = 1f;
 //        recalculateDimensions();
     }
 
@@ -121,8 +123,18 @@ public abstract class YANBaseNode implements YANIRenderableNode {
     }
 
     @Override
-    public float setRotation(float rotation) {
-        return mRotation = rotation;
+    public void setRotation(float rotation) {
+        mRotation = rotation;
+    }
+
+    @Override
+    public float getOpacity() {
+        return mOpacity;
+    }
+
+    @Override
+    public void setOpacity(float opacity) {
+        mOpacity = opacity;
     }
 
 

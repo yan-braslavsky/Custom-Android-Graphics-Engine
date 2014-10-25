@@ -4,8 +4,10 @@ import com.example.yan_home.openglengineandroid.nodes.YANButtonNode;
 import com.example.yan_home.openglengineandroid.renderer.YANGLRenderer;
 import com.example.yan_home.openglengineandroid.screens.YANNodeScreen;
 import com.example.yan_home.openglengineandroid.tween.TweenNodeAccessor;
-import com.example.yan_home.openglengineandroid.util.MyLogger;
+import com.example.yan_home.openglengineandroid.util.math.MathUtils;
 import com.example.yan_home.openglengineandroid.util.math.Vector2;
+
+import java.util.ArrayList;
 
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
@@ -16,64 +18,88 @@ import aurelienribon.tweenengine.TweenManager;
  */
 public class YANTweenTestScreen extends YANNodeScreen {
 
-    YANButtonNode mButtonNode;
+    public static final int BUTTONS_ON_STAGE = 10;
+    private ArrayList<YANButtonNode> mBtnList;
     TweenManager mTweenManager;
+    private float mButtonOriginalSize;
 
     public YANTweenTestScreen(YANGLRenderer renderer) {
         super(renderer);
+
     }
 
     @Override
     protected void onAddNodesToScene() {
-        addNode(mButtonNode);
+
+        for (YANButtonNode yanButtonNode : mBtnList) {
+            addNode(yanButtonNode);
+        }
+
     }
 
     @Override
     protected void onLayoutNodes() {
-        mButtonNode.getPosition().setX(150);
-        mButtonNode.getPosition().setY(150);
-        mButtonNode.setRotation(0);
+        for (YANButtonNode yanButtonNode : mBtnList) {
+            yanButtonNode.getPosition().setX(MathUtils.randomInRange(0, getSceneSize().getX() - mButtonOriginalSize));
+            yanButtonNode.getPosition().setY(MathUtils.randomInRange(0, getSceneSize().getY() - mButtonOriginalSize));
+            yanButtonNode.setRotation(MathUtils.randomInRange(0, 180));
+            yanButtonNode.setOpacity(MathUtils.randomInRange(0.2f, 0.95f));
+        }
     }
 
     @Override
     protected void onChangeNodesSize() {
-        //define size and position of the node
-        float spriteSize = Math.min(getSceneSize().getX(), getSceneSize().getY()) * 0.2f;
-        mButtonNode.setSize(new Vector2(spriteSize, spriteSize));
+        for (YANButtonNode yanButtonNode : mBtnList) {
+            yanButtonNode.setSize(new Vector2(mButtonOriginalSize, mButtonOriginalSize));
+        }
     }
 
     @Override
     protected void onCreateNodes() {
 
+        mBtnList = new ArrayList<YANButtonNode>();
+        mButtonOriginalSize = Math.min(getSceneSize().getX(), getSceneSize().getY()) * 0.2f;
+
         // We need a mTweenManager to handle every tween.
         mTweenManager = new TweenManager();
 
-        //create node
-        mButtonNode = new YANButtonNode(getTextureAtlas().getTextureRegion("call_btn_default.png"), getTextureAtlas().getTextureRegion("call_btn_pressed.png"));
+        for (int i = 0; i < BUTTONS_ON_STAGE; i++) {
+            //create node
+            final YANButtonNode btn = new YANButtonNode(getTextureAtlas().getTextureRegion("call_btn_default.png"), getTextureAtlas().getTextureRegion("call_btn_pressed.png"));
 
-        mButtonNode.setClickListener(new YANButtonNode.YanButtonNodeClickListener() {
-            @Override
-            public void onButtonClick() {
-                MyLogger.log("Button is clicked !");
-                Vector2 newSize = new Vector2(
-                        mButtonNode.getSize().getX() + mButtonNode.getSize().getX() * 0.1f,
-                        mButtonNode.getSize().getY() + mButtonNode.getSize().getY() * 0.1f
-                );
-                mButtonNode.setSize(newSize);
-            }
-        });
+            btn.setClickListener(new YANButtonNode.YanButtonNodeClickListener() {
+                @Override
+                public void onButtonClick() {
+                    tweenTheButton(btn);
+                }
+            });
+
+            mBtnList.add(btn);
+            tweenTheButton(btn);
+
+        }
 
 
-        Timeline.createSequence().beginParallel()
-                    .push(Tween.to(mButtonNode, TweenNodeAccessor.POSITION_X, 0.5f).target(200))
-                    .push(Tween.to(mButtonNode, TweenNodeAccessor.POSITION_Y, 0.5f).target(0))
-                    .push(Tween.to(mButtonNode, TweenNodeAccessor.ROTATION_CW, 0.5f).target(30))
+    }
+
+    private void tweenTheButton(YANButtonNode btn) {
+        Timeline.createSequence()
+                .beginParallel()
+                .push(Tween.to(btn, TweenNodeAccessor.POSITION_X, 0.5f).target(MathUtils.randomInRange(0, getSceneSize().getX() - btn.getSize().getX())))
+                .push(Tween.to(btn, TweenNodeAccessor.POSITION_Y, 0.5f).target(MathUtils.randomInRange(0, getSceneSize().getY() - btn.getSize().getY())))
+                .push(Tween.to(btn, TweenNodeAccessor.ROTATION_CW, 0.5f).target(MathUtils.randomInRange(-360, 360)))
+                .push(Tween.to(btn, TweenNodeAccessor.OPACITY, 0.5f).target(MathUtils.randomInRange(0.1f, 1f)))
                 .end()
+                .push(Tween.to(btn, TweenNodeAccessor.OPACITY, 0.5f).target(MathUtils.randomInRange(0.1f, 1f)))
+                .push(Tween.to(btn, TweenNodeAccessor.ROTATION_CW, 0.5f).target(MathUtils.randomInRange(-360, 360)))
                 .pushPause(0.5f)
-                .push(Tween.to(mButtonNode, TweenNodeAccessor.POSITION_X, 0.5f).target(500))
-                .push(Tween.to(mButtonNode, TweenNodeAccessor.POSITION_Y, 0.5f).target(250))
+                .push(Tween.to(btn, TweenNodeAccessor.SIZE_X, 0.5f).target(MathUtils.randomInRange(15, 300)))
+                .push(Tween.to(btn, TweenNodeAccessor.SIZE_Y, 0.5f).target(MathUtils.randomInRange(15, 300)))
+                .push(Tween.to(btn, TweenNodeAccessor.POSITION_X, 0.5f).target(MathUtils.randomInRange(0, getSceneSize().getX() - btn.getSize().getX())))
+                .push(Tween.to(btn, TweenNodeAccessor.POSITION_Y, 0.5f).target(MathUtils.randomInRange(0, getSceneSize().getY() - btn.getSize().getY())))
+                .push(Tween.to(btn, TweenNodeAccessor.SIZE_X, 0.5f).target(mButtonOriginalSize))
+                .push(Tween.to(btn, TweenNodeAccessor.SIZE_Y, 0.5f).target(mButtonOriginalSize))
                 .start(mTweenManager);
-
     }
 
     @Override
@@ -89,6 +115,5 @@ public class YANTweenTestScreen extends YANNodeScreen {
     @Override
     public void onSetNotActive() {
         super.onSetNotActive();
-        mButtonNode.setClickListener(null);
     }
 }

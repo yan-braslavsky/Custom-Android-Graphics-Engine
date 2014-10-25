@@ -6,7 +6,6 @@ import android.opengl.Matrix;
 
 import com.example.yan_home.openglengineandroid.GLEngineApp;
 import com.example.yan_home.openglengineandroid.assets.YANAssetManager;
-import com.example.yan_home.openglengineandroid.nodes.YANButtonNode;
 import com.example.yan_home.openglengineandroid.nodes.YANIRenderableNode;
 import com.example.yan_home.openglengineandroid.nodes.YANTexturedNode;
 import com.example.yan_home.openglengineandroid.programs.YANColorShaderProgram;
@@ -16,8 +15,6 @@ import com.example.yan_home.openglengineandroid.screens.impl.YANTweenTestScreen;
 import com.example.yan_home.openglengineandroid.util.YANMatrixHelper;
 import com.example.yan_home.openglengineandroid.util.colors.YANColor;
 import com.example.yan_home.openglengineandroid.util.math.Vector2;
-
-import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by Yan-Home on 10/3/2014.
@@ -101,10 +98,10 @@ public class YANGLRenderer implements IRenderer {
 
             if (iNode instanceof YANTexturedNode) {
                 textureProgram.useProgram();
-                textureProgram.setUniforms(YANMatrixHelper.modelViewProjectionMatrix, YANAssetManager.getInstance().getLoadedTextureHandle(((YANTexturedNode) iNode).getTextureRegion().getAtlasImageResourceId()));
-            } else if (iNode instanceof YANButtonNode) {
-                textureProgram.useProgram();
-                textureProgram.setUniforms(YANMatrixHelper.modelViewProjectionMatrix, YANAssetManager.getInstance().getLoadedTextureHandle(((YANButtonNode) iNode).getCurrentStateTextureRegion().getAtlasImageResourceId()));
+                textureProgram.setUniforms(
+                        YANMatrixHelper.modelViewProjectionMatrix,
+                        YANAssetManager.getInstance().getLoadedTextureHandle(((YANTexturedNode) iNode).getTextureRegion().getAtlasImageResourceId()),
+                        iNode.getOpacity());
             } else {
                 throw new RuntimeException("Don't know how to render node of type " + iNode.getClass().getSimpleName());
             }
@@ -120,9 +117,9 @@ public class YANGLRenderer implements IRenderer {
         YANColor color = YANColor.createFromHexColor(Color.GRAY);
         GLES20.glClearColor(color.getR(), color.getG(), color.getB(), color.getA());
 
-        //enable alpha blending
-        GLES20.glEnable(GL10.GL_BLEND);
-        GLES20.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        //TODO : when batching will be implemented , consider enable and disable this
+        GLES20.glEnable(GLES20.GL_BLEND);
+        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     private void loadShaderPrograms() {
