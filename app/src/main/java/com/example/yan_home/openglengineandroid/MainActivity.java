@@ -13,6 +13,7 @@ import android.view.View.OnTouchListener;
 import android.widget.Toast;
 
 import com.example.yan_home.openglengineandroid.assets.YANAssetManager;
+import com.example.yan_home.openglengineandroid.setup.YANEngineSetup;
 
 public class MainActivity extends Activity {
 
@@ -29,13 +30,19 @@ public class MainActivity extends Activity {
         YANAssetManager.getInstance().preloadAssets(new YANAssetManager.YANAssetManagerListener() {
             @Override
             public void onAssetsPreloaded() {
-                //TODO : maybe it is better to remove to other place ?
+
+                //setup the tween engine
+                YANEngineSetup.setupTweenEngine();
+
+                //init the engine
                 init();
             }
         });
     }
 
     private void init() {
+
+
         glSurfaceView = new GLSurfaceView(this);
 
         // Check if the system supports OpenGL ES 2.0.

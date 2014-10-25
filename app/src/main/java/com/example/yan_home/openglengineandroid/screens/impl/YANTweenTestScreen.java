@@ -3,17 +3,23 @@ package com.example.yan_home.openglengineandroid.screens.impl;
 import com.example.yan_home.openglengineandroid.nodes.YANButtonNode;
 import com.example.yan_home.openglengineandroid.renderer.YANGLRenderer;
 import com.example.yan_home.openglengineandroid.screens.YANNodeScreen;
+import com.example.yan_home.openglengineandroid.tween.TweenNodeAccessor;
 import com.example.yan_home.openglengineandroid.util.MyLogger;
 import com.example.yan_home.openglengineandroid.util.math.Vector2;
+
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenManager;
 
 /**
  * Created by Yan-Home on 10/3/2014.
  */
-public class YANButtonTestScreen extends YANNodeScreen {
+public class YANTweenTestScreen extends YANNodeScreen {
 
     YANButtonNode mButtonNode;
+    TweenManager mTweenManager;
 
-    public YANButtonTestScreen(YANGLRenderer renderer) {
+    public YANTweenTestScreen(YANGLRenderer renderer) {
         super(renderer);
     }
 
@@ -26,6 +32,7 @@ public class YANButtonTestScreen extends YANNodeScreen {
     protected void onLayoutNodes() {
         mButtonNode.getPosition().setX(150);
         mButtonNode.getPosition().setY(150);
+        mButtonNode.setRotation(0);
     }
 
     @Override
@@ -37,6 +44,9 @@ public class YANButtonTestScreen extends YANNodeScreen {
 
     @Override
     protected void onCreateNodes() {
+
+        // We need a mTweenManager to handle every tween.
+        mTweenManager = new TweenManager();
 
         //create node
         mButtonNode = new YANButtonNode(getTextureAtlas().getTextureRegion("call_btn_default.png"), getTextureAtlas().getTextureRegion("call_btn_pressed.png"));
@@ -52,11 +62,23 @@ public class YANButtonTestScreen extends YANNodeScreen {
                 mButtonNode.setSize(newSize);
             }
         });
+
+
+        Timeline.createSequence().beginParallel()
+                    .push(Tween.to(mButtonNode, TweenNodeAccessor.POSITION_X, 0.5f).target(200))
+                    .push(Tween.to(mButtonNode, TweenNodeAccessor.POSITION_Y, 0.5f).target(0))
+                    .push(Tween.to(mButtonNode, TweenNodeAccessor.ROTATION_CW, 0.5f).target(30))
+                .end()
+                .pushPause(0.5f)
+                .push(Tween.to(mButtonNode, TweenNodeAccessor.POSITION_X, 0.5f).target(500))
+                .push(Tween.to(mButtonNode, TweenNodeAccessor.POSITION_Y, 0.5f).target(250))
+                .start(mTweenManager);
+
     }
 
     @Override
     public void onUpdate(float deltaTimeSeconds) {
-        //TODO : update nodes state
+        mTweenManager.update(deltaTimeSeconds * 1);
     }
 
     @Override

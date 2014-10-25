@@ -12,7 +12,7 @@ import com.example.yan_home.openglengineandroid.nodes.YANTexturedNode;
 import com.example.yan_home.openglengineandroid.programs.YANColorShaderProgram;
 import com.example.yan_home.openglengineandroid.programs.YANTextureShaderProgram;
 import com.example.yan_home.openglengineandroid.screens.YANIScreen;
-import com.example.yan_home.openglengineandroid.screens.impl.YANButtonTestScreen;
+import com.example.yan_home.openglengineandroid.screens.impl.YANTweenTestScreen;
 import com.example.yan_home.openglengineandroid.util.YANMatrixHelper;
 import com.example.yan_home.openglengineandroid.util.colors.YANColor;
 import com.example.yan_home.openglengineandroid.util.math.Vector2;
@@ -32,11 +32,12 @@ public class YANGLRenderer implements IRenderer {
     // shader programs
     private YANTextureShaderProgram textureProgram;
     private YANColorShaderProgram colorProgram;
-    private float mPreviousFrameTime;
+    private long mPreviousFrameTime;
 
     private YANIScreen getStartingScreen() {
+        return new YANTweenTestScreen(this);
 //        return new YANTextureAtlasTestScreen(this);
-        return new YANButtonTestScreen(this);
+//        return new YANButtonTestScreen(this);
 //        return new YANTouchTestScreen(this);
     }
 
@@ -78,7 +79,7 @@ public class YANGLRenderer implements IRenderer {
     public void onDrawFrame() {
 
         //update screen state
-        mCurrentScreen.onUpdate(System.currentTimeMillis() - mPreviousFrameTime);
+        mCurrentScreen.onUpdate(((float) (System.currentTimeMillis() - mPreviousFrameTime)) / 1000f);
 
         // Clear the rendering surface.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);

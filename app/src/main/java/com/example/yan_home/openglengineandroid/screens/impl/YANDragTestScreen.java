@@ -80,7 +80,7 @@ public class YANDragTestScreen extends YANNodeScreen {
     }
 
     @Override
-    public void onUpdate(float deltaTime) {
+    public void onUpdate(float deltaTimeSeconds) {
         //TODO : update nodes state
     }
 

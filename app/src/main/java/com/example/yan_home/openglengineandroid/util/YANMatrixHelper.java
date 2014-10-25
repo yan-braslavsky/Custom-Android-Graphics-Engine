@@ -31,6 +31,11 @@ public class YANMatrixHelper {
 
         Matrix.setIdentityM(YANMatrixHelper.modelMatrix, 0);
         Matrix.translateM(YANMatrixHelper.modelMatrix, 0, x, y, 0);
+
+        if(iNode.getRotation() != 0){
+            Matrix.rotateM(YANMatrixHelper.modelMatrix,0,iNode.getRotation(),0,0,1);
+        }
+
         Matrix.multiplyMM(YANMatrixHelper.modelViewProjectionMatrix, 0, YANMatrixHelper.viewProjectionMatrix, 0,
                 YANMatrixHelper.modelMatrix, 0);
     }

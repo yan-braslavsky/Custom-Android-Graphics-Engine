@@ -25,11 +25,13 @@ public abstract class YANBaseNode implements YANIRenderableNode {
     private Vector2 mSize;
     private YANNodeTouchListener mNodeTouchListener;
     private Vector2 mAnchorPoint;
+    private float mRotation;
 
     protected YANBaseNode() {
         mSize = new Vector2(1, 2);
         mPosition = new Vector2();
         mAnchorPoint = new Vector2();
+        mRotation = 0;
 //        recalculateDimensions();
     }
 
@@ -93,10 +95,11 @@ public abstract class YANBaseNode implements YANIRenderableNode {
                 getPosition().getY() + getSize().getY() * getAnchorPoint().getY());
 
         Vector2 rightBottom = new Vector2(getPosition().getX() + getSize().getX() + getSize().getX() * getAnchorPoint().getX(),
-                getPosition().getY() + getSize().getY()  + getSize().getY() * getAnchorPoint().getY());
+                getPosition().getY() + getSize().getY() + getSize().getY() * getAnchorPoint().getY());
 
         return new Rectangle(leftTop, rightBottom);
     }
+
 
     public void setNodeTouchListener(YANNodeTouchListener nodeTouchListener) {
         mNodeTouchListener = nodeTouchListener;
@@ -110,6 +113,16 @@ public abstract class YANBaseNode implements YANIRenderableNode {
     @Override
     public Vector2 getAnchorPoint() {
         return mAnchorPoint;
+    }
+
+    @Override
+    public float getRotation() {
+        return mRotation;
+    }
+
+    @Override
+    public float setRotation(float rotation) {
+        return mRotation = rotation;
     }
 
 

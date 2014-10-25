@@ -10,7 +10,7 @@ import java.util.List;
 public interface YANIScreen {
     void onResize(float newWidth, float newHeight);
 
-    void onUpdate(float deltaTime);
+    void onUpdate(float deltaTimeSeconds);
 
     void onSetActive();
 

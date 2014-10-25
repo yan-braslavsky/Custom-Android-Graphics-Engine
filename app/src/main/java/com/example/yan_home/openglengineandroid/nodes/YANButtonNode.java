@@ -3,6 +3,8 @@ package com.example.yan_home.openglengineandroid.nodes;
 import com.example.yan_home.openglengineandroid.EngineWrapper;
 import com.example.yan_home.openglengineandroid.assets.atlas.YANTextureRegion;
 import com.example.yan_home.openglengineandroid.input.YANInputManager;
+import com.example.yan_home.openglengineandroid.util.math.Rectangle;
+import com.example.yan_home.openglengineandroid.util.math.Vector2;
 
 /**
  * Created by Yan-Home on 10/12/2014.
@@ -17,8 +19,10 @@ public class YANButtonNode extends YANTexturedNode {
         @Override
         public void onTouchDown(float normalizedX, float normalizedY) {
 
-            if (getBoundingRectangle().contains(YANInputManager.touchToWorld(normalizedX, normalizedY,
-                    EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY()))) {
+            Vector2 touchToWorldPoint = YANInputManager.touchToWorld(normalizedX, normalizedY,
+                    EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY());
+            Rectangle boundingRectangle = getBoundingRectangle();
+            if (boundingRectangle.contains(touchToWorldPoint)) {
                 changeState(YANButtonState.PRESSED);
             }
         }
