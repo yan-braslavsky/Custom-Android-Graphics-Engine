@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Toast;
 
-import com.example.yan_home.openglengineandroid.screens.YANTweenTestScreen;
+import com.example.yan_home.openglengineandroid.screens.CardsTestScreen;
 import com.yan.glengine.EngineWrapper;
 import com.yan.glengine.assets.YANAssetManager;
 import com.yan.glengine.setup.YANEngineSetup;
@@ -22,11 +22,11 @@ import java.util.HashMap;
 
 public class MainActivity extends Activity {
 
-    private static final int HIDE_UI_DELAY_MILLIS = 1000;
+    private static final int HIDE_UI_DELAY_MILLIS = 2000;
 
-    private GLSurfaceView glSurfaceView;
     private final static EngineWrapper renderer;
-    private static Handler mHandler;
+    private GLSurfaceView glSurfaceView;
+    private Handler mHandler;
     private Runnable mHideUiRunnable;
 
     static {
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
                 YANEngineSetup.setupTweenEngine();
 
                 //set the first screen
-                EngineWrapper.getRenderer().setActiveScreen(new YANTweenTestScreen(EngineWrapper.getRenderer()));
+                EngineWrapper.getRenderer().setActiveScreen(new CardsTestScreen(EngineWrapper.getRenderer()));
             }
         });
 

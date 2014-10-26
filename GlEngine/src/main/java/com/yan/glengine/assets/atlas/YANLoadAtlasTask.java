@@ -17,6 +17,7 @@ public class YANLoadAtlasTask extends AsyncTask<Integer, Integer, YANTextureAtla
 
     public interface YANLoadAtlasTaskListener {
         void onAtlasLoaded(YANTextureAtlas atlas);
+
         void onProgress(float percentLoaded);
     }
 
@@ -36,7 +37,7 @@ public class YANLoadAtlasTask extends AsyncTask<Integer, Integer, YANTextureAtla
         String jsonAtlasString = YANTextResourceReader.readTextFileFromResource(EngineWrapper.getContext(), _resourceID);
         YANTexturePackerPojos.WrappingObject loadedPojo = (new Gson()).fromJson(jsonAtlasString, YANTexturePackerPojos.WrappingObject.class);
         Map<String, YANTextureRegion> textureRegionsMap = createTextureRegionsMap(loadedPojo);
-        return new YANTextureAtlas(_resourceID,_atlasImageResourceID, textureRegionsMap);
+        return new YANTextureAtlas(_resourceID, _atlasImageResourceID, textureRegionsMap);
     }
 
     private Map<String, YANTextureRegion> createTextureRegionsMap(YANTexturePackerPojos.WrappingObject loadedPojo) {
@@ -55,7 +56,7 @@ public class YANLoadAtlasTask extends AsyncTask<Integer, Integer, YANTextureAtla
         float u1 = (frame.getFrameData().getX() + frame.getFrameData().getW()) / atlasImageSize.getW();
         float v0 = ((frame.getFrameData().getY()) / atlasImageSize.getH());
         float v1 = ((frame.getFrameData().getY() + frame.getFrameData().getH()) / atlasImageSize.getH());
-        return new YANTextureRegion(regionName, atlasImageResourceID, u0, u1, v0, v1);
+        return new YANTextureRegion(regionName, atlasImageResourceID, u0, u1, v0, v1, frame.getFrameData().getW(), frame.getFrameData().getH());
     }
 
     @Override

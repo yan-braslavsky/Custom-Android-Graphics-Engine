@@ -11,7 +11,7 @@
 },
 {
 	"filename": "billiardball.png",
-	"frame": {"x":132,"y":2,"w":128,"h":128},
+	"frame": {"x":2,"y":132,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -20,7 +20,7 @@
 },
 {
 	"filename": "bowlingball.png",
-	"frame": {"x":262,"y":2,"w":128,"h":128},
+	"frame": {"x":2,"y":262,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -29,7 +29,7 @@
 },
 {
 	"filename": "call_btn_default.png",
-	"frame": {"x":912,"y":2,"w":64,"h":64},
+	"frame": {"x":132,"y":446,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -38,7 +38,7 @@
 },
 {
 	"filename": "call_btn_pressed.png",
-	"frame": {"x":912,"y":68,"w":64,"h":64},
+	"frame": {"x":132,"y":512,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -46,8 +46,44 @@
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
+	"filename": "cards_all-01.png",
+	"frame": {"x":132,"y":2,"w":81,"h":109},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":81,"h":109},
+	"sourceSize": {"w":81,"h":109},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_all-02.png",
+	"frame": {"x":132,"y":113,"w":81,"h":109},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":81,"h":109},
+	"sourceSize": {"w":81,"h":109},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_all-03.png",
+	"frame": {"x":132,"y":224,"w":81,"h":109},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":81,"h":109},
+	"sourceSize": {"w":81,"h":109},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_all-04.png",
+	"frame": {"x":132,"y":335,"w":81,"h":109},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":81,"h":109},
+	"sourceSize": {"w":81,"h":109},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
 	"filename": "football.png",
-	"frame": {"x":392,"y":2,"w":128,"h":128},
+	"frame": {"x":2,"y":392,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -56,7 +92,7 @@
 },
 {
 	"filename": "golfball.png",
-	"frame": {"x":522,"y":2,"w":128,"h":128},
+	"frame": {"x":2,"y":522,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -65,7 +101,7 @@
 },
 {
 	"filename": "tennisball.png",
-	"frame": {"x":652,"y":2,"w":128,"h":128},
+	"frame": {"x":2,"y":652,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -74,7 +110,7 @@
 },
 {
 	"filename": "volleyball.png",
-	"frame": {"x":782,"y":2,"w":128,"h":128},
+	"frame": {"x":2,"y":782,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -86,8 +122,8 @@
 	"version": "1.0",
 	"image": "ui_atlas.png",
 	"format": "RGBA8888",
-	"size": {"w":978,"h":134},
+	"size": {"w":215,"h":912},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:329a40f2d669aeb81b947d7f9359b97b:fc5a371be07a682ca87d0577541bff62:b5d3be34114d9e44e607c8ae1c6193a6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:52595c1f27c496ef815c5800e4ebebc2:7a1cc02c228574894b4890a2c94a7aeb:b5d3be34114d9e44e607c8ae1c6193a6$"
 }
 }

@@ -17,18 +17,21 @@ public class YANButtonNode extends YANTexturedNode {
     private YanButtonNodeClickListener mClickListener;
     private YANInputManager.TouchListener mInputManagerTouchListener = new YANInputManager.TouchListener() {
         @Override
-        public void onTouchDown(float normalizedX, float normalizedY) {
+        public boolean onTouchDown(float normalizedX, float normalizedY) {
 
             YANVector2 touchToWorldPoint = YANInputManager.touchToWorld(normalizedX, normalizedY,
                     EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY());
             YANRectangle boundingRectangle = getBoundingRectangle();
             if (boundingRectangle.contains(touchToWorldPoint)) {
                 changeState(YANButtonState.PRESSED);
+                return true;
             }
+
+            return false;
         }
 
         @Override
-        public void onTouchUp(float normalizedX, float normalizedY) {
+        public boolean onTouchUp(float normalizedX, float normalizedY) {
             if (getBoundingRectangle().contains(YANInputManager.touchToWorld(normalizedX, normalizedY,
                     EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY()))) {
 
@@ -39,23 +42,31 @@ public class YANButtonNode extends YANTexturedNode {
                 if (wasPressed && mClickListener != null) {
                     mClickListener.onButtonClick();
                 }
+
+                return true;
             }
+
+            return false;
         }
 
         @Override
-        public void onTouchDrag(float normalizedX, float normalizedY) {
+        public boolean onTouchDrag(float normalizedX, float normalizedY) {
 
             //we are not handling hovering above the button
             if (mState == YANButtonState.DEFAULT)
-                return;
+                return true;
 
             if (getBoundingRectangle().contains(YANInputManager.touchToWorld(normalizedX, normalizedY,
                     EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY()))) {
                 //node still touched inside , do nothing
+                return true;
             } else {
                 //dragged outside the button , reset the state
                 changeState(YANButtonState.DEFAULT);
+                return false;
             }
+
+
         }
     };
 

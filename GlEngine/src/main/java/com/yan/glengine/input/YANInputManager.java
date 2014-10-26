@@ -24,23 +24,37 @@ public class YANInputManager {
     }
 
     public void handleTouchUp(float normalizedX, float normalizedY) {
-        for (TouchListener listener : mListeners) {
-            listener.onTouchUp(normalizedX, normalizedY);
+
+        for (int i = mListeners.size() -1; i >= 0; i--) {
+            boolean consumed = mListeners.get(i).onTouchUp(normalizedX, normalizedY);
+            if (consumed)
+                break;
+        }
+
+    }
+
+    public void handleTouchPress(float normalizedX, float normalizedY) {
+        for (int i = mListeners.size() -1; i >= 0; i--) {
+            boolean consumed = mListeners.get(i).onTouchDown(normalizedX, normalizedY);
+            if (consumed)
+                break;
         }
     }
 
     public void handleTouchDrag(float normalizedX, float normalizedY) {
-        for (TouchListener listener : mListeners) {
-            listener.onTouchDrag(normalizedX, normalizedY);
+        for (int i = mListeners.size() -1; i >= 0; i--) {
+            boolean consumed = mListeners.get(i).onTouchDrag(normalizedX, normalizedY);
+            if (consumed)
+                break;
         }
     }
 
     public interface TouchListener {
-        void onTouchDown(float normalizedX, float normalizedY);
+        boolean onTouchDown(float normalizedX, float normalizedY);
 
-        void onTouchUp(float normalizedX, float normalizedY);
+        boolean onTouchUp(float normalizedX, float normalizedY);
 
-        void onTouchDrag(float normalizedX, float normalizedY);
+        boolean onTouchDrag(float normalizedX, float normalizedY);
     }
 
     private List<TouchListener> mListeners;
@@ -49,11 +63,7 @@ public class YANInputManager {
         mListeners = new ArrayList<TouchListener>();
     }
 
-    public void handleTouchPress(float normalizedX, float normalizedY) {
-        for (TouchListener listener : mListeners) {
-            listener.onTouchDown(normalizedX, normalizedY);
-        }
-    }
+
 
     public void addEventListener(TouchListener listener) {
         mListeners.add(listener);
