@@ -19,6 +19,9 @@ import static android.opengl.GLES20.glUniformMatrix4fv;
 
 
 public class YANColorShaderProgram extends ShaderProgram {
+
+    protected static final String A_COLOR = "a_Color";
+
     // Uniform locations
     private final int uMatrixLocation;
     private final int uColorLocation;

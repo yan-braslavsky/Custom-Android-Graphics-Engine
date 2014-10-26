@@ -1,6 +1,6 @@
 package com.example.yan_home.openglengineandroid.nodes;
 
-import com.example.yan_home.openglengineandroid.programs.YANTextureShaderProgram;
+import com.example.yan_home.openglengineandroid.programs.ShaderProgram;
 import com.example.yan_home.openglengineandroid.util.math.Rectangle;
 import com.example.yan_home.openglengineandroid.util.math.Vector2;
 
@@ -9,9 +9,9 @@ import com.example.yan_home.openglengineandroid.util.math.Vector2;
  * <p/>
  * Node is a basic renderable element of the engine.
  */
-public interface YANIRenderableNode {
+public interface YANIRenderableNode<T extends ShaderProgram>  {
 
-    void bindData(YANTextureShaderProgram textureProgram);
+    void bindData(T shaderProgram);
 
     void draw();
 

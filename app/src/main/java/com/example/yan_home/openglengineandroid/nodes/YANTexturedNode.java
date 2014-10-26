@@ -5,8 +5,9 @@
 package com.example.yan_home.openglengineandroid.nodes;
 
 import com.example.yan_home.openglengineandroid.assets.atlas.YANTextureRegion;
+import com.example.yan_home.openglengineandroid.programs.YANTextureShaderProgram;
 
-public class YANTexturedNode extends YANBaseNode {
+public class YANTexturedNode extends YANBaseNode<YANTextureShaderProgram>{
 
     private YANTextureRegion mTextureRegion;
 
@@ -22,6 +23,21 @@ public class YANTexturedNode extends YANBaseNode {
     public void setTextureRegion(YANTextureRegion textureRegion) {
         mTextureRegion = textureRegion;
         recalculateDimensions();
+    }
+
+    @Override
+    public void bindData(YANTextureShaderProgram shaderProgram) {
+        vertexArray.setVertexAttribPointer(
+                0,
+                shaderProgram.getPositionAttributeLocation(),
+                POSITION_COMPONENT_COUNT,
+                STRIDE);
+
+        vertexArray.setVertexAttribPointer(
+                POSITION_COMPONENT_COUNT,
+                shaderProgram.getTextureCoordinatesAttributeLocation(),
+                TEXTURE_COORDINATES_COMPONENT_COUNT,
+                STRIDE);
     }
 
     @Override

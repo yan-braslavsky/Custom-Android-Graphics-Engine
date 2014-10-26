@@ -24,10 +24,15 @@ import static android.opengl.GLES20.glUniformMatrix4fv;
 
 
 public class YANTextureShaderProgram extends ShaderProgram {
+
+    protected static final String U_TEXTURE_UNIT = "u_TextureUnit";
+    protected static final String A_TEXTURE_COORDINATES = "a_TextureCoordinates";
+
     // Uniform locations
     private final int uMatrixLocation;
     private final int uTextureUnitLocation;
     private final int uOpacityLocation;
+
     
     // Attribute locations
     private final int aPositionLocation;

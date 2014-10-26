@@ -2,7 +2,7 @@ package com.example.yan_home.openglengineandroid.nodes;
 
 import com.example.yan_home.openglengineandroid.data.YANVertexArray;
 import com.example.yan_home.openglengineandroid.input.YANNodeTouchListener;
-import com.example.yan_home.openglengineandroid.programs.YANTextureShaderProgram;
+import com.example.yan_home.openglengineandroid.programs.ShaderProgram;
 import com.example.yan_home.openglengineandroid.util.math.Rectangle;
 import com.example.yan_home.openglengineandroid.util.math.Vector2;
 
@@ -14,13 +14,13 @@ import static android.opengl.GLES20.glDrawArrays;
  * <p/>
  * Basic implementation of renderable node.
  */
-public abstract class YANBaseNode implements YANIRenderableNode {
+public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRenderableNode<T> {
 
-    private static final int POSITION_COMPONENT_COUNT = 2;
-    private static final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
-    private static final int BYTES_PER_FLOAT = 4;
-    private static final int STRIDE = (POSITION_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT) * BYTES_PER_FLOAT;
-    private YANVertexArray vertexArray;
+    protected static final int POSITION_COMPONENT_COUNT = 2;
+    protected static final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
+    protected static final int BYTES_PER_FLOAT = 4;
+    protected static final int STRIDE = (POSITION_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT) * BYTES_PER_FLOAT;
+    protected YANVertexArray vertexArray;
     private Vector2 mPosition;
     private Vector2 mSize;
     private YANNodeTouchListener mNodeTouchListener;
@@ -64,20 +64,8 @@ public abstract class YANBaseNode implements YANIRenderableNode {
         return mSize;
     }
 
-    @Override
-    public void bindData(YANTextureShaderProgram textureProgram) {
-        vertexArray.setVertexAttribPointer(
-                0,
-                textureProgram.getPositionAttributeLocation(),
-                POSITION_COMPONENT_COUNT,
-                STRIDE);
 
-        vertexArray.setVertexAttribPointer(
-                POSITION_COMPONENT_COUNT,
-                textureProgram.getTextureCoordinatesAttributeLocation(),
-                TEXTURE_COORDINATES_COMPONENT_COUNT,
-                STRIDE);
-    }
+
 
     @Override
     public void draw() {
