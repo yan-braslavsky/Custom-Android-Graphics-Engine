@@ -7,6 +7,7 @@ import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -15,13 +16,22 @@ import android.widget.Toast;
 import com.example.yan_home.openglengineandroid.assets.YANAssetManager;
 import com.example.yan_home.openglengineandroid.setup.YANEngineSetup;
 
+
 public class MainActivity extends Activity {
 
+    public static final int HIDE_UI_DELAY_MILLIS = 1000;
     /**
      * Hold a reference to our GLSurfaceView
      */
     private GLSurfaceView glSurfaceView;
     private final EngineWrapper renderer = new EngineWrapper();
+    private Handler mHandler = new Handler();
+    private Runnable mHideUiRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hideSystemUI();
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,10 +50,35 @@ public class MainActivity extends Activity {
         });
     }
 
+    // This snippet hides the system bars.
+    public void hideSystemUI() {
+        // Set the IMMERSIVE flag.
+        // Set the content to appear under the system bars so that the content
+        // doesn't resize when the system bars hide and show.
+        glSurfaceView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+    }
+
+    // This snippet shows the system bars. It does this by removing all the flags
+    // except for the ones that make the content appear under the system bars.
+    public void showSystemUI() {
+        glSurfaceView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    }
+
     private void init() {
 
 
         glSurfaceView = new GLSurfaceView(this);
+
+        hideSystemUI();
 
         // Check if the system supports OpenGL ES 2.0.
         ActivityManager activityManager =
@@ -132,6 +167,13 @@ public class MainActivity extends Activity {
                 } else {
                     return false;
                 }
+            }
+        });
+
+        glSurfaceView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                mHandler.postDelayed(mHideUiRunnable, HIDE_UI_DELAY_MILLIS);
             }
         });
 
