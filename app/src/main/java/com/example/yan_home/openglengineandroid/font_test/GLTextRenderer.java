@@ -7,10 +7,10 @@ import android.opengl.Matrix;
 
 import com.example.yan_home.openglengineandroid.GLEngineApp;
 import com.example.yan_home.openglengineandroid.R;
-import com.example.yan_home.openglengineandroid.util.YANMatrixHelper;
-import com.example.yan_home.openglengineandroid.util.YANShaderHelper;
-import com.example.yan_home.openglengineandroid.util.YANTextResourceReader;
-import com.example.yan_home.openglengineandroid.util.YANTextureHelper;
+import com.yan.glengine.util.YANMatrixHelper;
+import com.yan.glengine.util.YANShaderHelper;
+import com.yan.glengine.util.YANTextResourceReader;
+import com.yan.glengine.util.YANTextureHelper;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;

@@ -13,41 +13,58 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Toast;
 
-import com.example.yan_home.openglengineandroid.assets.YANAssetManager;
-import com.example.yan_home.openglengineandroid.setup.YANEngineSetup;
+import com.example.yan_home.openglengineandroid.screens.YANTweenTestScreen;
+import com.yan.glengine.EngineWrapper;
+import com.yan.glengine.assets.YANAssetManager;
+import com.yan.glengine.setup.YANEngineSetup;
 
+import java.util.HashMap;
 
 public class MainActivity extends Activity {
 
-    public static final int HIDE_UI_DELAY_MILLIS = 1000;
-    /**
-     * Hold a reference to our GLSurfaceView
-     */
+    private static final int HIDE_UI_DELAY_MILLIS = 1000;
+
     private GLSurfaceView glSurfaceView;
-    private final EngineWrapper renderer = new EngineWrapper();
-    private Handler mHandler = new Handler();
-    private Runnable mHideUiRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hideSystemUI();
-        }
-    };
+    private final static EngineWrapper renderer;
+    private static Handler mHandler;
+    private Runnable mHideUiRunnable;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    static {
+        renderer = new EngineWrapper(GLEngineApp.getAppContext());
 
-        YANAssetManager.getInstance().preloadAssets(new YANAssetManager.YANAssetManagerListener() {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(R.raw.ui_atlas, R.drawable.ui_atlas);
+
+        YANAssetManager.getInstance().preloadAssets(map, new YANAssetManager.YANAssetManagerListener() {
             @Override
             public void onAssetsPreloaded() {
 
                 //setup the tween engine
                 YANEngineSetup.setupTweenEngine();
 
-                //init the engine
-                init();
+                //set the first screen
+                EngineWrapper.getRenderer().setActiveScreen(new YANTweenTestScreen(EngineWrapper.getRenderer()));
             }
         });
+
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mHideUiRunnable = new Runnable() {
+            @Override
+            public void run() {
+                hideSystemUI();
+            }
+        };
+        mHandler = new Handler();
+
+        //init the engine
+        init();
+
     }
 
     // This snippet hides the system bars.
@@ -74,7 +91,6 @@ public class MainActivity extends Activity {
     }
 
     private void init() {
-
 
         glSurfaceView = new GLSurfaceView(this);
 
