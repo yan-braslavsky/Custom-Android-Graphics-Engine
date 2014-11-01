@@ -12,7 +12,16 @@ import com.yan.glengine.util.math.YANVector2;
  */
 public class CardNode extends YANTexturedNode {
 
+    public interface CardNodeListener {
+        void onCardPicked(CardNode cardNode);
+
+        void onCardHovered(CardNode cardNode);
+    }
+
     private boolean isDragged;
+    private CardNodeListener mCardNodeListener;
+    private YANVector2 mDragOffset;
+
 
     private YANInputManager.TouchListener mInputManagerTouchListener = new YANInputManager.TouchListener() {
         @Override
@@ -24,9 +33,17 @@ public class CardNode extends YANTexturedNode {
             if (boundingRectangle.contains(touchToWorldPoint)) {
                 isDragged = true;
 
+                mDragOffset.setX(getPosition().getX() - touchToWorldPoint.getX());
+                mDragOffset.setY(getPosition().getY() - touchToWorldPoint.getY());
+
+
+                if (mCardNodeListener != null) {
+                    mCardNodeListener.onCardPicked(CardNode.this);
+                }
+
                 //resetting the anchor point that assumable is 0
-                getPosition().setX(touchToWorldPoint.getX() - (getSize().getX() / 2));
-                getPosition().setY(touchToWorldPoint.getY() - (getSize().getY() / 2));
+                getPosition().setX(touchToWorldPoint.getX() + mDragOffset.getX());
+                getPosition().setY(touchToWorldPoint.getY() + mDragOffset.getY());
 
                 return true;
             }
@@ -40,7 +57,6 @@ public class CardNode extends YANTexturedNode {
                     EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY()))) {
 
                 isDragged = false;
-
                 return true;
 
             }
@@ -55,10 +71,14 @@ public class CardNode extends YANTexturedNode {
             if (isDragged) {
 
                 //resetting the anchor point that assumable is 0
-                getPosition().setX(touchToWorldPoint.getX() - (getSize().getX() / 2));
-                getPosition().setY(touchToWorldPoint.getY() - (getSize().getY() / 2));
+                getPosition().setX(touchToWorldPoint.getX() + mDragOffset.getX());
+                getPosition().setY(touchToWorldPoint.getY() + mDragOffset.getY());
 
                 return true;
+            } else {
+                if (mCardNodeListener != null) {
+                    mCardNodeListener.onCardHovered(CardNode.this);
+                }
             }
 
             return false;
@@ -68,6 +88,7 @@ public class CardNode extends YANTexturedNode {
 
     public CardNode(YANTextureRegion textureRegion) {
         super(textureRegion);
+        mDragOffset = new YANVector2();
     }
 
     @Override
@@ -80,6 +101,10 @@ public class CardNode extends YANTexturedNode {
     public void onDetachedFromScreen() {
         // Add itself to input manager
         YANInputManager.getInstance().removeEventListener(mInputManagerTouchListener);
+        mCardNodeListener = null;
     }
 
+    public void setCardNodeListener(CardNodeListener cardNodeListener) {
+        mCardNodeListener = cardNodeListener;
+    }
 }

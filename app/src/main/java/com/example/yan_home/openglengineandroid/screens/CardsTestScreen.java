@@ -2,9 +2,14 @@ package com.example.yan_home.openglengineandroid.screens;
 
 import com.example.yan_home.openglengineandroid.R;
 import com.example.yan_home.openglengineandroid.nodes.CardNode;
+import com.yan.glengine.nodes.YANButtonNode;
 import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.screens.YANNodeScreen;
+import com.yan.glengine.util.colors.YANColor;
+import com.yan.glengine.util.math.YANMathUtils;
 import com.yan.glengine.util.math.YANVector2;
+
+import java.util.ArrayList;
 
 import aurelienribon.tweenengine.TweenManager;
 
@@ -13,22 +18,28 @@ import aurelienribon.tweenengine.TweenManager;
  */
 public class CardsTestScreen extends YANNodeScreen {
 
+    private static final int BG_HEXA_COLOR = 0x9F9E36;
+    private static final int CARDS_COUNT = 6;
     private TweenManager mTweenManager;
-    private CardNode mCard1;
-    private CardNode mCard2;
-    private CardNode mCard3;
-    private CardNode mCard4;
+    private ArrayList<CardNode> mCardNodesArray;
+    private CardNode.CardNodeListener mCardNodeListener;
+    private YANButtonNode mRepositionCardsNode;
 
     public CardsTestScreen(YANGLRenderer renderer) {
         super(renderer);
+
+        mCardNodesArray = new ArrayList<>();
+        // We need a mTweenManager to handle every tween.
+        mTweenManager = new TweenManager();
     }
 
     @Override
     protected void onAddNodesToScene() {
-        addNode(mCard1);
-        addNode(mCard2);
-        addNode(mCard3);
-        addNode(mCard4);
+        for (CardNode cardNode : mCardNodesArray) {
+            addNode(cardNode);
+        }
+
+        addNode(mRepositionCardsNode);
     }
 
     @Override
@@ -39,45 +50,71 @@ public class CardsTestScreen extends YANNodeScreen {
     @Override
     protected void onLayoutNodes() {
 
-        float yPosition = getSceneSize().getY() - mCard4.getSize().getY();
+        float rotationAngle = -15;
+        float xPosition = mCardNodesArray.get(0).getSize().getX() / 4;
+        for (CardNode cardNode : mCardNodesArray) {
+            float yPosition = getSceneSize().getY() - cardNode.getSize().getY() * 1.5f;
+            cardNode.getPosition().setX(xPosition);
 
-        mCard1.getPosition().setX(0);
-        mCard1.getPosition().setY(yPosition);
-
-        mCard2.getPosition().setX(mCard1.getPosition().getX() + mCard2.getSize().getX());
-        mCard2.getPosition().setY(yPosition);
-
-        mCard3.getPosition().setX(mCard2.getPosition().getX() + mCard3.getSize().getX());
-        mCard3.getPosition().setY(yPosition);
-
-        mCard4.getPosition().setX(mCard3.getPosition().getX() + mCard4.getSize().getX());
-        mCard4.getPosition().setY(yPosition);
-
+            float offset = (15 - Math.abs(rotationAngle)) * 1.5f;
+            cardNode.getPosition().setY(yPosition - offset);
+            cardNode.setRotation(rotationAngle);
+            rotationAngle += 5;
+            xPosition += cardNode.getSize().getX() / (2);
+        }
     }
 
     @Override
     protected void onChangeNodesSize() {
-        float w = mCard1.getTextureRegion().getWidth() * 2;
-        float h = mCard1.getTextureRegion().getHeight() * 2;
 
-        mCard1.setSize(new YANVector2(w, h));
-        mCard2.setSize(new YANVector2(w, h));
-        mCard3.setSize(new YANVector2(w, h));
-        mCard4.setSize(new YANVector2(w, h));
+        float aspectRatio = mCardNodesArray.get(0).getTextureRegion().getWidth() / mCardNodesArray.get(0).getTextureRegion().getHeight();
+        float w = getSceneSize().getX() / (float) ((CARDS_COUNT + 2) / 2);
+        float h = w / aspectRatio;
+
+        for (CardNode cardNode : mCardNodesArray) {
+            cardNode.setSize(new YANVector2(w, h));
+        }
+
+        mRepositionCardsNode.setSize(new YANVector2(150, 150));
     }
 
 
     @Override
     protected void onCreateNodes() {
 
-        // We need a mTweenManager to handle every tween.
-        mTweenManager = new TweenManager();
+        mRepositionCardsNode = new YANButtonNode(getTextureAtlas().getTextureRegion("call_btn_default.png"), getTextureAtlas().getTextureRegion("call_btn_pressed.png"));
+        mRepositionCardsNode.setClickListener(new YANButtonNode.YanButtonNodeClickListener() {
+            @Override
+            public void onButtonClick() {
 
-        mCard1 = new CardNode(getTextureAtlas().getTextureRegion("cards_all-01.png"));
-        mCard2 = new CardNode(getTextureAtlas().getTextureRegion("cards_all-02.png"));
-        mCard3 = new CardNode(getTextureAtlas().getTextureRegion("cards_all-03.png"));
-        mCard4 = new CardNode(getTextureAtlas().getTextureRegion("cards_all-04.png"));
+                for (CardNode cardNode : mCardNodesArray) {
+                    pushNodeToFront(cardNode);
+                }
+                onLayoutNodes();
+            }
+        });
 
+        mCardNodeListener = new CardNode.CardNodeListener() {
+            @Override
+            public void onCardPicked(CardNode cardNode) {
+                pushNodeToFront(cardNode);
+            }
+
+            @Override
+            public void onCardHovered(CardNode cardNode) {
+
+            }
+        };
+
+
+        for (int i = 0; i < CARDS_COUNT; i++) {
+
+            String name = "cards_all-0" + (int) (YANMathUtils.randomInRange(1, 4)) + ".png";
+            CardNode card = new CardNode(getTextureAtlas().getTextureRegion(name));
+            card.setCardNodeListener(mCardNodeListener);
+
+            mCardNodesArray.add(card);
+        }
     }
 
 
@@ -89,7 +126,7 @@ public class CardsTestScreen extends YANNodeScreen {
     @Override
     public void onSetActive() {
         super.onSetActive();
-
+        getRenderer().setRendererBackgroundColor(YANColor.createFromHexColor(BG_HEXA_COLOR));
 
     }
 

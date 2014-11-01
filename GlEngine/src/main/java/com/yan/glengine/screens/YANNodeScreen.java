@@ -20,7 +20,7 @@ public abstract class YANNodeScreen implements YANIScreen {
 
     public YANNodeScreen(YANGLRenderer renderer) {
         mRenderer = renderer;
-        mNodeList = new ArrayList<YANIRenderableNode>();
+        mNodeList = new ArrayList<>();
         mAtlas = YANAssetManager.getInstance().getLoadedAtlas(getAtlasResourceID());
     }
 
@@ -46,6 +46,15 @@ public abstract class YANNodeScreen implements YANIScreen {
     protected void removeNode(YANIRenderableNode node) {
         node.onDetachedFromScreen();
         getNodeList().remove(node);
+    }
+
+    /**
+     * puts node at the end of node list ,
+     * that makes this node to be drawn on top
+     */
+    protected void pushNodeToFront(YANIRenderableNode node) {
+        getNodeList().remove(node);
+        getNodeList().add(node);
     }
 
     public YANTextureAtlas getTextureAtlas() {
@@ -93,5 +102,7 @@ public abstract class YANNodeScreen implements YANIScreen {
         YANAssetManager.getInstance().unloadTexture(mAtlas.getAtlasImageResourceID());
     }
 
-
+    public YANGLRenderer getRenderer() {
+        return mRenderer;
+    }
 }

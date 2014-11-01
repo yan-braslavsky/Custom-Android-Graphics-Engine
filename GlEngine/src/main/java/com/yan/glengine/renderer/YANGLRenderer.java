@@ -1,7 +1,6 @@
 package com.yan.glengine.renderer;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
@@ -20,7 +19,7 @@ import com.yan.glengine.util.math.YANVector2;
  * <p/>
  * Implementer of graphics rendering using openGL
  */
-public class YANGLRenderer  {
+public class YANGLRenderer {
 
     private YANIScreen mCurrentScreen;
     private YANVector2 mSurfaceSize;
@@ -30,6 +29,7 @@ public class YANGLRenderer  {
     private YANColorShaderProgram colorProgram;
     private long mPreviousFrameTime;
     private Context mCtx;
+    private YANColor mClearColor;
 
 
     public YANGLRenderer(Context appContext) {
@@ -113,8 +113,7 @@ public class YANGLRenderer  {
     private void setGlInitialStates() {
 
         //clear color
-        YANColor color = YANColor.createFromHexColor(Color.GRAY);
-        GLES20.glClearColor(color.getR(), color.getG(), color.getB(), color.getA());
+        GLES20.glClearColor(mClearColor.getR(), mClearColor.getG(), mClearColor.getB(), mClearColor.getA());
 
         //TODO : when batching will be implemented , consider enable and disable this
         GLES20.glEnable(GLES20.GL_BLEND);
@@ -136,5 +135,11 @@ public class YANGLRenderer  {
 
     public YANVector2 getSurfaceSize() {
         return mSurfaceSize;
+    }
+
+    public void setRendererBackgroundColor(YANColor clearColor) {
+        mClearColor = clearColor;
+        //clear color
+        GLES20.glClearColor(clearColor.getR(), clearColor.getG(), clearColor.getB(), clearColor.getA());
     }
 }

@@ -54,7 +54,7 @@ public class YANButtonNode extends YANTexturedNode {
 
             //we are not handling hovering above the button
             if (mState == YANButtonState.DEFAULT)
-                return true;
+                return false;
 
             if (getBoundingRectangle().contains(YANInputManager.touchToWorld(normalizedX, normalizedY,
                     EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY()))) {
@@ -65,7 +65,6 @@ public class YANButtonNode extends YANTexturedNode {
                 changeState(YANButtonState.DEFAULT);
                 return false;
             }
-
 
         }
     };
