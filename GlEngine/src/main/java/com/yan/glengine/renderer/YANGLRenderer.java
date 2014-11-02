@@ -35,14 +35,13 @@ public class YANGLRenderer {
     public YANGLRenderer(Context appContext) {
         mCtx = appContext;
         mSurfaceSize = new YANVector2();
+        mClearColor = new YANColor(1f, 1f, 1f, 1f);
     }
 
     public void onGLSurfaceCreated() {
         // Enable blending using pre-multiplied alpha.
         setGlInitialStates();
         loadShaderPrograms();
-
-
         mPreviousFrameTime = System.currentTimeMillis();
     }
 
@@ -140,6 +139,6 @@ public class YANGLRenderer {
     public void setRendererBackgroundColor(YANColor clearColor) {
         mClearColor = clearColor;
         //clear color
-        GLES20.glClearColor(clearColor.getR(), clearColor.getG(), clearColor.getB(), clearColor.getA());
+        GLES20.glClearColor(mClearColor.getR(), mClearColor.getG(), mClearColor.getB(), mClearColor.getA());
     }
 }

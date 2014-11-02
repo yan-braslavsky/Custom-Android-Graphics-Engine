@@ -24,31 +24,16 @@ public class MainActivity extends Activity {
 
     private static final int HIDE_UI_DELAY_MILLIS = 2000;
 
-    private final static EngineWrapper renderer;
+    private static EngineWrapper renderer;
     private GLSurfaceView glSurfaceView;
     private Handler mHandler;
     private Runnable mHideUiRunnable;
 
-    static {
-        renderer = new EngineWrapper(GLEngineApp.getAppContext());
+    public MainActivity() {
+        super();
 
-        HashMap<Integer, Integer> map = new HashMap<>();
-        map.put(R.raw.ui_atlas, R.drawable.ui_atlas);
-
-        YANAssetManager.getInstance().preloadAssets(map, new YANAssetManager.YANAssetManagerListener() {
-            @Override
-            public void onAssetsPreloaded() {
-
-                //setup the tween engine
-                YANEngineSetup.setupTweenEngine();
-
-                //set the first screen
-                EngineWrapper.getRenderer().setActiveScreen(new CardsTestScreen(EngineWrapper.getRenderer()));
-            }
-        });
 
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,8 +47,31 @@ public class MainActivity extends Activity {
         };
         mHandler = new Handler();
 
-        //init the engine
-        init();
+        if (renderer == null) {
+            renderer = new EngineWrapper(GLEngineApp.getAppContext());
+
+            HashMap<Integer, Integer> map = new HashMap<>();
+            map.put(R.raw.ui_atlas, R.drawable.ui_atlas);
+
+            YANAssetManager.getInstance().preloadAssets(map, new YANAssetManager.YANAssetManagerListener() {
+                @Override
+                public void onAssetsPreloaded() {
+
+                    //setup the tween engine
+                    YANEngineSetup.setupTweenEngine();
+
+                    //set the first screen
+                    EngineWrapper.getRenderer().setActiveScreen(new CardsTestScreen(EngineWrapper.getRenderer()));
+
+                    //init the engine
+                    init();
+                }
+            });
+        } else {
+
+            //init the engine
+            init();
+        }
 
     }
 

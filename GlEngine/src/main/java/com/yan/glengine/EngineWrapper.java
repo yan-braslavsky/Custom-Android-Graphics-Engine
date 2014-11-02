@@ -6,7 +6,6 @@ import android.opengl.GLSurfaceView.Renderer;
 
 import com.yan.glengine.input.YANInputManager;
 import com.yan.glengine.renderer.YANGLRenderer;
-import com.yan.glengine.util.YANLogger;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -45,13 +44,11 @@ public class EngineWrapper implements Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
-        YANLogger.log("onSurfaceCreated");
         mRenderer.onGLSurfaceCreated();
     }
 
     @Override
     public void onSurfaceChanged(GL10 glUnused, int width, int height) {
-        YANLogger.log("onSurfaceChanged");
         mRenderer.onGLSurfaceChanged(width, height);
     }
 

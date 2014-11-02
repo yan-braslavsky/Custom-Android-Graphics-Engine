@@ -51,16 +51,14 @@ public class CardsTestScreen extends YANNodeScreen {
     protected void onLayoutNodes() {
 
         float rotationAngle = -15;
-        float xPosition = mCardNodesArray.get(0).getSize().getX() / 4;
-        for (CardNode cardNode : mCardNodesArray) {
-            float yPosition = getSceneSize().getY() - cardNode.getSize().getY() * 1.5f;
-            cardNode.getPosition().setX(xPosition);
+        YANVector2 rotationOrigin = new YANVector2(getSceneSize().getX() / 2, getSceneSize().getY() * 1.5f);
 
-            float offset = (15 - Math.abs(rotationAngle)) * 1.5f;
-            cardNode.getPosition().setY(yPosition - offset);
+        for (CardNode cardNode : mCardNodesArray) {
+            cardNode.getPosition().setX(getSceneSize().getX() / 2);
+            cardNode.getPosition().setY(getSceneSize().getY() - (cardNode.getSize().getY() * 1.5f));
+            YANMathUtils.rotatePointAroundOrigin(cardNode.getPosition(), rotationOrigin, rotationAngle);
             cardNode.setRotation(rotationAngle);
             rotationAngle += 5;
-            xPosition += cardNode.getSize().getX() / (2);
         }
     }
 
@@ -68,7 +66,7 @@ public class CardsTestScreen extends YANNodeScreen {
     protected void onChangeNodesSize() {
 
         float aspectRatio = mCardNodesArray.get(0).getTextureRegion().getWidth() / mCardNodesArray.get(0).getTextureRegion().getHeight();
-        float w = getSceneSize().getX() / (float) ((CARDS_COUNT + 2) / 2);
+        float w = Math.min(getSceneSize().getX(),getSceneSize().getY()) / (float) ((CARDS_COUNT + 2) / 2);
         float h = w / aspectRatio;
 
         for (CardNode cardNode : mCardNodesArray) {
