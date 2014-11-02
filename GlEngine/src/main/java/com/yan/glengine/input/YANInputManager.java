@@ -51,9 +51,7 @@ public class YANInputManager {
 
     public interface TouchListener {
         boolean onTouchDown(float normalizedX, float normalizedY);
-
         boolean onTouchUp(float normalizedX, float normalizedY);
-
         boolean onTouchDrag(float normalizedX, float normalizedY);
     }
 

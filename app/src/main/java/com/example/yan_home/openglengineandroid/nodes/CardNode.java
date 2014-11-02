@@ -15,12 +15,17 @@ public class CardNode extends YANTexturedNode {
     public interface CardNodeListener {
         void onCardPicked(CardNode cardNode);
 
+        void onCardReleased(CardNode cardNode);
+
         void onCardHovered(CardNode cardNode);
+
+        void onCardHoverEnd(CardNode cardNode);
     }
 
     private boolean isDragged;
     private CardNodeListener mCardNodeListener;
     private YANVector2 mDragOffset;
+    private boolean mHovered;
 
 
     private YANInputManager.TouchListener mInputManagerTouchListener = new YANInputManager.TouchListener() {
@@ -53,13 +58,28 @@ public class CardNode extends YANTexturedNode {
 
         @Override
         public boolean onTouchUp(float normalizedX, float normalizedY) {
-            if (getBoundingRectangle().contains(YANInputManager.touchToWorld(normalizedX, normalizedY,
-                    EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY()))) {
+            if (intersects(normalizedX, normalizedY)) {
+
+                if (mCardNodeListener != null) {
+                    if (isDragged) {
+                        mCardNodeListener.onCardReleased(CardNode.this);
+                    }
+
+                    if (mHovered) {
+                        mCardNodeListener.onCardHoverEnd(CardNode.this);
+                    }
+                }
 
                 isDragged = false;
+                mHovered = false;
+
                 return true;
 
             }
+
+            //in case card was dragged very fast
+            isDragged = false;
+            mHovered = false;
 
             return false;
         }
@@ -76,12 +96,31 @@ public class CardNode extends YANTexturedNode {
 
                 return true;
             } else {
+
                 if (mCardNodeListener != null) {
-                    mCardNodeListener.onCardHovered(CardNode.this);
+
+                    if (intersects(normalizedX, normalizedY)) {
+
+                        if(!mHovered){
+                            //dispatch hover event
+                            mCardNodeListener.onCardHovered(CardNode.this);
+                            mHovered = true;
+                        }
+
+                    }else {
+                        mHovered = false;
+                        mCardNodeListener.onCardHoverEnd(CardNode.this);
+                    }
+
                 }
             }
 
             return false;
+        }
+
+        private boolean intersects(float normalizedX, float normalizedY) {
+            return getBoundingRectangle().contains(YANInputManager.touchToWorld(normalizedX, normalizedY,
+                    EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY()));
         }
     };
 
