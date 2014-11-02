@@ -1,35 +1,8 @@
 {"frames": [
 
 {
-	"filename": "basketball.png",
-	"frame": {"x":2,"y":2,"w":128,"h":128},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
-	"sourceSize": {"w":128,"h":128},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "billiardball.png",
-	"frame": {"x":2,"y":132,"w":128,"h":128},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
-	"sourceSize": {"w":128,"h":128},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "bowlingball.png",
-	"frame": {"x":2,"y":262,"w":128,"h":128},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
-	"sourceSize": {"w":128,"h":128},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
 	"filename": "call_btn_default.png",
-	"frame": {"x":132,"y":446,"w":64,"h":64},
+	"frame": {"x":2,"y":2,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -38,7 +11,7 @@
 },
 {
 	"filename": "call_btn_pressed.png",
-	"frame": {"x":132,"y":512,"w":64,"h":64},
+	"frame": {"x":68,"y":2,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -46,8 +19,8 @@
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
-	"filename": "cards_all-01.png",
-	"frame": {"x":132,"y":2,"w":81,"h":109},
+	"filename": "card_1.png",
+	"frame": {"x":134,"y":2,"w":81,"h":109},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":81,"h":109},
@@ -55,8 +28,8 @@
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
-	"filename": "cards_all-02.png",
-	"frame": {"x":132,"y":113,"w":81,"h":109},
+	"filename": "card_2.png",
+	"frame": {"x":217,"y":2,"w":81,"h":109},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":81,"h":109},
@@ -64,8 +37,8 @@
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
-	"filename": "cards_all-03.png",
-	"frame": {"x":132,"y":224,"w":81,"h":109},
+	"filename": "card_3.png",
+	"frame": {"x":300,"y":2,"w":81,"h":109},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":81,"h":109},
@@ -73,8 +46,8 @@
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
-	"filename": "cards_all-04.png",
-	"frame": {"x":132,"y":335,"w":81,"h":109},
+	"filename": "card_4.png",
+	"frame": {"x":383,"y":2,"w":81,"h":109},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":81,"h":109},
@@ -82,39 +55,21 @@
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
-	"filename": "football.png",
-	"frame": {"x":2,"y":392,"w":128,"h":128},
+	"filename": "fence.png",
+	"frame": {"x":2,"y":113,"w":800,"h":93},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
-	"sourceSize": {"w":128,"h":128},
+	"spriteSourceSize": {"x":0,"y":0,"w":800,"h":93},
+	"sourceSize": {"w":800,"h":93},
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
-	"filename": "golfball.png",
-	"frame": {"x":2,"y":522,"w":128,"h":128},
+	"filename": "glade.png",
+	"frame": {"x":2,"y":208,"w":750,"h":764},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
-	"sourceSize": {"w":128,"h":128},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "tennisball.png",
-	"frame": {"x":2,"y":652,"w":128,"h":128},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
-	"sourceSize": {"w":128,"h":128},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "volleyball.png",
-	"frame": {"x":2,"y":782,"w":128,"h":128},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
-	"sourceSize": {"w":128,"h":128},
+	"spriteSourceSize": {"x":0,"y":0,"w":750,"h":764},
+	"sourceSize": {"w":750,"h":764},
 	"pivot": {"x":0.5,"y":0.5}
 }],
 "meta": {
@@ -122,8 +77,8 @@
 	"version": "1.0",
 	"image": "ui_atlas.png",
 	"format": "RGBA8888",
-	"size": {"w":215,"h":912},
+	"size": {"w":804,"h":974},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:52595c1f27c496ef815c5800e4ebebc2:7a1cc02c228574894b4890a2c94a7aeb:b5d3be34114d9e44e607c8ae1c6193a6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:6645f992ca4799e9cafad4583b435a83:41eb1195723faec1bdf32bfdad37db28:b5d3be34114d9e44e607c8ae1c6193a6$"
 }
 }

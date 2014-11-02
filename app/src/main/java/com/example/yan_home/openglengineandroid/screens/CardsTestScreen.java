@@ -3,6 +3,7 @@ package com.example.yan_home.openglengineandroid.screens;
 import com.example.yan_home.openglengineandroid.R;
 import com.example.yan_home.openglengineandroid.nodes.CardNode;
 import com.yan.glengine.nodes.YANButtonNode;
+import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.screens.YANNodeScreen;
 import com.yan.glengine.tween.YANTweenNodeAccessor;
@@ -28,6 +29,8 @@ public class CardsTestScreen extends YANNodeScreen {
     private ArrayList<CardNode> mCardNodesArray;
     private CardNode.CardNodeListener mCardNodeListener;
     private YANButtonNode mRepositionCardsNode;
+    private YANTexturedNode mFence;
+    private YANTexturedNode mGlade;
     private float mCardWidth;
     private float mCardheight;
 
@@ -41,11 +44,14 @@ public class CardsTestScreen extends YANNodeScreen {
 
     @Override
     protected void onAddNodesToScene() {
+
+        addNode(mGlade);
         for (CardNode cardNode : mCardNodesArray) {
             addNode(cardNode);
         }
 
         addNode(mRepositionCardsNode);
+        addNode(mFence);
     }
 
     @Override
@@ -55,6 +61,18 @@ public class CardsTestScreen extends YANNodeScreen {
 
     @Override
     protected void onLayoutNodes() {
+
+        //fence
+        float centerX = (getSceneSize().getX() - mFence.getSize().getX()) / 2;
+        float centerY = (getSceneSize().getY() - mFence.getSize().getY());
+        mFence.getPosition().setX(centerX);
+        mFence.getPosition().setY(centerY);
+
+        //glade
+        centerX = (getSceneSize().getX() - mGlade.getSize().getX()) / 2;
+        centerY = (getSceneSize().getY() - mGlade.getSize().getY()) / 2;
+        mGlade.getPosition().setX(centerX);
+        mGlade.getPosition().setY(centerY);
 
 //        positionCardsInFan();
         positionCardsInLine();
@@ -107,8 +125,19 @@ public class CardsTestScreen extends YANNodeScreen {
 
     @Override
     protected void onChangeNodesSize() {
+        float aspectRatio = 0;
 
-        float aspectRatio = mCardNodesArray.get(0).getTextureRegion().getWidth() / mCardNodesArray.get(0).getTextureRegion().getHeight();
+        //fence
+        aspectRatio = mFence.getTextureRegion().getWidth() / mFence.getTextureRegion().getHeight();
+        mFence.setSize(new YANVector2(getSceneSize().getX(), getSceneSize().getX() / aspectRatio));
+
+        //glade
+        aspectRatio = mGlade.getTextureRegion().getWidth() / mGlade.getTextureRegion().getHeight();
+        float gladeWidth = getSceneSize().getX() * 0.9f;
+        mGlade.setSize(new YANVector2(gladeWidth, gladeWidth / aspectRatio));
+
+        //cards
+        aspectRatio = mCardNodesArray.get(0).getTextureRegion().getWidth() / mCardNodesArray.get(0).getTextureRegion().getHeight();
         mCardWidth = Math.min(getSceneSize().getX(), getSceneSize().getY()) / (float) ((MAX_CARDS_IN_LINE) / 2);
         mCardheight = mCardWidth / aspectRatio;
 
@@ -123,13 +152,17 @@ public class CardsTestScreen extends YANNodeScreen {
     @Override
     protected void onCreateNodes() {
 
+        mFence = new YANTexturedNode(getTextureAtlas().getTextureRegion("fence.png"));
+        mGlade = new YANTexturedNode(getTextureAtlas().getTextureRegion("glade.png"));
+
+
         mRepositionCardsNode = new YANButtonNode(getTextureAtlas().getTextureRegion("call_btn_default.png"), getTextureAtlas().getTextureRegion("call_btn_pressed.png"));
         mRepositionCardsNode.setClickListener(new YANButtonNode.YanButtonNodeClickListener() {
             @Override
             public void onButtonClick() {
 
                 for (CardNode cardNode : mCardNodesArray) {
-                    pushNodeToFront(cardNode);
+//                    pushNodeToFront(cardNode);
                 }
                 onLayoutNodes();
             }
@@ -139,7 +172,7 @@ public class CardsTestScreen extends YANNodeScreen {
             @Override
             public void onCardPicked(CardNode cardNode) {
 
-                pushNodeToFront(cardNode);
+//                pushNodeToFront(cardNode);
                 Timeline.createSequence()
                         .push(Tween.to(cardNode, YANTweenNodeAccessor.ROTATION_CW, 0.5f).target(0))
                         .start(mTweenManager);
@@ -167,7 +200,7 @@ public class CardsTestScreen extends YANNodeScreen {
 
         for (int i = 0; i < CARDS_COUNT; i++) {
 
-            String name = "cards_all-0" + (int) (YANMathUtils.randomInRange(1, 4)) + ".png";
+            String name = "card_" + (int) (YANMathUtils.randomInRange(1, 4)) + ".png";
             CardNode card = new CardNode(getTextureAtlas().getTextureRegion(name));
             card.setCardNodeListener(mCardNodeListener);
 
@@ -186,6 +219,7 @@ public class CardsTestScreen extends YANNodeScreen {
         Timeline.createSequence().beginParallel()
                 .push(Tween.to(cardNode, YANTweenNodeAccessor.SIZE_X, 0.15f).target(mCardWidth * 1.2f))
                 .push(Tween.to(cardNode, YANTweenNodeAccessor.SIZE_Y, 0.15f).target(mCardheight * 1.2f))
+                .push(Tween.to(cardNode, YANTweenNodeAccessor.POSITION_Y, 0.1f).target(cardNode.getPosition().getY() - 50))
                 .start(mTweenManager);
     }
 
