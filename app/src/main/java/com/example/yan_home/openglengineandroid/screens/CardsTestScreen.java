@@ -23,7 +23,7 @@ import aurelienribon.tweenengine.TweenManager;
 public class CardsTestScreen extends YANNodeScreen {
 
     private static final int BG_HEXA_COLOR = 0x9F9E36;
-    private static final int CARDS_COUNT = 8;
+    private static final int CARDS_COUNT = 10;
     private static final int MAX_CARDS_IN_LINE = 8;
     private TweenManager mTweenManager;
     private ArrayList<CardNode> mCardNodesArray;
@@ -74,8 +74,8 @@ public class CardsTestScreen extends YANNodeScreen {
         mGlade.getPosition().setX(centerX);
         mGlade.getPosition().setY(centerY);
 
-//        positionCardsInFan();
-        positionCardsInLine();
+        positionCardsInFan();
+//        positionCardsInLine();
     }
 
     private void positionCardsInLine() {
@@ -97,29 +97,27 @@ public class CardsTestScreen extends YANNodeScreen {
         float cardHeigth = mCardNodesArray.get(0).getSize().getY();
         float yStartPosition = getSceneSize().getY() - cardHeigth * 1.3f;
 
-        double tanFi = (getSceneSize().getY() - yStartPosition) / xCenterPosition;
+        float yRotationPoint = getSceneSize().getY() * 6;
+        double tanFi = (yRotationPoint - yStartPosition) / xCenterPosition;
         double fi = Math.atan(tanFi);
 
-        float fanAngle = (float) (100 - Math.toDegrees(fi));
-        float halfFanAngle = fanAngle / 2;
+        float fanAngle = (float) (90 - Math.toDegrees(fi));
         float angleStep = fanAngle / CARDS_COUNT;
+        float currentRotation = -fanAngle + angleStep;
 
+        YANVector2 rotationOrigin = new YANVector2(xCenterPosition, yRotationPoint);
 
-        YANVector2 rotationOrigin = new YANVector2(xCenterPosition, getSceneSize().getY());
-
-        for (int i = 0; i < mCardNodesArray.size(); i++) {
-
-            CardNode cardNode = mCardNodesArray.get(i);
-
-            float rotationAngle = (i * angleStep) - halfFanAngle;
+        for (CardNode cardNode : mCardNodesArray) {
 
             //card will be rotated around origin starting from the center bottom
             cardNode.getPosition().setX(xCenterPosition);
             cardNode.getPosition().setY(yStartPosition);
 
             //rotate the card
-            YANMathUtils.rotatePointAroundOrigin(cardNode.getPosition(), rotationOrigin, rotationAngle);
-            cardNode.setRotation(rotationAngle);
+            YANMathUtils.rotatePointAroundOrigin(cardNode.getPosition(), rotationOrigin, currentRotation);
+            cardNode.setRotation(currentRotation);
+
+            currentRotation += (angleStep * 2) /*+ angleStep * 0.2f*/;
         }
     }
 
@@ -133,7 +131,7 @@ public class CardsTestScreen extends YANNodeScreen {
 
         //glade
         aspectRatio = mGlade.getTextureRegion().getWidth() / mGlade.getTextureRegion().getHeight();
-        float gladeWidth = getSceneSize().getX() * 0.9f;
+        float gladeWidth = Math.min(getSceneSize().getX(), getSceneSize().getY()) * 0.9f;
         mGlade.setSize(new YANVector2(gladeWidth, gladeWidth / aspectRatio));
 
         //cards
@@ -219,7 +217,6 @@ public class CardsTestScreen extends YANNodeScreen {
         Timeline.createSequence().beginParallel()
                 .push(Tween.to(cardNode, YANTweenNodeAccessor.SIZE_X, 0.15f).target(mCardWidth * 1.2f))
                 .push(Tween.to(cardNode, YANTweenNodeAccessor.SIZE_Y, 0.15f).target(mCardheight * 1.2f))
-                .push(Tween.to(cardNode, YANTweenNodeAccessor.POSITION_Y, 0.1f).target(cardNode.getPosition().getY() - 50))
                 .start(mTweenManager);
     }
 
