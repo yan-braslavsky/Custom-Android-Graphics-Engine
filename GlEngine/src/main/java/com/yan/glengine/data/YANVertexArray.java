@@ -19,7 +19,7 @@ import static android.opengl.GLES20.glVertexAttribPointer;
 
 public class YANVertexArray {
     private final FloatBuffer floatBuffer;
-    public static final int BYTES_PER_FLOAT = 4;
+    private static final int BYTES_PER_FLOAT = 4;
 
     public YANVertexArray(float[] vertexData) {
         floatBuffer = ByteBuffer
@@ -28,7 +28,7 @@ public class YANVertexArray {
             .asFloatBuffer()
             .put(vertexData);
     }
-        
+
     public void setVertexAttribPointer(int dataOffset, int attributeLocation,
         int componentCount, int stride) {        
         floatBuffer.position(dataOffset);        
