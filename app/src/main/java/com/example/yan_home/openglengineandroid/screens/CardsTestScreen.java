@@ -23,7 +23,7 @@ import aurelienribon.tweenengine.TweenManager;
 public class CardsTestScreen extends YANNodeScreen {
 
     private static final int BG_HEXA_COLOR = 0x9F9E36;
-    private static final int CARDS_COUNT = 10;
+    private static final int CARDS_COUNT = 36;
     private static final int MAX_CARDS_IN_LINE = 8;
     private TweenManager mTweenManager;
     private ArrayList<CardNode> mCardNodesArray;
@@ -108,14 +108,14 @@ public class CardsTestScreen extends YANNodeScreen {
         for (CardNode cardNode : mCardNodesArray) {
 
             //card will be rotated around origin starting from the center bottom
-            cardNode.setPosition(xCenterPosition,yStartPosition);
+            cardNode.setPosition(xCenterPosition, yStartPosition);
 
             //TODO : replace casting with something else
             //rotate the card
-            YANMathUtils.rotatePointAroundOrigin((YANVector2)cardNode.getPosition(), rotationOrigin, currentRotation);
+            YANMathUtils.rotatePointAroundOrigin((YANVector2) cardNode.getPosition(), rotationOrigin, currentRotation);
             cardNode.setRotation(currentRotation);
 
-            currentRotation += (angleStep * 2) /*+ angleStep * 0.2f*/;
+            currentRotation += (angleStep * 2);
         }
     }
 

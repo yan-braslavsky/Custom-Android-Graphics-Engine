@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Toast;
 
-import com.example.yan_home.openglengineandroid.screens.CardsTestScreen;
+import com.example.yan_home.openglengineandroid.screens.LayoutingTestScreen;
 import com.yan.glengine.EngineWrapper;
 import com.yan.glengine.assets.YANAssetManager;
 import com.yan.glengine.setup.YANEngineSetup;
@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
                     YANEngineSetup.setupTweenEngine();
 
                     //set the first screen
-                    EngineWrapper.getRenderer().setActiveScreen(new CardsTestScreen(EngineWrapper.getRenderer()));
+                    EngineWrapper.getRenderer().setActiveScreen(new LayoutingTestScreen(EngineWrapper.getRenderer()));
 
                     //init the engine
                     init();

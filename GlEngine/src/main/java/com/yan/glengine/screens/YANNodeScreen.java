@@ -4,7 +4,7 @@ import com.yan.glengine.assets.YANAssetManager;
 import com.yan.glengine.assets.atlas.YANTextureAtlas;
 import com.yan.glengine.nodes.YANIRenderableNode;
 import com.yan.glengine.renderer.YANGLRenderer;
-import com.yan.glengine.util.math.YANVector2;
+import com.yan.glengine.util.math.YANReadOnlyVector2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +79,7 @@ public abstract class YANNodeScreen implements YANIScreen {
         unloadScreenTextures();
     }
 
-    protected YANVector2 getSceneSize() {
+    protected YANReadOnlyVector2 getSceneSize() {
         return mRenderer.getSurfaceSize();
     }
 
