@@ -3,7 +3,7 @@ package com.yan.glengine.util.math;
 /**
  * Created by Yan-Home on 10/3/2014.
  */
-public class YANVector2 {
+public class YANVector2 implements YANReadOnlyVector2 {
     private float mX;
     private float mY;
 
@@ -17,16 +17,18 @@ public class YANVector2 {
         this.mY = y;
     }
 
+    @Override
     public float getX() {
         return mX;
     }
 
-    public void setX(float x) {
-        mX = x;
-    }
-
+    @Override
     public float getY() {
         return mY;
+    }
+
+    public void setX(float x) {
+        mX = x;
     }
 
     public void setY(float y) {

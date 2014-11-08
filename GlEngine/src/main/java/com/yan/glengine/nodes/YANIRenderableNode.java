@@ -1,6 +1,7 @@
 package com.yan.glengine.nodes;
 
 import com.yan.glengine.programs.ShaderProgram;
+import com.yan.glengine.util.math.YANReadOnlyVector2;
 import com.yan.glengine.util.math.YANRectangle;
 import com.yan.glengine.util.math.YANVector2;
 
@@ -15,9 +16,13 @@ public interface YANIRenderableNode<T extends ShaderProgram>  {
 
     void draw();
 
-    YANVector2 getPosition();
+    YANReadOnlyVector2 getPosition();
 
-    YANVector2 getSize();
+    YANReadOnlyVector2 getSize();
+
+    void setPosition(float x, float y);
+
+
 
     void setSize(float width,float height);
 

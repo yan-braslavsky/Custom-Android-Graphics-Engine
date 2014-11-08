@@ -2,6 +2,7 @@ package com.yan.glengine.nodes;
 
 import com.yan.glengine.data.YANVertexArray;
 import com.yan.glengine.programs.ShaderProgram;
+import com.yan.glengine.util.math.YANReadOnlyVector2;
 import com.yan.glengine.util.math.YANRectangle;
 import com.yan.glengine.util.math.YANVector2;
 
@@ -33,12 +34,17 @@ public class YANTextNode implements YANIRenderableNode {
     }
 
     @Override
-    public YANVector2 getPosition() {
+    public YANReadOnlyVector2 getPosition() {
         return null;
     }
 
     @Override
-    public YANVector2 getSize() {
+    public void setPosition(float x, float y) {
+
+    }
+
+    @Override
+    public YANReadOnlyVector2 getSize() {
         return null;
     }
 

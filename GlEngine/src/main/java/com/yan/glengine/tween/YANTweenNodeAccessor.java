@@ -63,14 +63,13 @@ public class YANTweenNodeAccessor implements TweenAccessor<YANIRenderableNode> {
     public void setValues(YANIRenderableNode target, int tweenType, float[] newValues) {
         switch (tweenType) {
             case POSITION_X:
-                target.getPosition().setX(newValues[0]);
+                target.setPosition(newValues[0],target.getPosition().getY());
                 break;
             case POSITION_Y:
-                target.getPosition().setY(newValues[0]);
+                target.setPosition(target.getPosition().getX(),newValues[0]);
                 break;
             case POSITION_XY:
-                target.getPosition().setX(newValues[0]);
-                target.getPosition().setY(newValues[1]);
+                target.setPosition(newValues[0],newValues[1]);
                 break;
 
             case SIZE_XY:

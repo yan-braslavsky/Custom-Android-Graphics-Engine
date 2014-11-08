@@ -3,6 +3,7 @@ package com.yan.glengine.nodes;
 import com.yan.glengine.data.YANVertexArray;
 import com.yan.glengine.input.YANNodeTouchListener;
 import com.yan.glengine.programs.ShaderProgram;
+import com.yan.glengine.util.math.YANReadOnlyVector2;
 import com.yan.glengine.util.math.YANRectangle;
 import com.yan.glengine.util.math.YANVector2;
 
@@ -48,8 +49,14 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
 
 
     @Override
-    public YANVector2 getPosition() {
+    public YANReadOnlyVector2 getPosition() {
         return mPosition;
+    }
+
+    @Override
+    public void setPosition(float x, float y){
+        mPosition.setX(x);
+        mPosition.setY(y);
     }
 
     @Override
@@ -60,7 +67,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     }
 
     @Override
-    public YANVector2 getSize() {
+    public YANReadOnlyVector2 getSize() {
         return mSize;
     }
 

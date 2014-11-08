@@ -65,14 +65,14 @@ public class CardsTestScreen extends YANNodeScreen {
         //fence
         float centerX = (getSceneSize().getX() - mFence.getSize().getX()) / 2;
         float centerY = (getSceneSize().getY() - mFence.getSize().getY());
-        mFence.getPosition().setX(centerX);
-        mFence.getPosition().setY(centerY);
+
+        mFence.setPosition(centerX, centerY);
 
         //glade
         centerX = (getSceneSize().getX() - mGlade.getSize().getX()) / 2;
         centerY = (getSceneSize().getY() - mGlade.getSize().getY()) / 2;
-        mGlade.getPosition().setX(centerX);
-        mGlade.getPosition().setY(centerY);
+
+        mGlade.setPosition(centerX, centerY);
 
         positionCardsInFan();
 //        positionCardsInLine();
@@ -86,10 +86,8 @@ public class CardsTestScreen extends YANNodeScreen {
 
         for (int i = 0; i < mCardNodesArray.size(); i++) {
             CardNode card = mCardNodesArray.get(i);
-            card.getPosition().setX(xStartPosition + (i * distanceBetweenCards));
-            card.getPosition().setY(yStartPosition);
+            card.setPosition(xStartPosition + (i * distanceBetweenCards), yStartPosition);
         }
-
     }
 
     private void positionCardsInFan() {
@@ -110,11 +108,11 @@ public class CardsTestScreen extends YANNodeScreen {
         for (CardNode cardNode : mCardNodesArray) {
 
             //card will be rotated around origin starting from the center bottom
-            cardNode.getPosition().setX(xCenterPosition);
-            cardNode.getPosition().setY(yStartPosition);
+            cardNode.setPosition(xCenterPosition,yStartPosition);
 
+            //TODO : replace casting with something else
             //rotate the card
-            YANMathUtils.rotatePointAroundOrigin(cardNode.getPosition(), rotationOrigin, currentRotation);
+            YANMathUtils.rotatePointAroundOrigin((YANVector2)cardNode.getPosition(), rotationOrigin, currentRotation);
             cardNode.setRotation(currentRotation);
 
             currentRotation += (angleStep * 2) /*+ angleStep * 0.2f*/;

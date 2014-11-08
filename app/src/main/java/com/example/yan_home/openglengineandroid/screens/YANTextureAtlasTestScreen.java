@@ -28,8 +28,7 @@ public class YANTextureAtlasTestScreen extends YANNodeScreen {
 
     @Override
     protected void onLayoutNodes() {
-        mTexturedNode.getPosition().setX(150);
-        mTexturedNode.getPosition().setY(150);
+        mTexturedNode.setPosition(150,150);
     }
 
     @Override

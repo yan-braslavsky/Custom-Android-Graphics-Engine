@@ -47,8 +47,7 @@ public class CardNode extends YANTexturedNode {
                 }
 
                 //resetting the anchor point that assumable is 0
-                getPosition().setX(touchToWorldPoint.getX() + mDragOffset.getX());
-                getPosition().setY(touchToWorldPoint.getY() + mDragOffset.getY());
+                setPosition(touchToWorldPoint.getX() + mDragOffset.getX(),touchToWorldPoint.getY() + mDragOffset.getY());
 
                 return true;
             }
@@ -91,8 +90,7 @@ public class CardNode extends YANTexturedNode {
             if (isDragged) {
 
                 //resetting the anchor point that assumable is 0
-                getPosition().setX(touchToWorldPoint.getX() + mDragOffset.getX());
-                getPosition().setY(touchToWorldPoint.getY() + mDragOffset.getY());
+                setPosition(touchToWorldPoint.getX() + mDragOffset.getX(),touchToWorldPoint.getY() + mDragOffset.getY());
 
                 return true;
             } else {

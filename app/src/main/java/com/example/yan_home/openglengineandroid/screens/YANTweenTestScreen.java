@@ -45,8 +45,7 @@ public class YANTweenTestScreen extends YANNodeScreen {
     protected void onLayoutNodes() {
 
         for (YANButtonNode yanButtonNode : mBtnList) {
-            yanButtonNode.getPosition().setX(YANMathUtils.randomInRange(0, getSceneSize().getX() - mButtonOriginalSize));
-            yanButtonNode.getPosition().setY(YANMathUtils.randomInRange(0, getSceneSize().getY() - mButtonOriginalSize));
+            yanButtonNode.setPosition(YANMathUtils.randomInRange(0, getSceneSize().getX() - mButtonOriginalSize), YANMathUtils.randomInRange(0, getSceneSize().getY() - mButtonOriginalSize));
             yanButtonNode.setRotation(YANMathUtils.randomInRange(0, 180));
             yanButtonNode.setOpacity(YANMathUtils.randomInRange(0.2f, 0.95f));
         }

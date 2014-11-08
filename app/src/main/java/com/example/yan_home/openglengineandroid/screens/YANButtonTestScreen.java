@@ -30,8 +30,7 @@ public class YANButtonTestScreen extends YANNodeScreen {
 
     @Override
     protected void onLayoutNodes() {
-        mButtonNode.getPosition().setX(150);
-        mButtonNode.getPosition().setY(150);
+        mButtonNode.setPosition(150,150);
     }
 
     @Override

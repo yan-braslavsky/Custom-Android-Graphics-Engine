@@ -29,8 +29,7 @@ public class YANDragTestScreen extends YANNodeScreen {
     @Override
     protected void onLayoutNodes() {
         //position the ball at bottom left corner
-        mBallNode.getPosition().setX(mBallNode.getSize().getX() - (getSceneSize().getX() / 2));
-        mBallNode.getPosition().setY(mBallNode.getSize().getY() - (getSceneSize().getY() / 2));
+        mBallNode.setPosition(mBallNode.getSize().getX() - (getSceneSize().getX() / 2),mBallNode.getSize().getY() - (getSceneSize().getY() / 2));
     }
 
     @Override
