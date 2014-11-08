@@ -7,7 +7,6 @@ import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -22,30 +21,16 @@ import java.util.HashMap;
 
 public class MainActivity extends Activity {
 
-    private static final int HIDE_UI_DELAY_MILLIS = 2000;
-
     private static EngineWrapper renderer;
     private GLSurfaceView glSurfaceView;
-    private Handler mHandler;
-    private Runnable mHideUiRunnable;
 
     public MainActivity() {
         super();
-
-
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mHideUiRunnable = new Runnable() {
-            @Override
-            public void run() {
-                hideSystemUI();
-            }
-        };
-        mHandler = new Handler();
 
         if (renderer == null) {
             renderer = new EngineWrapper(GLEngineApp.getAppContext());
@@ -82,6 +67,7 @@ public class MainActivity extends Activity {
         // doesn't resize when the system bars hide and show.
         glSurfaceView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
@@ -89,14 +75,6 @@ public class MainActivity extends Activity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 
-    // This snippet shows the system bars. It does this by removing all the flags
-    // except for the ones that make the content appear under the system bars.
-    public void showSystemUI() {
-        glSurfaceView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-    }
 
     private void init() {
 
@@ -191,13 +169,6 @@ public class MainActivity extends Activity {
                 } else {
                     return false;
                 }
-            }
-        });
-
-        glSurfaceView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                mHandler.postDelayed(mHideUiRunnable, HIDE_UI_DELAY_MILLIS);
             }
         });
 
