@@ -38,7 +38,7 @@ public class YANButtonTestScreen extends YANNodeScreen {
     protected void onChangeNodesSize() {
         //define size and position of the node
         float spriteSize = Math.min(getSceneSize().getX(), getSceneSize().getY()) * 0.2f;
-        mButtonNode.setSize(new YANVector2(spriteSize, spriteSize));
+        mButtonNode.setSize(spriteSize, spriteSize);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class YANButtonTestScreen extends YANNodeScreen {
                         mButtonNode.getSize().getX() + mButtonNode.getSize().getX() * 0.1f,
                         mButtonNode.getSize().getY() + mButtonNode.getSize().getY() * 0.1f
                 );
-                mButtonNode.setSize(newSize);
+                mButtonNode.setSize(newSize.getX(),newSize.getY());
             }
         });
     }

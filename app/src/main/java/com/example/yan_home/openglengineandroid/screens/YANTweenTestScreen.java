@@ -6,7 +6,6 @@ import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.screens.YANNodeScreen;
 import com.yan.glengine.tween.YANTweenNodeAccessor;
 import com.yan.glengine.util.math.YANMathUtils;
-import com.yan.glengine.util.math.YANVector2;
 
 import java.util.ArrayList;
 
@@ -58,7 +57,7 @@ public class YANTweenTestScreen extends YANNodeScreen {
 
         mButtonOriginalSize = Math.min(getSceneSize().getX(), getSceneSize().getY()) * 0.2f;
         for (YANButtonNode yanButtonNode : mBtnList) {
-            yanButtonNode.setSize(new YANVector2(mButtonOriginalSize, mButtonOriginalSize));
+            yanButtonNode.setSize(mButtonOriginalSize, mButtonOriginalSize);
         }
 
     }

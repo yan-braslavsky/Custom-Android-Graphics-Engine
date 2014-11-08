@@ -29,12 +29,11 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     private float mOpacity;
 
     protected YANBaseNode() {
-        mSize = new YANVector2(1, 2);
+        mSize = new YANVector2(0, 0);
         mPosition = new YANVector2();
         mAnchorPoint = new YANVector2();
         mRotation = 0;
         mOpacity = 1f;
-//        recalculateDimensions();
     }
 
     @Override
@@ -54,8 +53,9 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     }
 
     @Override
-    public void setSize(YANVector2 size) {
-        mSize = size;
+    public void setSize(float width, float height) {
+        mSize.setX(width);
+        mSize.setY(height);
         recalculateDimensions();
     }
 
@@ -63,8 +63,6 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     public YANVector2 getSize() {
         return mSize;
     }
-
-
 
 
     @Override

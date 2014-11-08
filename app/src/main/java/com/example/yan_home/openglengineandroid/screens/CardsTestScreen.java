@@ -127,12 +127,12 @@ public class CardsTestScreen extends YANNodeScreen {
 
         //fence
         aspectRatio = mFence.getTextureRegion().getWidth() / mFence.getTextureRegion().getHeight();
-        mFence.setSize(new YANVector2(getSceneSize().getX(), getSceneSize().getX() / aspectRatio));
+        mFence.setSize(getSceneSize().getX(), getSceneSize().getX() / aspectRatio);
 
         //glade
         aspectRatio = mGlade.getTextureRegion().getWidth() / mGlade.getTextureRegion().getHeight();
         float gladeWidth = Math.min(getSceneSize().getX(), getSceneSize().getY()) * 0.9f;
-        mGlade.setSize(new YANVector2(gladeWidth, gladeWidth / aspectRatio));
+        mGlade.setSize(gladeWidth, gladeWidth / aspectRatio);
 
         //cards
         aspectRatio = mCardNodesArray.get(0).getTextureRegion().getWidth() / mCardNodesArray.get(0).getTextureRegion().getHeight();
@@ -140,10 +140,10 @@ public class CardsTestScreen extends YANNodeScreen {
         mCardheight = mCardWidth / aspectRatio;
 
         for (CardNode cardNode : mCardNodesArray) {
-            cardNode.setSize(new YANVector2(mCardWidth, mCardheight));
+            cardNode.setSize(mCardWidth, mCardheight);
         }
 
-        mRepositionCardsNode.setSize(new YANVector2(150, 150));
+        mRepositionCardsNode.setSize(150, 150);
     }
 
 

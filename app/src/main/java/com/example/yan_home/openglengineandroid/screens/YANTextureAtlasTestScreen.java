@@ -4,7 +4,6 @@ import com.example.yan_home.openglengineandroid.R;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.screens.YANNodeScreen;
-import com.yan.glengine.util.math.YANVector2;
 
 /**
  * Created by Yan-Home on 10/3/2014.
@@ -37,7 +36,7 @@ public class YANTextureAtlasTestScreen extends YANNodeScreen {
     protected void onChangeNodesSize() {
         //define size and position of the node
         float spriteSize = Math.min(getSceneSize().getX(), getSceneSize().getY()) * 0.2f;
-        mTexturedNode.setSize(new YANVector2(spriteSize, spriteSize));
+        mTexturedNode.setSize(spriteSize, spriteSize);
     }
 
     @Override

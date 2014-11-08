@@ -43,9 +43,10 @@ public class YANTextNode implements YANIRenderableNode {
     }
 
     @Override
-    public void setSize(YANVector2 size) {
+    public void setSize(float width, float height) {
 
     }
+
 
     @Override
     public YANRectangle getBoundingRectangle() {

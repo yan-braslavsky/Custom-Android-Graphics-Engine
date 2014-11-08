@@ -19,8 +19,7 @@ public interface YANIRenderableNode<T extends ShaderProgram>  {
 
     YANVector2 getSize();
 
-    //TODO : Optimize with scale!
-    void setSize(YANVector2 size);
+    void setSize(float width,float height);
 
     YANRectangle getBoundingRectangle();
 

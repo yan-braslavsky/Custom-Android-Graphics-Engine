@@ -1,7 +1,6 @@
 package com.yan.glengine.tween;
 
 import com.yan.glengine.nodes.YANIRenderableNode;
-import com.yan.glengine.util.math.YANVector2;
 
 import aurelienribon.tweenengine.TweenAccessor;
 
@@ -75,7 +74,7 @@ public class YANTweenNodeAccessor implements TweenAccessor<YANIRenderableNode> {
                 break;
 
             case SIZE_XY:
-                target.setSize(new YANVector2(newValues[0], newValues[1]));
+                target.setSize(newValues[0], newValues[1]);
                 break;
 
             case ROTATION_CW:
@@ -86,11 +85,11 @@ public class YANTweenNodeAccessor implements TweenAccessor<YANIRenderableNode> {
                 break;
 
             case SIZE_X:
-                target.setSize(new YANVector2(newValues[0], target.getSize().getY()));
+                target.setSize(newValues[0], target.getSize().getY());
                 break;
 
             case SIZE_Y:
-                target.setSize(new YANVector2(target.getSize().getX(), newValues[0]));
+                target.setSize(target.getSize().getX(), newValues[0]);
                 break;
 
             default:
