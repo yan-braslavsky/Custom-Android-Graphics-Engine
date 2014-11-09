@@ -49,7 +49,7 @@ public class CardsLayouterImpl implements CardsLayouter {
     }
 
     @Override
-    public void init(float cardWidth, float cardHeight, float maxAvailableWidth, float maxAvailableHeight,float baseXPosition, float baseYPosition) {
+    public void init(float cardWidth, float cardHeight, float maxAvailableWidth, float maxAvailableHeight, float baseXPosition, float baseYPosition) {
         mCardWidth = cardWidth;
         mCardHeight = cardHeight;
         mMaxAvailableWidth = maxAvailableWidth;
@@ -62,7 +62,7 @@ public class CardsLayouterImpl implements CardsLayouter {
     }
 
     private void recalculateSlotsData() {
-        //TODO : here we decide how cards should be layed out
+        //here we decide how cards should be layed out
 
         //for now we will only implement line layout
         float yPosition = mBaseYPosition;
@@ -72,17 +72,19 @@ public class CardsLayouterImpl implements CardsLayouter {
         int step = /*mMaxFullCardsInLine * 2*/ 7;
         float yDeltaBetweenRows = mCardHeight / 4;
         int i = 0;
-        CardsLayoutStrategy strategy = mFanStrategy;
+        CardsLayoutStrategy strategy;
         while (i < mActiveSlotsAmount) {
             int start = i;
             int end = Math.min(i + step, mActiveSlotsAmount);
 
-//            if((end - start + 1) % 2 == 0)
-//                strategy = mFanStrategy;
-//            else
-//                strategy = mLineStrategy;
+            //strategy will change depending on amount of cards in line
+            int cardsInLine = end - start;
+            if (cardsInLine == 2)
+                strategy = mLineStrategy;
+            else
+                strategy = mFanStrategy;
 
-            strategy.init(mBaseXPosition,yPosition, mMaxAvailableWidth, mCardWidth, mCardHeight);
+            strategy.init(mBaseXPosition, yPosition, mMaxAvailableWidth, mCardWidth, mCardHeight);
             strategy.layoutRowOfSlots(mSlots.subList(start, end));
 
             yPosition -= yDeltaBetweenRows;

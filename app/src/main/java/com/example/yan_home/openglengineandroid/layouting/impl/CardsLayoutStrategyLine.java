@@ -13,18 +13,20 @@ public class CardsLayoutStrategyLine extends CardsLayoutStrategy {
     public void layoutRowOfSlots(List<CardsLayouterSlotImpl> slots) {
 
         float yStartPosition = mBaseYPosition - mSlotHeight;
-        float xStartPosition = mBaseXPosition - (mMaxWidth / 2);
-
-        float distanceBetweenCards = mMaxWidth / slots.size();
-        distanceBetweenCards -= (mSlotWidth - distanceBetweenCards) / (slots.size() - 1);
+        float distanceBetweenCards = mSlotWidth / 2;
+        float xStartPosition = mBaseXPosition - (distanceBetweenCards * (slots.size() / 2));
 
         CardsLayouterSlotImpl slot;
         float cursorPosition = xStartPosition;
+
         for (int i = 0; i < slots.size(); i++) {
+
             slot = slots.get(i);
-            slot.setPosition(cursorPosition, yStartPosition);
+            slot.setPosition(cursorPosition - mSlotWidth / 4, yStartPosition);
             slot.setRotation(0);
+
             cursorPosition += distanceBetweenCards;
+
         }
     }
 }

@@ -14,6 +14,8 @@ public class CardsLayoutStrategyFan extends CardsLayoutStrategy {
 
     public void layoutRowOfSlots(List<CardsLayouterSlotImpl> slots) {
 
+        boolean isEvenAmountOfSlots = slots.size() % 2 == 0;
+
         float xCenterPosition = mBaseXPosition;
         float yStartPosition = mBaseYPosition - mSlotHeight;
 
@@ -52,6 +54,11 @@ public class CardsLayoutStrategyFan extends CardsLayoutStrategy {
 
             //fix the offset from the pivot point
             slot.setPosition(slot.getPosition().getX() - mSlotWidth / 2, slot.getPosition().getY());
+
+            if (isEvenAmountOfSlots) {
+                //rotate one more time
+                YANMathUtils.rotatePointAroundOrigin(slot.getPosition(), rotationOrigin, -angleStep / 2);
+            }
 
             //increase the distance only when both sides are placed
             if (side < 0) {
