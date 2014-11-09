@@ -196,7 +196,7 @@ public class CardsTestScreen extends YANNodeScreen {
 
         for (int i = 0; i < CARDS_COUNT; i++) {
 
-            String name = "card_" + (int) (YANMathUtils.randomInRange(1, 4)) + ".png";
+            String name = "card_6" + (int) (YANMathUtils.randomInRange(1, 4)) + ".png";
             CardNode card = new CardNode(getTextureAtlas().getTextureRegion(name));
             card.setCardNodeListener(mCardNodeListener);
 

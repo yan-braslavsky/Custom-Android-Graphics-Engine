@@ -8,11 +8,13 @@ import com.yan.glengine.nodes.YANButtonNode;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.screens.YANNodeScreen;
+import com.yan.glengine.tween.YANTweenNodeAccessor;
 import com.yan.glengine.util.colors.YANColor;
-import com.yan.glengine.util.math.YANMathUtils;
 
 import java.util.ArrayList;
 
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
 
 /**
@@ -26,7 +28,11 @@ public class LayoutingTestScreen extends YANNodeScreen {
     private static final int MAX_CARDS_IN_LINE = 8;
     private TweenManager mTweenManager;
     private ArrayList<YANTexturedNode> mCardNodesArray;
-    private YANButtonNode mRepositionCardsButton;
+
+    private YANButtonNode mRemoveCardButon;
+    private YANButtonNode mResetLayoutButton;
+
+
     private YANTexturedNode mFence;
     private YANTexturedNode mGlade;
     private float mCardWidth;
@@ -49,7 +55,8 @@ public class LayoutingTestScreen extends YANNodeScreen {
             addNode(cardNode);
         }
 
-        addNode(mRepositionCardsButton);
+        addNode(mRemoveCardButon);
+        addNode(mResetLayoutButton);
         addNode(mFence);
     }
 
@@ -73,6 +80,8 @@ public class LayoutingTestScreen extends YANNodeScreen {
 
         mGlade.setPosition(centerX, centerY);
 
+        mResetLayoutButton.setPosition(getSceneSize().getX() - mResetLayoutButton.getSize().getX(), 0);
+
         layoutCards();
     }
 
@@ -83,12 +92,14 @@ public class LayoutingTestScreen extends YANNodeScreen {
         for (int i = 0; i < mCardNodesArray.size(); i++) {
             YANTexturedNode card = mCardNodesArray.get(i);
 
-            //set position
             CardsLayoutSlot slot = mCardsLayouter.getSlotAtPosition(i);
-            card.setPosition(slot.getPosition().getX(), slot.getPosition().getY());
-
-            //set rotation
-            card.setRotation(slot.getRotation());
+            //set with animation
+            Timeline.createSequence()
+                    .beginParallel()
+                    .push(Tween.to(card, YANTweenNodeAccessor.POSITION_X, 0.5f).target(slot.getPosition().getX()))
+                    .push(Tween.to(card, YANTweenNodeAccessor.POSITION_Y, 0.5f).target(slot.getPosition().getY()))
+                    .push(Tween.to(card, YANTweenNodeAccessor.ROTATION_CW, 0.5f).target(slot.getRotation()))
+                    .start(mTweenManager);
         }
 
         //change position in layers
@@ -126,7 +137,8 @@ public class LayoutingTestScreen extends YANNodeScreen {
             cardNode.setSize(mCardWidth, mCardHeight);
         }
 
-        mRepositionCardsButton.setSize(150, 150);
+        mRemoveCardButon.setSize(150, 150);
+        mResetLayoutButton.setSize(150, 150);
 
         //init the layouter
         mCardsLayouter.init(mCardWidth, mCardHeight,
@@ -147,24 +159,47 @@ public class LayoutingTestScreen extends YANNodeScreen {
         mFence = new YANTexturedNode(getTextureAtlas().getTextureRegion("fence.png"));
         mGlade = new YANTexturedNode(getTextureAtlas().getTextureRegion("glade.png"));
 
-        mRepositionCardsButton = new YANButtonNode(getTextureAtlas().getTextureRegion("call_btn_default.png"), getTextureAtlas().getTextureRegion("call_btn_pressed.png"));
-        mRepositionCardsButton.setClickListener(new YANButtonNode.YanButtonNodeClickListener() {
+        mRemoveCardButon = new YANButtonNode(getTextureAtlas().getTextureRegion("call_btn_default.png"), getTextureAtlas().getTextureRegion("call_btn_pressed.png"));
+
+        mRemoveCardButon.setClickListener(new YANButtonNode.YanButtonNodeClickListener() {
             @Override
             public void onButtonClick() {
 
                 if (mCardNodesArray.isEmpty())
                     return;
 
-                YANTexturedNode cardToRemove = mCardNodesArray.get(0);
+                YANTexturedNode cardToRemove = mCardNodesArray.get(mCardNodesArray.size() - 1);
                 mCardNodesArray.remove(cardToRemove);
                 removeNode(cardToRemove);
                 layoutCards();
             }
         });
 
+        mResetLayoutButton = new YANButtonNode(getTextureAtlas().getTextureRegion("call_btn_default.png"), getTextureAtlas().getTextureRegion("call_btn_pressed.png"));
+        mResetLayoutButton.setClickListener(new YANButtonNode.YanButtonNodeClickListener() {
+            @Override
+            public void onButtonClick() {
 
+                for (YANTexturedNode node : mCardNodesArray) {
+                    removeNode(node);
+                }
+
+                mCardNodesArray.clear();
+                initCardsArray();
+                for (YANTexturedNode node : mCardNodesArray) {
+                    addNode(node);
+                }
+                onChangeNodesSize();
+                onLayoutNodes();
+            }
+        });
+
+        initCardsArray();
+    }
+
+    private void initCardsArray() {
         for (int i = 0; i < CARDS_COUNT; i++) {
-            String name = "card_" + (int) (YANMathUtils.randomInRange(1, 4)) + ".png";
+            String name = "card_" + (i + 1) + ".png";
             YANTexturedNode card = new YANTexturedNode(getTextureAtlas().getTextureRegion(name));
             mCardNodesArray.add(card);
         }
@@ -172,8 +207,7 @@ public class LayoutingTestScreen extends YANNodeScreen {
 
     @Override
     public void onUpdate(float deltaTimeSeconds) {
-
-//        mTweenManager.update(deltaTimeSeconds * 1);
+        mTweenManager.update(deltaTimeSeconds * 1);
     }
 
     @Override
