@@ -1,6 +1,7 @@
 package com.example.yan_home.openglengineandroid.layouting.impl;
 
 import com.example.yan_home.openglengineandroid.layouting.CardsLayoutSlot;
+import com.example.yan_home.openglengineandroid.layouting.CardsLayoutStrategy;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayouter;
 
 import java.util.ArrayList;
@@ -71,13 +72,18 @@ public class CardsLayouterImpl implements CardsLayouter {
         int step = /*mMaxFullCardsInLine * 2*/ 7;
         float yDeltaBetweenRows = mCardHeight / 4;
         int i = 0;
+        CardsLayoutStrategy strategy = mFanStrategy;
         while (i < mActiveSlotsAmount) {
-
-            mFanStrategy.init(mBaseXPosition,yPosition, mMaxAvailableWidth, mCardWidth, mCardHeight);
-
             int start = i;
-            int end = Math.min(i + step, mSlots.size());
-            mFanStrategy.layoutRowOfSlots(mSlots.subList(start, end));
+            int end = Math.min(i + step, mActiveSlotsAmount);
+
+//            if((end - start + 1) % 2 == 0)
+//                strategy = mFanStrategy;
+//            else
+//                strategy = mLineStrategy;
+
+            strategy.init(mBaseXPosition,yPosition, mMaxAvailableWidth, mCardWidth, mCardHeight);
+            strategy.layoutRowOfSlots(mSlots.subList(start, end));
 
             yPosition -= yDeltaBetweenRows;
             i += step;

@@ -23,6 +23,7 @@ public class CardsLayoutStrategyLine extends CardsLayoutStrategy {
         for (int i = 0; i < slots.size(); i++) {
             slot = slots.get(i);
             slot.setPosition(cursorPosition, yStartPosition);
+            slot.setRotation(0);
             cursorPosition += distanceBetweenCards;
         }
     }

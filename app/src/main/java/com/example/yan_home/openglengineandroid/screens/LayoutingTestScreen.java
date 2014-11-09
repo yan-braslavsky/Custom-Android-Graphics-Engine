@@ -21,7 +21,7 @@ import aurelienribon.tweenengine.TweenManager;
 public class LayoutingTestScreen extends YANNodeScreen {
 
     private static final int BG_HEXA_COLOR = 0x9F9E36;
-    private static final int CARDS_COUNT = 6;
+    private static final int CARDS_COUNT = 36;
     private static final int SCREEN_PADDING = 0;
     private static final int MAX_CARDS_IN_LINE = 8;
     private TweenManager mTweenManager;
@@ -30,7 +30,7 @@ public class LayoutingTestScreen extends YANNodeScreen {
     private YANTexturedNode mFence;
     private YANTexturedNode mGlade;
     private float mCardWidth;
-    private float mCardheight;
+    private float mCardHeight;
     private CardsLayouter mCardsLayouter;
 
     public LayoutingTestScreen(YANGLRenderer renderer) {
@@ -120,16 +120,16 @@ public class LayoutingTestScreen extends YANNodeScreen {
         //cards
         aspectRatio = mCardNodesArray.get(0).getTextureRegion().getWidth() / mCardNodesArray.get(0).getTextureRegion().getHeight();
         mCardWidth = Math.min(getSceneSize().getX(), getSceneSize().getY()) / (float) ((MAX_CARDS_IN_LINE) / 2);
-        mCardheight = mCardWidth / aspectRatio;
+        mCardHeight = mCardWidth / aspectRatio;
 
         for (YANTexturedNode cardNode : mCardNodesArray) {
-            cardNode.setSize(mCardWidth, mCardheight);
+            cardNode.setSize(mCardWidth, mCardHeight);
         }
 
         mRepositionCardsButton.setSize(150, 150);
 
         //init the layouter
-        mCardsLayouter.init(mCardWidth, mCardheight,
+        mCardsLayouter.init(mCardWidth, mCardHeight,
                 //maximum available width
                 getSceneSize().getX() - (SCREEN_PADDING * 2),
                 //maximum available height
