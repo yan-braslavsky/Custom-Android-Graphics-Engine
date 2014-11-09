@@ -21,8 +21,8 @@ import aurelienribon.tweenengine.TweenManager;
 public class LayoutingTestScreen extends YANNodeScreen {
 
     private static final int BG_HEXA_COLOR = 0x9F9E36;
-    private static final int CARDS_COUNT = 36;
-    private static final int SCREEN_PADDING = 20;
+    private static final int CARDS_COUNT = 6;
+    private static final int SCREEN_PADDING = 0;
     private static final int MAX_CARDS_IN_LINE = 8;
     private TweenManager mTweenManager;
     private ArrayList<YANTexturedNode> mCardNodesArray;
@@ -130,11 +130,11 @@ public class LayoutingTestScreen extends YANNodeScreen {
 
         //init the layouter
         mCardsLayouter.init(mCardWidth, mCardheight,
-                //maximum availible width
+                //maximum available width
                 getSceneSize().getX() - (SCREEN_PADDING * 2),
-                //maximum availible height
+                //maximum available height
                 getSceneSize().getY(),
-                //base x position - center
+                //base x position ( center )
                 getSceneSize().getX() / 2,
                 //base y position
                 getSceneSize().getY() - mFence.getSize().getY() / 2);

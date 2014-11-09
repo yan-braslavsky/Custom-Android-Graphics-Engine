@@ -1,7 +1,6 @@
 package com.example.yan_home.openglengineandroid.layouting.impl;
 
 import com.example.yan_home.openglengineandroid.layouting.CardsLayoutSlot;
-import com.yan.glengine.util.math.YANReadOnlyVector2;
 import com.yan.glengine.util.math.YANVector2;
 
 /**
@@ -17,7 +16,7 @@ public class CardsLayouterSlotImpl implements CardsLayoutSlot {
     }
 
     @Override
-    public YANReadOnlyVector2 getPosition() {
+    public YANVector2 getPosition() {
         return mPosition;
     }
 
@@ -26,7 +25,7 @@ public class CardsLayouterSlotImpl implements CardsLayoutSlot {
         mPosition.setY(y);
     }
 
-    public void setRotaion(float rotation) {
+    public void setRotation(float rotation) {
         mRotation = rotation;
     }
 

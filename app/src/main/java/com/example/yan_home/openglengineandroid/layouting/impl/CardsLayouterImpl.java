@@ -63,23 +63,21 @@ public class CardsLayouterImpl implements CardsLayouter {
     private void recalculateSlotsData() {
         //TODO : here we decide how cards should be layed out
 
-
         //for now we will only implement line layout
-
         float yPosition = mBaseYPosition;
 
         //we will allow cards to overlap
         //up until half of the width
-        int step = mMaxFullCardsInLine * 3;
+        int step = /*mMaxFullCardsInLine * 2*/ 7;
         float yDeltaBetweenRows = mCardHeight / 4;
         int i = 0;
         while (i < mActiveSlotsAmount) {
 
-            mLineStrategy.init(mBaseXPosition,yPosition, mMaxAvailableWidth, mCardWidth, mCardHeight);
+            mFanStrategy.init(mBaseXPosition,yPosition, mMaxAvailableWidth, mCardWidth, mCardHeight);
 
             int start = i;
             int end = Math.min(i + step, mSlots.size());
-            mLineStrategy.layoutRowOfSlots(mSlots.subList(start, end));
+            mFanStrategy.layoutRowOfSlots(mSlots.subList(start, end));
 
             yPosition -= yDeltaBetweenRows;
             i += step;

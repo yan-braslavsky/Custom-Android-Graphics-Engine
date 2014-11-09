@@ -1,24 +1,14 @@
 package com.example.yan_home.openglengineandroid.layouting.impl;
 
+import com.example.yan_home.openglengineandroid.layouting.CardsLayoutStrategy;
+
 import java.util.List;
 
 /**
  * Created by Yan-Home on 11/8/2014.
  */
-public class CardsLayoutStrategyLine {
-    private float mBaseYPosition;
-    private float mMaxWidth;
-    private float mSlotWidth;
-    private float mSlotHeight;
-    private float mBaseXPosition;
+public class CardsLayoutStrategyLine extends CardsLayoutStrategy {
 
-    public void init(float xPosition, float yPosition, float maxAvailableWidth, float slotWidth, float slotHeight) {
-        mBaseXPosition = xPosition;
-        mBaseYPosition = yPosition;
-        mMaxWidth = maxAvailableWidth;
-        mSlotWidth = slotWidth;
-        mSlotHeight = slotHeight;
-    }
 
     public void layoutRowOfSlots(List<CardsLayouterSlotImpl> slots) {
 
