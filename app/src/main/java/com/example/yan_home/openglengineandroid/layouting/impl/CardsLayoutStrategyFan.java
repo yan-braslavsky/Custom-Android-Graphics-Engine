@@ -4,6 +4,8 @@ import com.example.yan_home.openglengineandroid.layouting.CardsLayoutStrategy;
 import com.yan.glengine.util.math.YANMathUtils;
 import com.yan.glengine.util.math.YANVector2;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -11,6 +13,18 @@ import java.util.List;
  */
 public class CardsLayoutStrategyFan extends CardsLayoutStrategy {
 
+
+    private Comparator<CardsLayouterSlotImpl> mSlotsByIndexComparator;
+
+    public CardsLayoutStrategyFan() {
+        super();
+        mSlotsByIndexComparator = new Comparator<CardsLayouterSlotImpl>() {
+            @Override
+            public int compare(CardsLayouterSlotImpl lhs, CardsLayouterSlotImpl rhs) {
+                return rhs.getSortingIndex() - lhs.getSortingIndex();
+            }
+        };
+    }
 
     public void layoutRowOfSlots(List<CardsLayouterSlotImpl> slots) {
 
@@ -32,8 +46,11 @@ public class CardsLayoutStrategyFan extends CardsLayoutStrategy {
         angleStep = angleStep * 0.8f;
 
         float currentRotation;
-        float currentDistanceFromOrigin = 0;
+        int currentDistanceFromOrigin = 0;
         YANVector2 rotationOrigin = new YANVector2(xCenterPosition, yRotationPoint);
+
+        int halfArraySize = slots.size() / 2;
+        int currentSortingIndex = halfArraySize;
 
         for (int i = 0; i < slots.size(); i++) {
             //slot that will be repositioned
@@ -41,6 +58,13 @@ public class CardsLayoutStrategyFan extends CardsLayoutStrategy {
 
             //side represents left or right from the origin
             int side = ((i % 2) == 0) ? -1 : 1;
+
+            //set sorting index that will help reorder slots
+            //after reposition
+            slot.setSortingIndex(currentSortingIndex);
+
+            //update sorting index
+            currentSortingIndex += currentDistanceFromOrigin * side;
 
             //the amount of rotation in degrees
             currentRotation = currentDistanceFromOrigin * angleStep * side;
@@ -65,5 +89,8 @@ public class CardsLayoutStrategyFan extends CardsLayoutStrategy {
                 currentDistanceFromOrigin++;
             }
         }
+
+        //reorder the array to fix the sorting mess
+        Collections.sort(slots, mSlotsByIndexComparator);
     }
 }

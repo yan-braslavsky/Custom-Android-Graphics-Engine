@@ -11,6 +11,17 @@ public class CardsLayouterSlotImpl implements CardsLayoutSlot {
     private YANVector2 mPosition;
     private float mRotation;
 
+    public int getSortingIndex() {
+        return mSortingIndex;
+    }
+
+    public void setSortingIndex(int sortingIndex) {
+        mSortingIndex = sortingIndex;
+    }
+
+    //used internaly for reordering after positioning
+    private int mSortingIndex;
+
     public CardsLayouterSlotImpl() {
         mPosition = new YANVector2();
     }

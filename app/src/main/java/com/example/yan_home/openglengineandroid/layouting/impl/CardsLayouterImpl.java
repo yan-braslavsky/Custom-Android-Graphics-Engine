@@ -77,17 +77,50 @@ public class CardsLayouterImpl implements CardsLayouter {
 
             //strategy will change depending on amount of cards in line
             int cardsInLine = end - start;
-            if (cardsInLine == 2)
+            boolean isLineStrategy = cardsInLine == 2;
+            if (isLineStrategy)
                 strategy = mLineStrategy;
             else
                 strategy = mFanStrategy;
 
             strategy.init(mBaseXPosition, yPosition, mMaxAvailableWidth, mCardWidth, mCardHeight);
-            strategy.layoutRowOfSlots(mSlots.subList(start, end));
+            List<CardsLayouterSlotImpl> subList = mSlots.subList(start, end);
+            strategy.layoutRowOfSlots(subList);
+
+            if(!isLineStrategy){
+                //reorder cards inside subList
+                reorderInsideSubList(subList);
+            }
 
             yPosition -= yDeltaBetweenRows;
             i += step;
         }
+    }
+
+    private void reorderInsideSubList(List<CardsLayouterSlotImpl> subList) {
+
+//        ArrayList<CardsLayouterSlotImpl> tmpList = new ArrayList<>();
+//        if(subList.size() == 11){
+//            tmpList.add(0,subList.get(10));
+//            tmpList.add(1,subList.get(8));
+//            tmpList.add(2,subList.get(6));
+//            tmpList.add(3,subList.get(4));
+//            tmpList.add(4,subList.get(2));
+//            tmpList.add(5,subList.get(0));
+//            tmpList.add(6,subList.get(1));
+//            tmpList.add(7,subList.get(3));
+//            tmpList.add(8,subList.get(5));
+//            tmpList.add(9,subList.get(7));
+//            tmpList.add(10,subList.get(9));
+//
+//            subList.clear();
+//
+//            for (CardsLayouterSlotImpl slot : tmpList) {
+//                subList.add(slot);
+//            }
+//        }
+
+
     }
 
     private int calculateStep() {
