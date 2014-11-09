@@ -10,6 +10,7 @@ import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.screens.YANNodeScreen;
 import com.yan.glengine.tween.YANTweenNodeAccessor;
 import com.yan.glengine.util.colors.YANColor;
+import com.yan.glengine.util.math.YANMathUtils;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ public class LayoutingTestScreen extends YANNodeScreen {
     private static final int MAX_CARDS_IN_LINE = 8;
     private TweenManager mTweenManager;
     private ArrayList<YANTexturedNode> mCardNodesArray;
+    private ArrayList<YANTexturedNode> mNodesToRemove;
 
     private YANButtonNode mRemoveCardButon;
     private YANButtonNode mResetLayoutButton;
@@ -43,6 +45,7 @@ public class LayoutingTestScreen extends YANNodeScreen {
         super(renderer);
 
         mCardNodesArray = new ArrayList<>();
+        mNodesToRemove = new ArrayList<>();
         mTweenManager = new TweenManager();
         mCardsLayouter = new CardsLayouterImpl(CARDS_COUNT);
     }
@@ -160,7 +163,6 @@ public class LayoutingTestScreen extends YANNodeScreen {
         mGlade = new YANTexturedNode(getTextureAtlas().getTextureRegion("glade.png"));
 
         mRemoveCardButon = new YANButtonNode(getTextureAtlas().getTextureRegion("call_btn_default.png"), getTextureAtlas().getTextureRegion("call_btn_pressed.png"));
-
         mRemoveCardButon.setClickListener(new YANButtonNode.YanButtonNodeClickListener() {
             @Override
             public void onButtonClick() {
@@ -168,9 +170,18 @@ public class LayoutingTestScreen extends YANNodeScreen {
                 if (mCardNodesArray.isEmpty())
                     return;
 
-                YANTexturedNode cardToRemove = mCardNodesArray.get(mCardNodesArray.size() - 1);
+                //removing a random card from the hand
+                YANTexturedNode cardToRemove = mCardNodesArray.get((int) YANMathUtils.randomInRange(0, mCardNodesArray.size() - 1));
                 mCardNodesArray.remove(cardToRemove);
-                removeNode(cardToRemove);
+
+                Timeline.createSequence()
+                        .beginParallel()
+                        .push(Tween.to(cardToRemove, YANTweenNodeAccessor.POSITION_X, 0.5f).target(getSceneSize().getX() / 2))
+                        .push(Tween.to(cardToRemove, YANTweenNodeAccessor.POSITION_Y, 0.5f).target(mCardHeight))
+                        .push(Tween.to(cardToRemove, YANTweenNodeAccessor.ROTATION_CW, 0.5f).target(YANMathUtils.randomInRange(0, 360)))
+                        .start(mTweenManager);
+
+                mNodesToRemove.add(cardToRemove);
                 layoutCards();
             }
         });
@@ -179,6 +190,12 @@ public class LayoutingTestScreen extends YANNodeScreen {
         mResetLayoutButton.setClickListener(new YANButtonNode.YanButtonNodeClickListener() {
             @Override
             public void onButtonClick() {
+
+                for (YANTexturedNode node : mNodesToRemove) {
+                    removeNode(node);
+                }
+
+                mNodesToRemove.clear();
 
                 for (YANTexturedNode node : mCardNodesArray) {
                     removeNode(node);
