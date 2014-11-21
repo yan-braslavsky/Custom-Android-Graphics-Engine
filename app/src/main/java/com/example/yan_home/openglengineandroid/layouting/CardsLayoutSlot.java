@@ -9,4 +9,5 @@ public interface CardsLayoutSlot {
 
     YANReadOnlyVector2 getPosition();
     float getRotation();
+    public int getSortingLayer();
 }

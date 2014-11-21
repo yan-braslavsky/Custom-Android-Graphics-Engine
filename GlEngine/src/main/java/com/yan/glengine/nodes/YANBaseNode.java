@@ -28,6 +28,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     private YANVector2 mAnchorPoint;
     private float mRotation;
     private float mOpacity;
+    private int mSortingLayer;
 
     protected YANBaseNode() {
         mSize = new YANVector2(0, 0);
@@ -54,7 +55,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     }
 
     @Override
-    public void setPosition(float x, float y){
+    public void setPosition(float x, float y) {
         mPosition.setX(x);
         mPosition.setY(y);
     }
@@ -130,5 +131,13 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
         mOpacity = opacity;
     }
 
+    @Override
+    public void setSortingLayer(int sortingLayer) {
+        mSortingLayer = sortingLayer;
+    }
 
+    @Override
+    public int getSortingLayer() {
+        return mSortingLayer;
+    }
 }

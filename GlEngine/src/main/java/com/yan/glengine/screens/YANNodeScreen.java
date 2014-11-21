@@ -7,6 +7,8 @@ import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.util.math.YANReadOnlyVector2;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -17,11 +19,18 @@ public abstract class YANNodeScreen implements YANIScreen {
     private final YANGLRenderer mRenderer;
     private List<YANIRenderableNode> mNodeList;
     YANTextureAtlas mAtlas;
+    private Comparator<YANIRenderableNode> mSortingLayerComparator;
 
     public YANNodeScreen(YANGLRenderer renderer) {
         mRenderer = renderer;
         mNodeList = new ArrayList<>();
         mAtlas = YANAssetManager.getInstance().getLoadedAtlas(getAtlasResourceID());
+        mSortingLayerComparator = new Comparator<YANIRenderableNode>() {
+            @Override
+            public int compare(YANIRenderableNode lhs, YANIRenderableNode rhs) {
+                return lhs.getSortingLayer() - rhs.getSortingLayer();
+            }
+        };
     }
 
     protected abstract int getAtlasResourceID();
@@ -87,6 +96,12 @@ public abstract class YANNodeScreen implements YANIScreen {
     public void onResize(float newWidth, float newHeight) {
         onChangeNodesSize();
         onLayoutNodes();
+    }
+
+    @Override
+    public void onUpdate(float deltaTimeSeconds) {
+        //reorder children by sorting layer
+        Collections.sort(getNodeList(), mSortingLayerComparator);
     }
 
     @Override

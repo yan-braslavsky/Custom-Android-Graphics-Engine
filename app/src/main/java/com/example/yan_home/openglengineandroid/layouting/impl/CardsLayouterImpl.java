@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class CardsLayouterImpl implements CardsLayouter {
 
+    public static final int BASE_SORTING_LAYER = 5;
     private int mActiveSlotsAmount;
     private ArrayList<CardsLayouterSlotImpl> mSlots;
 
@@ -27,10 +28,8 @@ public class CardsLayouterImpl implements CardsLayouter {
     private float mBaseXPosition;
     private float mBaseYPosition;
 
-    //maximum amount of cards that can fit in one row
-    //without getting on on top of another
-    private int mMaxFullCardsInLine;
 
+    private List<List<CardsLayouterSlotImpl>> mLinesOfSlots;
 
     //external data that required
     public CardsLayouterImpl(int maxSlotsAmount) {
@@ -40,6 +39,10 @@ public class CardsLayouterImpl implements CardsLayouter {
         for (int i = 0; i < maxSlotsAmount; i++) {
             mSlots.add(new CardsLayouterSlotImpl());
         }
+
+        //allocate list of slots
+        mLinesOfSlots = new ArrayList<>();
+
     }
 
     @Override
@@ -56,12 +59,11 @@ public class CardsLayouterImpl implements CardsLayouter {
         mMaxAvailibleHeight = maxAvailableHeight;
         mBaseXPosition = baseXPosition;
         mBaseYPosition = baseYPosition;
-
-        //calculate max cards in line
-        mMaxFullCardsInLine = (int) Math.floor(maxAvailableWidth / cardWidth);
     }
 
     private void recalculateSlotsData() {
+
+        mLinesOfSlots.clear();
 
         //for now we will only implement line layout
         float yPosition = mBaseYPosition;
@@ -87,40 +89,27 @@ public class CardsLayouterImpl implements CardsLayouter {
             List<CardsLayouterSlotImpl> subList = mSlots.subList(start, end);
             strategy.layoutRowOfSlots(subList);
 
-            if(!isLineStrategy){
-                //reorder cards inside subList
-                reorderInsideSubList(subList);
-            }
+            //add subList to list of lines of slots
+            mLinesOfSlots.add(subList);
 
             yPosition -= yDeltaBetweenRows;
             i += step;
         }
+
+        calculateSortingLayer();
     }
 
-    private void reorderInsideSubList(List<CardsLayouterSlotImpl> subList) {
-
-//        ArrayList<CardsLayouterSlotImpl> tmpList = new ArrayList<>();
-//        if(subList.size() == 11){
-//            tmpList.add(0,subList.get(10));
-//            tmpList.add(1,subList.get(8));
-//            tmpList.add(2,subList.get(6));
-//            tmpList.add(3,subList.get(4));
-//            tmpList.add(4,subList.get(2));
-//            tmpList.add(5,subList.get(0));
-//            tmpList.add(6,subList.get(1));
-//            tmpList.add(7,subList.get(3));
-//            tmpList.add(8,subList.get(5));
-//            tmpList.add(9,subList.get(7));
-//            tmpList.add(10,subList.get(9));
-//
-//            subList.clear();
-//
-//            for (CardsLayouterSlotImpl slot : tmpList) {
-//                subList.add(slot);
-//            }
-//        }
-
-
+    private void calculateSortingLayer() {
+        // 1 is the bottom line
+        //used to order slots by z order
+        int sortingLayer = BASE_SORTING_LAYER;
+        for (int i = getLinesOfSlots().size() - 1; i >= 0; i--) {
+            List<CardsLayouterSlotImpl> currentLine = getLinesOfSlots().get(i);
+            for (CardsLayouterSlotImpl slot : currentLine) {
+                slot.setSortingLayer(sortingLayer);
+                sortingLayer++;
+            }
+        }
     }
 
     private int calculateStep() {
@@ -138,7 +127,7 @@ public class CardsLayouterImpl implements CardsLayouter {
     }
 
     @Override
-    public List<List<Integer>> getSequences() {
-        throw new UnsupportedOperationException();
+    public List<List<CardsLayouterSlotImpl>> getLinesOfSlots() {
+        return mLinesOfSlots;
     }
 }

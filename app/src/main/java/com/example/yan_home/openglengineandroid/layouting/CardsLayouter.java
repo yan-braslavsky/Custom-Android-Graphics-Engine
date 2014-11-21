@@ -1,5 +1,7 @@
 package com.example.yan_home.openglengineandroid.layouting;
 
+import com.example.yan_home.openglengineandroid.layouting.impl.CardsLayouterSlotImpl;
+
 import java.util.List;
 
 /**
@@ -19,10 +21,15 @@ public interface CardsLayouter {
      * @param baseXPosition      starting x point fron where cards will be layed out
      * @param baseYPosition      starting y point from the bottom of the screen , where bottom cards line will be.
      */
-    void init(float cardWidth, float cardHeight, float maxAvailableWidth, float maxAvailableHeight,float baseXPosition, float baseYPosition);
+    void init(float cardWidth, float cardHeight, float maxAvailableWidth, float maxAvailableHeight, float baseXPosition, float baseYPosition);
 
     CardsLayoutSlot getSlotAtPosition(int position);
 
-    List<List<Integer>> getSequences();
+    /**
+     * Returns arrays of slots that represent a line.
+     * Order is from botom to top. That means array at position 0 is the bottom line ,
+     * array at position 1 is a second line , etc..
+     */
+    List<List<CardsLayouterSlotImpl>> getLinesOfSlots();
 
 }

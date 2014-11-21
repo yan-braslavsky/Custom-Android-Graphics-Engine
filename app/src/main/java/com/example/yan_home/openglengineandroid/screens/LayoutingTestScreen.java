@@ -5,6 +5,7 @@ import com.example.yan_home.openglengineandroid.layouting.CardsLayoutSlot;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayouter;
 import com.example.yan_home.openglengineandroid.layouting.impl.CardsLayouterImpl;
 import com.yan.glengine.nodes.YANButtonNode;
+import com.yan.glengine.nodes.YANIRenderableNode;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.screens.YANNodeScreen;
@@ -14,8 +15,10 @@ import com.yan.glengine.util.math.YANMathUtils;
 
 import java.util.ArrayList;
 
+import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 
 /**
@@ -31,7 +34,7 @@ public class LayoutingTestScreen extends YANNodeScreen {
     private ArrayList<YANTexturedNode> mCardNodesArray;
     private ArrayList<YANTexturedNode> mNodesToRemove;
 
-    private YANButtonNode mRemoveCardButon;
+    private YANButtonNode mRemoveCardButton;
     private YANButtonNode mResetLayoutButton;
 
 
@@ -53,12 +56,14 @@ public class LayoutingTestScreen extends YANNodeScreen {
     @Override
     protected void onAddNodesToScene() {
 
-        addNode(mGlade);
-        for (YANTexturedNode cardNode : mCardNodesArray) {
+
+        for (int i = mCardNodesArray.size() - 1; i >= 0; i--) {
+            YANIRenderableNode cardNode = mCardNodesArray.get(i);
             addNode(cardNode);
         }
 
-        addNode(mRemoveCardButon);
+        addNode(mGlade);
+        addNode(mRemoveCardButton);
         addNode(mResetLayoutButton);
         addNode(mFence);
     }
@@ -96,6 +101,8 @@ public class LayoutingTestScreen extends YANNodeScreen {
             YANTexturedNode card = mCardNodesArray.get(i);
 
             CardsLayoutSlot slot = mCardsLayouter.getSlotAtPosition(i);
+            card.setSortingLayer(slot.getSortingLayer());
+
             //set with animation
             Timeline.createSequence()
                     .beginParallel()
@@ -104,13 +111,6 @@ public class LayoutingTestScreen extends YANNodeScreen {
                     .push(Tween.to(card, YANTweenNodeAccessor.ROTATION_CW, 0.5f).target(slot.getRotation()))
                     .start(mTweenManager);
         }
-
-        //change position in layers
-        for (int i = mCardNodesArray.size() - 1; i >= 0; i--) {
-            pushNodeToFront(mCardNodesArray.get(i));
-        }
-
-        pushNodeToFront(mFence);
 
     }
 
@@ -140,7 +140,7 @@ public class LayoutingTestScreen extends YANNodeScreen {
             cardNode.setSize(mCardWidth, mCardHeight);
         }
 
-        mRemoveCardButon.setSize(150, 150);
+        mRemoveCardButton.setSize(150, 150);
         mResetLayoutButton.setSize(150, 150);
 
         //init the layouter
@@ -160,10 +160,13 @@ public class LayoutingTestScreen extends YANNodeScreen {
     protected void onCreateNodes() {
 
         mFence = new YANTexturedNode(getTextureAtlas().getTextureRegion("fence.png"));
+
+        //fence is on top of cards
+        mFence.setSortingLayer(50);
         mGlade = new YANTexturedNode(getTextureAtlas().getTextureRegion("glade.png"));
 
-        mRemoveCardButon = new YANButtonNode(getTextureAtlas().getTextureRegion("call_btn_default.png"), getTextureAtlas().getTextureRegion("call_btn_pressed.png"));
-        mRemoveCardButon.setClickListener(new YANButtonNode.YanButtonNodeClickListener() {
+        mRemoveCardButton = new YANButtonNode(getTextureAtlas().getTextureRegion("call_btn_default.png"), getTextureAtlas().getTextureRegion("call_btn_pressed.png"));
+        mRemoveCardButton.setClickListener(new YANButtonNode.YanButtonNodeClickListener() {
             @Override
             public void onButtonClick() {
 
@@ -171,12 +174,20 @@ public class LayoutingTestScreen extends YANNodeScreen {
                     return;
 
                 //removing a random card from the hand
-                YANTexturedNode cardToRemove = mCardNodesArray.get((int) YANMathUtils.randomInRange(0, mCardNodesArray.size() - 1));
+                final YANTexturedNode cardToRemove = mCardNodesArray.get((int) YANMathUtils.randomInRange(0, mCardNodesArray.size() - 1));
                 mCardNodesArray.remove(cardToRemove);
+
 
                 Timeline.createSequence()
                         .beginParallel()
                         .push(Tween.to(cardToRemove, YANTweenNodeAccessor.POSITION_X, 0.5f).target(getSceneSize().getX() / 2))
+                        .setCallback(
+                                new TweenCallback() {
+                                    @Override
+                                    public void onEvent(int i, BaseTween<?> baseTween) {
+                                        cardToRemove.setSortingLayer(1);
+                                    }
+                                })
                         .push(Tween.to(cardToRemove, YANTweenNodeAccessor.POSITION_Y, 0.5f).target(mCardHeight))
                         .push(Tween.to(cardToRemove, YANTweenNodeAccessor.ROTATION_CW, 0.5f).target(YANMathUtils.randomInRange(0, 360)))
                         .start(mTweenManager);
@@ -224,6 +235,7 @@ public class LayoutingTestScreen extends YANNodeScreen {
 
     @Override
     public void onUpdate(float deltaTimeSeconds) {
+        super.onUpdate(deltaTimeSeconds);
         mTweenManager.update(deltaTimeSeconds * 1);
     }
 

@@ -10,6 +10,7 @@ public class CardsLayouterSlotImpl implements CardsLayoutSlot {
 
     private YANVector2 mPosition;
     private float mRotation;
+    private int mSortingLayer;
 
     public int getSortingIndex() {
         return mSortingIndex;
@@ -43,5 +44,14 @@ public class CardsLayouterSlotImpl implements CardsLayoutSlot {
     @Override
     public float getRotation() {
         return mRotation;
+    }
+
+    @Override
+    public int getSortingLayer() {
+        return mSortingLayer;
+    }
+
+    public void setSortingLayer(int sortingLayer) {
+        mSortingLayer = sortingLayer;
     }
 }

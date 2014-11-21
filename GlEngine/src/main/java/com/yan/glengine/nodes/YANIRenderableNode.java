@@ -44,4 +44,7 @@ public interface YANIRenderableNode<T extends ShaderProgram>  {
     float getOpacity();
 
     void setOpacity(float opacity);
+
+     void setSortingLayer(int sortingLayer);
+    int getSortingLayer();
 }

@@ -93,4 +93,14 @@ public class YANTextNode implements YANIRenderableNode {
     public void setOpacity(float opacity) {
 
     }
+
+    @Override
+    public void setSortingLayer(int sortingLayer) {
+
+    }
+
+    @Override
+    public int getSortingLayer() {
+        return 0;
+    }
 }
