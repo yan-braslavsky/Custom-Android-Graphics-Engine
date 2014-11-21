@@ -4,24 +4,20 @@ import com.example.yan_home.openglengineandroid.R;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayoutSlot;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayouter;
 import com.example.yan_home.openglengineandroid.layouting.impl.CardsLayouterImpl;
+import com.example.yan_home.openglengineandroid.tweening.CardsTweenAnimator;
 import com.yan.glengine.assets.YANAssetManager;
 import com.yan.glengine.assets.atlas.YANTextureAtlas;
 import com.yan.glengine.nodes.YANButtonNode;
-import com.yan.glengine.nodes.YANIRenderableNode;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.screens.YANNodeScreen;
-import com.yan.glengine.tween.YANTweenNodeAccessor;
 import com.yan.glengine.util.colors.YANColor;
 import com.yan.glengine.util.math.YANMathUtils;
 
 import java.util.ArrayList;
 
 import aurelienribon.tweenengine.BaseTween;
-import aurelienribon.tweenengine.Timeline;
-import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
-import aurelienribon.tweenengine.TweenManager;
 
 /**
  * Created by Yan-Home on 10/3/2014.
@@ -32,15 +28,13 @@ public class LayoutingTestScreen extends YANNodeScreen {
     private static final int CARDS_COUNT = 36;
     private static final int SCREEN_PADDING = 0;
     private static final int MAX_CARDS_IN_LINE = 8;
-    private TweenManager mTweenManager;
+
     private ArrayList<YANTexturedNode> mCardNodesArray;
     private ArrayList<YANTexturedNode> mNodesToRemove;
-    YANTextureAtlas mAtlas;
-
+    private YANTextureAtlas mAtlas;
     private YANButtonNode mRemoveCardButton;
     private YANButtonNode mResetLayoutButton;
-
-
+    private CardsTweenAnimator mCardsTweenAnimator;
     private YANTexturedNode mFence;
     private YANTexturedNode mGlade;
     private float mCardWidth;
@@ -51,24 +45,25 @@ public class LayoutingTestScreen extends YANNodeScreen {
         super(renderer);
         mCardNodesArray = new ArrayList<>();
         mNodesToRemove = new ArrayList<>();
-        mTweenManager = new TweenManager();
+
         mCardsLayouter = new CardsLayouterImpl(CARDS_COUNT);
         mAtlas = YANAssetManager.getInstance().getLoadedAtlas(R.raw.ui_atlas);
+        mCardsTweenAnimator = new CardsTweenAnimator();
     }
 
     @Override
     protected void onAddNodesToScene() {
 
-
-        for (int i = mCardNodesArray.size() - 1; i >= 0; i--) {
-            YANIRenderableNode cardNode = mCardNodesArray.get(i);
-            addNode(cardNode);
+        //add cards
+        for (YANTexturedNode yanTexturedNode : mCardNodesArray) {
+            addNode(yanTexturedNode);
         }
 
+        //add all the other nodes
         addNode(mGlade);
+        addNode(mFence);
         addNode(mRemoveCardButton);
         addNode(mResetLayoutButton);
-        addNode(mFence);
     }
 
 
@@ -78,16 +73,16 @@ public class LayoutingTestScreen extends YANNodeScreen {
         //fence
         float centerX = (getSceneSize().getX() - mFence.getSize().getX()) / 2;
         float centerY = (getSceneSize().getY() - mFence.getSize().getY());
-
         mFence.setPosition(centerX, centerY);
 
         //glade
         centerX = (getSceneSize().getX() - mGlade.getSize().getX()) / 2;
         centerY = (getSceneSize().getY() - mGlade.getSize().getY()) / 2;
-
         mGlade.setPosition(centerX, centerY);
 
+        //buttons
         mResetLayoutButton.setPosition(getSceneSize().getX() - mResetLayoutButton.getSize().getX(), 0);
+        mRemoveCardButton.setPosition(0, 0);
 
         layoutCards();
     }
@@ -96,21 +91,13 @@ public class LayoutingTestScreen extends YANNodeScreen {
 
         mCardsLayouter.setActiveSlotsAmount(mCardNodesArray.size());
 
+        //each index in cards array corresponds to slot index
         for (int i = 0; i < mCardNodesArray.size(); i++) {
             YANTexturedNode card = mCardNodesArray.get(i);
-
             CardsLayoutSlot slot = mCardsLayouter.getSlotAtPosition(i);
             card.setSortingLayer(slot.getSortingLayer());
-
-            //set with animation
-            Timeline.createSequence()
-                    .beginParallel()
-                    .push(Tween.to(card, YANTweenNodeAccessor.POSITION_X, 0.5f).target(slot.getPosition().getX()))
-                    .push(Tween.to(card, YANTweenNodeAccessor.POSITION_Y, 0.5f).target(slot.getPosition().getY()))
-                    .push(Tween.to(card, YANTweenNodeAccessor.ROTATION_CW, 0.5f).target(slot.getRotation()))
-                    .start(mTweenManager);
+            mCardsTweenAnimator.animateCardToSlot(card, slot);
         }
-
     }
 
 
@@ -175,22 +162,18 @@ public class LayoutingTestScreen extends YANNodeScreen {
                 //removing a random card from the hand
                 final YANTexturedNode cardToRemove = mCardNodesArray.get((int) YANMathUtils.randomInRange(0, mCardNodesArray.size() - 1));
                 mCardNodesArray.remove(cardToRemove);
+                float targetRotation = YANMathUtils.randomInRange(0, 360);
 
+                float targetXPosition = getSceneSize().getX() / 2;
+                float targetYPosition = mCardHeight;
+                TweenCallback animationEndCallback = new TweenCallback() {
+                    @Override
+                    public void onEvent(int i, BaseTween<?> baseTween) {
+                        cardToRemove.setSortingLayer(1);
+                    }
+                };
 
-                Timeline.createSequence()
-                        .beginParallel()
-                        .push(Tween.to(cardToRemove, YANTweenNodeAccessor.POSITION_X, 0.5f).target(getSceneSize().getX() / 2))
-                        .setCallback(
-                                new TweenCallback() {
-                                    @Override
-                                    public void onEvent(int i, BaseTween<?> baseTween) {
-                                        cardToRemove.setSortingLayer(1);
-                                    }
-                                })
-                        .push(Tween.to(cardToRemove, YANTweenNodeAccessor.POSITION_Y, 0.5f).target(mCardHeight))
-                        .push(Tween.to(cardToRemove, YANTweenNodeAccessor.ROTATION_CW, 0.5f).target(YANMathUtils.randomInRange(0, 360)))
-                        .start(mTweenManager);
-
+                mCardsTweenAnimator.animateCardToValues(cardToRemove, targetXPosition, targetYPosition, targetRotation, animationEndCallback);
                 mNodesToRemove.add(cardToRemove);
                 layoutCards();
             }
@@ -235,7 +218,8 @@ public class LayoutingTestScreen extends YANNodeScreen {
     @Override
     public void onUpdate(float deltaTimeSeconds) {
         super.onUpdate(deltaTimeSeconds);
-        mTweenManager.update(deltaTimeSeconds * 1);
+        mCardsTweenAnimator.update(deltaTimeSeconds * 1);
+
     }
 
     @Override
