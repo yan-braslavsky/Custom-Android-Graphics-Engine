@@ -1,5 +1,6 @@
 package com.example.yan_home.openglengineandroid.screens;
 
+import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessor;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayoutSlot;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayouter;
 import com.example.yan_home.openglengineandroid.layouting.impl.CardsLayouterImpl;
@@ -26,13 +27,28 @@ public class LayoutingTestScreen extends BaseGameScreen {
     private ArrayList<YANTexturedNode> mNodesToRemove;
     private CardsTweenAnimator mCardsTweenAnimator;
     private CardsLayouter mCardsLayouter;
+    private CardsTouchProcessor mCardsTouchProcessor;
 
     public LayoutingTestScreen(YANGLRenderer renderer) {
         super(renderer);
-        mCardNodesArray = new ArrayList<>();
+        mCardNodesArray = new ArrayList<>(CARDS_COUNT);
         mNodesToRemove = new ArrayList<>();
         mCardsLayouter = new CardsLayouterImpl(CARDS_COUNT);
         mCardsTweenAnimator = new CardsTweenAnimator();
+        mCardsTouchProcessor = new CardsTouchProcessor(mCardNodesArray);
+    }
+
+
+    @Override
+    public void onSetActive() {
+        super.onSetActive();
+        mCardsTouchProcessor.register();
+    }
+
+    @Override
+    public void onSetNotActive() {
+        super.onSetNotActive();
+        mCardsTouchProcessor.unRegister();
     }
 
     @Override
