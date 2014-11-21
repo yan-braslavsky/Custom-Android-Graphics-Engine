@@ -101,7 +101,7 @@ public class YANAssetManager {
 
             //FIXME : causes random deletion of the sprite
             //delete textureResourceName rom GL context
-//           YANTextureHelper.deleteTexture(mTextureHandlesMap.get(textureResourceName));
+           YANTextureHelper.deleteTexture(mTextureHandlesMap.get(textureResourceName));
 
             //reload the textureResourceName into gl context again
             loadTexture(textureResourceName);

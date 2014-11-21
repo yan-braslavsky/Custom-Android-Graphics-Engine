@@ -4,6 +4,8 @@ import com.example.yan_home.openglengineandroid.R;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayoutSlot;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayouter;
 import com.example.yan_home.openglengineandroid.layouting.impl.CardsLayouterImpl;
+import com.yan.glengine.assets.YANAssetManager;
+import com.yan.glengine.assets.atlas.YANTextureAtlas;
 import com.yan.glengine.nodes.YANButtonNode;
 import com.yan.glengine.nodes.YANIRenderableNode;
 import com.yan.glengine.nodes.YANTexturedNode;
@@ -33,6 +35,7 @@ public class LayoutingTestScreen extends YANNodeScreen {
     private TweenManager mTweenManager;
     private ArrayList<YANTexturedNode> mCardNodesArray;
     private ArrayList<YANTexturedNode> mNodesToRemove;
+    YANTextureAtlas mAtlas;
 
     private YANButtonNode mRemoveCardButton;
     private YANButtonNode mResetLayoutButton;
@@ -46,11 +49,11 @@ public class LayoutingTestScreen extends YANNodeScreen {
 
     public LayoutingTestScreen(YANGLRenderer renderer) {
         super(renderer);
-
         mCardNodesArray = new ArrayList<>();
         mNodesToRemove = new ArrayList<>();
         mTweenManager = new TweenManager();
         mCardsLayouter = new CardsLayouterImpl(CARDS_COUNT);
+        mAtlas = YANAssetManager.getInstance().getLoadedAtlas(R.raw.ui_atlas);
     }
 
     @Override
@@ -68,10 +71,6 @@ public class LayoutingTestScreen extends YANNodeScreen {
         addNode(mFence);
     }
 
-    @Override
-    protected int getAtlasResourceID() {
-        return R.raw.ui_atlas;
-    }
 
     @Override
     protected void onLayoutNodes() {
@@ -159,13 +158,13 @@ public class LayoutingTestScreen extends YANNodeScreen {
     @Override
     protected void onCreateNodes() {
 
-        mFence = new YANTexturedNode(getTextureAtlas().getTextureRegion("fence.png"));
+        mFence = new YANTexturedNode(mAtlas.getTextureRegion("fence.png"));
 
         //fence is on top of cards
         mFence.setSortingLayer(50);
-        mGlade = new YANTexturedNode(getTextureAtlas().getTextureRegion("glade.png"));
+        mGlade = new YANTexturedNode(mAtlas.getTextureRegion("glade.png"));
 
-        mRemoveCardButton = new YANButtonNode(getTextureAtlas().getTextureRegion("call_btn_default.png"), getTextureAtlas().getTextureRegion("call_btn_pressed.png"));
+        mRemoveCardButton = new YANButtonNode(mAtlas.getTextureRegion("call_btn_default.png"), mAtlas.getTextureRegion("call_btn_pressed.png"));
         mRemoveCardButton.setClickListener(new YANButtonNode.YanButtonNodeClickListener() {
             @Override
             public void onButtonClick() {
@@ -197,7 +196,7 @@ public class LayoutingTestScreen extends YANNodeScreen {
             }
         });
 
-        mResetLayoutButton = new YANButtonNode(getTextureAtlas().getTextureRegion("call_btn_default.png"), getTextureAtlas().getTextureRegion("call_btn_pressed.png"));
+        mResetLayoutButton = new YANButtonNode(mAtlas.getTextureRegion("call_btn_default.png"), mAtlas.getTextureRegion("call_btn_pressed.png"));
         mResetLayoutButton.setClickListener(new YANButtonNode.YanButtonNodeClickListener() {
             @Override
             public void onButtonClick() {
@@ -228,7 +227,7 @@ public class LayoutingTestScreen extends YANNodeScreen {
     private void initCardsArray() {
         for (int i = 0; i < CARDS_COUNT; i++) {
             String name = "card_" + (i + 1) + ".png";
-            YANTexturedNode card = new YANTexturedNode(getTextureAtlas().getTextureRegion(name));
+            YANTexturedNode card = new YANTexturedNode(mAtlas.getTextureRegion(name));
             mCardNodesArray.add(card);
         }
     }
@@ -243,10 +242,12 @@ public class LayoutingTestScreen extends YANNodeScreen {
     public void onSetActive() {
         super.onSetActive();
         getRenderer().setRendererBackgroundColor(YANColor.createFromHexColor(BG_HEXA_COLOR));
+        YANAssetManager.getInstance().loadTexture(mAtlas.getAtlasImageResourceID());
     }
 
     @Override
     public void onSetNotActive() {
         super.onSetNotActive();
+        YANAssetManager.getInstance().unloadTexture(mAtlas.getAtlasImageResourceID());
     }
 }

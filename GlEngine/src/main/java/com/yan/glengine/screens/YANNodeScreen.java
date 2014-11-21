@@ -1,7 +1,5 @@
 package com.yan.glengine.screens;
 
-import com.yan.glengine.assets.YANAssetManager;
-import com.yan.glengine.assets.atlas.YANTextureAtlas;
 import com.yan.glengine.nodes.YANIRenderableNode;
 import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.util.math.YANReadOnlyVector2;
@@ -18,13 +16,13 @@ public abstract class YANNodeScreen implements YANIScreen {
 
     private final YANGLRenderer mRenderer;
     private List<YANIRenderableNode> mNodeList;
-    YANTextureAtlas mAtlas;
+
     private Comparator<YANIRenderableNode> mSortingLayerComparator;
 
     public YANNodeScreen(YANGLRenderer renderer) {
         mRenderer = renderer;
         mNodeList = new ArrayList<>();
-        mAtlas = YANAssetManager.getInstance().getLoadedAtlas(getAtlasResourceID());
+
         mSortingLayerComparator = new Comparator<YANIRenderableNode>() {
             @Override
             public int compare(YANIRenderableNode lhs, YANIRenderableNode rhs) {
@@ -32,8 +30,6 @@ public abstract class YANNodeScreen implements YANIScreen {
             }
         };
     }
-
-    protected abstract int getAtlasResourceID();
 
     protected abstract void onAddNodesToScene();
 
@@ -57,22 +53,9 @@ public abstract class YANNodeScreen implements YANIScreen {
         getNodeList().remove(node);
     }
 
-    /**
-     * puts node at the end of node list ,
-     * that makes this node to be drawn on top
-     */
-    protected void pushNodeToFront(YANIRenderableNode node) {
-        getNodeList().remove(node);
-        getNodeList().add(node);
-    }
-
-    public YANTextureAtlas getTextureAtlas() {
-        return mAtlas;
-    }
 
     @Override
     public void onSetActive() {
-        loadScreenTextures();
         onCreateNodes();
 
         if (mRenderer.getSurfaceSize().getX() != 0 && mRenderer.getSurfaceSize().getY() != 0) {
@@ -85,7 +68,6 @@ public abstract class YANNodeScreen implements YANIScreen {
 
     @Override
     public void onSetNotActive() {
-        unloadScreenTextures();
     }
 
     protected YANReadOnlyVector2 getSceneSize() {
@@ -107,14 +89,6 @@ public abstract class YANNodeScreen implements YANIScreen {
     @Override
     public List<YANIRenderableNode> getNodeList() {
         return mNodeList;
-    }
-
-    private void loadScreenTextures() {
-        YANAssetManager.getInstance().loadTexture(mAtlas.getAtlasImageResourceID());
-    }
-
-    private void unloadScreenTextures() {
-        YANAssetManager.getInstance().unloadTexture(mAtlas.getAtlasImageResourceID());
     }
 
     public YANGLRenderer getRenderer() {
