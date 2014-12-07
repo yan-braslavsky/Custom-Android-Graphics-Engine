@@ -17,6 +17,10 @@ public class YANVector2 implements YANReadOnlyVector2 {
         this.mY = y;
     }
 
+    public YANVector2(YANReadOnlyVector2 vector2) {
+        this(vector2.getX(),vector2.getY());
+    }
+
     @Override
     public float getX() {
         return mX;

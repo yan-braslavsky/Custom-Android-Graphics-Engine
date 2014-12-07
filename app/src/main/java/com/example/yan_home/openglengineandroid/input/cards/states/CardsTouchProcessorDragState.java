@@ -2,7 +2,6 @@ package com.example.yan_home.openglengineandroid.input.cards.states;
 
 import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessor;
 import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessorState;
-import com.yan.glengine.nodes.YANTexturedNode;
 
 /**
  * Created by Yan-Home on 11/21/2014.
@@ -15,21 +14,23 @@ public class CardsTouchProcessorDragState extends CardsTouchProcessorState {
 
     @Override
     public void applyState() {
-        //TODO : Implement
-    }
-
-    @Override
-    public void onTouchUp() {
 
     }
 
     @Override
-    public void onCardTouchDrag(YANTexturedNode touchedCard) {
-
+    public boolean onTouchUp(float normalizedX, float normalizedY) {
+        return false;
     }
 
     @Override
-    public void onCardTouchDown(YANTexturedNode touchedCard) {
-
+    public boolean onTouchDrag(float normalizedX, float normalizedY) {
+        return false;
     }
+
+    @Override
+    public boolean onTouchDown(float normalizedX, float normalizedY) {
+        return false;
+    }
+
+
 }

@@ -1,7 +1,5 @@
 package com.example.yan_home.openglengineandroid.input.cards;
 
-import com.yan.glengine.nodes.YANTexturedNode;
-
 /**
  * Created by Yan-Home on 11/21/2014.
  */
@@ -15,9 +13,9 @@ public abstract class CardsTouchProcessorState {
 
     public abstract void applyState();
 
-    public abstract void onTouchUp();
+    public abstract boolean onTouchUp(float normalizedX, float normalizedY);
 
-    public abstract void onCardTouchDrag(YANTexturedNode touchedCard);
+    public abstract boolean onTouchDrag(float normalizedX, float normalizedY);
 
-    public abstract void onCardTouchDown(YANTexturedNode touchedCard);
+    public abstract boolean onTouchDown(float normalizedX, float normalizedY);
 }

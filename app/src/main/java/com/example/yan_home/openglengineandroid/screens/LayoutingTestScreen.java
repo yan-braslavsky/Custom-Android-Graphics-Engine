@@ -35,7 +35,7 @@ public class LayoutingTestScreen extends BaseGameScreen {
         mNodesToRemove = new ArrayList<>();
         mCardsLayouter = new CardsLayouterImpl(CARDS_COUNT);
         mCardsTweenAnimator = new CardsTweenAnimator();
-        mCardsTouchProcessor = new CardsTouchProcessor(mCardNodesArray);
+        mCardsTouchProcessor = new CardsTouchProcessor(mCardNodesArray,mCardsTweenAnimator);
     }
 
 
@@ -112,6 +112,8 @@ public class LayoutingTestScreen extends BaseGameScreen {
         float aspectRatio = mCardNodesArray.get(0).getTextureRegion().getWidth() / mCardNodesArray.get(0).getTextureRegion().getHeight();
         float cardWidth = Math.min(getSceneSize().getX(), getSceneSize().getY()) / (float) ((MAX_CARDS_IN_LINE) / 2);
         float cardHeight = cardWidth / aspectRatio;
+
+        mCardsTouchProcessor.setOriginalCardSize(cardWidth,cardHeight);
 
         for (YANTexturedNode cardNode : mCardNodesArray) {
             cardNode.setSize(cardWidth, cardHeight);

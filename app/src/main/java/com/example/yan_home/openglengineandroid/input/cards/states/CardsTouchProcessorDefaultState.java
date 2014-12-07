@@ -2,7 +2,10 @@ package com.example.yan_home.openglengineandroid.input.cards.states;
 
 import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessor;
 import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessorState;
+import com.yan.glengine.EngineWrapper;
+import com.yan.glengine.input.YANInputManager;
 import com.yan.glengine.nodes.YANTexturedNode;
+import com.yan.glengine.util.math.YANVector2;
 
 /**
  * Created by Yan-Home on 11/21/2014.
@@ -19,19 +22,32 @@ public class CardsTouchProcessorDefaultState extends CardsTouchProcessorState {
     }
 
     @Override
-    public void onTouchUp() {
-
+    public boolean onTouchUp(float normalizedX, float normalizedY) {
+        return false;
     }
 
     @Override
-    public void onCardTouchDrag(YANTexturedNode touchedCard) {
-
+    public boolean onTouchDrag(float normalizedX, float normalizedY) {
+        return false;
     }
 
     @Override
-    public void onCardTouchDown(YANTexturedNode touchedCard) {
+    public boolean onTouchDown(float normalizedX, float normalizedY) {
+        YANVector2 touchToWorldPoint = YANInputManager.touchToWorld(normalizedX, normalizedY,
+                EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY());
 
-        //TODO : switch to hover state and delegate the touch card to it
-        touchedCard.setSize(touchedCard.getSize().getX() * 1.2f, touchedCard.getSize().getY() * 1.2f);
+        //find touched card under the touch point
+        YANTexturedNode touchedCard = mCardsTouchProcessor.findTouchedCard(touchToWorldPoint);
+        if (touchedCard == null)
+            return false;
+
+        //move to hover state
+        CardsTouchProcessorHoverState hoverState = new CardsTouchProcessorHoverState(mCardsTouchProcessor);
+        hoverState.setHoveredCard(touchedCard);
+        mCardsTouchProcessor.setCardsTouchProcessorState(hoverState);
+        return true;
+
     }
+
+
 }
