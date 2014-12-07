@@ -17,17 +17,21 @@ import java.util.List;
 public class CardsTouchProcessor {
 
     //I assume there gonna be maximum of cards underneath a touch point
-    public static final int MAX_CARDS_TO_PROCESS = 15;
+    private static final int MAX_CARDS_TO_PROCESS = 15;
     private final YANInputManager.TouchListener mTouchListener;
     private CardsTouchProcessorState mCardsTouchProcessorState;
     private List<YANTexturedNode> mTouchedCards;
     private Comparator<YANTexturedNode> mComparator;
 
-
     public CardsTouchProcessor(final ArrayList<YANTexturedNode> cardNodesArray) {
 
-        mCardsTouchProcessorState = new CardsTouchProcessorDefaultState();
+        //starting from a default state
+        setCardsTouchProcessorState(new CardsTouchProcessorDefaultState(this));
+
+        //array of cards under touch point
         mTouchedCards = new ArrayList<>(MAX_CARDS_TO_PROCESS);
+
+        //comparator of cards by sorting layer
         mComparator = new Comparator<YANTexturedNode>() {
             @Override
             public int compare(YANTexturedNode lhs, YANTexturedNode rhs) {
@@ -35,30 +39,36 @@ public class CardsTouchProcessor {
             }
         };
 
+        //touch listener that is added to input processor
         mTouchListener = new YANInputManager.TouchListener() {
             @Override
             public boolean onTouchDown(float normalizedX, float normalizedY) {
 
+                //find touched card under the touch point
                 YANTexturedNode touchedCard = findTouchedCard(normalizedX, normalizedY, cardNodesArray);
                 if (touchedCard == null)
                     return false;
 
+                //handle touch down on card
                 onCardTouchDown(touchedCard);
                 return true;
             }
 
             @Override
             public boolean onTouchUp(float normalizedX, float normalizedY) {
-                CardsTouchProcessor.this.onTouchUp();
+                onCardTouchUp();
                 return false;
             }
 
             @Override
             public boolean onTouchDrag(float normalizedX, float normalizedY) {
+
+                //find touched card under the touch point
                 YANTexturedNode touchedCard = findTouchedCard(normalizedX, normalizedY, cardNodesArray);
                 if (touchedCard == null)
                     return false;
 
+                //handle touch drag on card
                 onCardTouchDrag(touchedCard);
                 return true;
             }
@@ -66,15 +76,25 @@ public class CardsTouchProcessor {
 
     }
 
+    /**
+     * Making the touch processor active.It starts listen to touch events
+     * and process it on cards.
+     */
     public void register() {
         YANInputManager.getInstance().addEventListener(mTouchListener);
     }
 
+    /**
+     * Makes touch processor not active.It no longer processes touch events on cards.
+     */
     public void unRegister() {
         YANInputManager.getInstance().removeEventListener(mTouchListener);
     }
 
-    private void onTouchUp() {
+    private void onCardTouchDown(YANTexturedNode touchedCard) {
+        mCardsTouchProcessorState.onCardTouchDown(touchedCard);
+    }
+    private void onCardTouchUp() {
         mCardsTouchProcessorState.onTouchUp();
     }
 
@@ -82,11 +102,6 @@ public class CardsTouchProcessor {
         mCardsTouchProcessorState.onCardTouchDrag(touchedCard);
     }
 
-    private void onCardTouchDown(YANTexturedNode touchedCard) {
-        //TODO : here we actually will process the touched card according to state
-        mCardsTouchProcessorState.onCardTouchDown(touchedCard);
-
-    }
 
     /**
      * Goes over all cards underneath the touch point and puts them into array
@@ -113,5 +128,10 @@ public class CardsTouchProcessor {
         //the latest card is the one that was touched
         return mTouchedCards.get(mTouchedCards.size() - 1);
 
+    }
+
+    public void setCardsTouchProcessorState(CardsTouchProcessorState cardsTouchProcessorState) {
+        mCardsTouchProcessorState = cardsTouchProcessorState;
+        mCardsTouchProcessorState.applyState();
     }
 }

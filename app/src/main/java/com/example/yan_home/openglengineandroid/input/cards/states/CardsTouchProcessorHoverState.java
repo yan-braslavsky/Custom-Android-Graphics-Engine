@@ -7,9 +7,9 @@ import com.yan.glengine.nodes.YANTexturedNode;
 /**
  * Created by Yan-Home on 11/21/2014.
  */
-public class CardsTouchProcessorSelectedState extends CardsTouchProcessorState {
+public class CardsTouchProcessorHoverState extends CardsTouchProcessorState {
 
-    public CardsTouchProcessorSelectedState(CardsTouchProcessor cardsTouchProcessor) {
+    public CardsTouchProcessorHoverState(CardsTouchProcessor cardsTouchProcessor) {
         super(cardsTouchProcessor);
     }
 
