@@ -63,7 +63,7 @@ public class CardsLayoutStrategyFan extends CardsLayoutStrategy {
             //after reposition
             slot.setSortingIndex(currentSortingIndex);
 
-            //update sorting index
+            //onUpdate sorting index
             currentSortingIndex += currentDistanceFromOrigin * side;
 
             //the amount of rotation in degrees

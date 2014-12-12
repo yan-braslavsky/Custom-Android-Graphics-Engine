@@ -10,6 +10,7 @@ import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.programs.YANColorShaderProgram;
 import com.yan.glengine.programs.YANTextureShaderProgram;
 import com.yan.glengine.screens.YANIScreen;
+import com.yan.glengine.tasks.YANTaskManager;
 import com.yan.glengine.util.YANMatrixHelper;
 import com.yan.glengine.util.colors.YANColor;
 import com.yan.glengine.util.math.YANVector2;
@@ -69,9 +70,14 @@ public class YANGLRenderer {
 
     public void onDrawFrame() {
 
-        //update screen state
+        float deltaTimeSeconds = ((float) (System.currentTimeMillis() - mPreviousFrameTime)) / 1000f;
+
+        //onUpdate tasks
+        YANTaskManager.getInstance().update(deltaTimeSeconds);
+
+        //onUpdate screen state
         if (mCurrentScreen != null) {
-            mCurrentScreen.onUpdate(((float) (System.currentTimeMillis() - mPreviousFrameTime)) / 1000f);
+            mCurrentScreen.onUpdate(deltaTimeSeconds);
         }
 
         // Clear the rendering surface.
