@@ -5,29 +5,48 @@ package com.yan.glengine.tasks;
  */
 public class YANDelayedTask implements YANTask {
 
+    public interface YANDelayedTaskListener {
+        void onComplete();
+    }
+
+
     private float mDurationSeconds;
+    private YANDelayedTaskListener mDelayedTaskListener;
 
     public YANDelayedTask(float durationSeconds) {
         mDurationSeconds = durationSeconds;
     }
 
-    public interface YANDelayedTaskListener {
-        void onComplete();
+    public YANDelayedTask(float durationSeconds, YANDelayedTaskListener listener) {
+        mDurationSeconds = durationSeconds;
+        mDelayedTaskListener = listener;
     }
+
 
     @Override
     public void onUpdate(float deltaSeconds) {
-        //TODO : calculate time and remove , when task suppose to finish
+        mDurationSeconds -= deltaSeconds;
+        if (mDurationSeconds <= 0) {
+            finishTask();
+        }
+    }
+
+    private void finishTask() {
+        stop();
+        if (mDelayedTaskListener != null) {
+            mDelayedTaskListener.onComplete();
+        }
     }
 
     @Override
     public void start() {
-        //TODO : reset the values of end task calculation and add to the manager
+        YANTaskManager.getInstance().addTask(this);
     }
 
     @Override
     public void stop() {
-        //TODO : reset the values of end task calculation and remove from the manager
+        YANTaskManager.getInstance().removeTask(this);
+        mDurationSeconds = 0;
     }
 
 }

@@ -17,8 +17,12 @@ import java.util.List;
  */
 public class CardsTouchProcessor {
 
+    public interface CardsTouchProcessorListener{
+        void onSelectedCardTap(YANTexturedNode card);
+    }
+
     //I assume there gonna be maximum of cards underneath a touch point
-    private static final int MAX_CARDS_TO_PROCESS = 15;
+    private static final int MAX_CARDS_TO_PROCESS = 6;
     private final YANInputManager.TouchListener mTouchListener;
     private final ArrayList<YANTexturedNode> mCardNodesArray;
     private final CardsTweenAnimator mCardsTweenAnimator;
@@ -26,6 +30,7 @@ public class CardsTouchProcessor {
     private CardsTouchProcessorState mCardsTouchProcessorState;
     private List<YANTexturedNode> mTouchedCards;
     private Comparator<YANTexturedNode> mComparator;
+    private CardsTouchProcessorListener mCardsTouchProcessorListener;
 
     public CardsTouchProcessor(final ArrayList<YANTexturedNode> cardNodesArray, CardsTweenAnimator cardsTweenAnimator) {
 
@@ -128,5 +133,13 @@ public class CardsTouchProcessor {
 
     public void setOriginalCardSize(float cardWidth,float cardHeight) {
         mOriginalCardSize = new YANVector2(cardWidth,cardHeight);
+    }
+
+    public CardsTouchProcessorListener getCardsTouchProcessorListener() {
+        return mCardsTouchProcessorListener;
+    }
+
+    public void setCardsTouchProcessorListener(CardsTouchProcessorListener cardsTouchProcessorListener) {
+        mCardsTouchProcessorListener = cardsTouchProcessorListener;
     }
 }

@@ -35,7 +35,13 @@ public class LayoutingTestScreen extends BaseGameScreen {
         mNodesToRemove = new ArrayList<>();
         mCardsLayouter = new CardsLayouterImpl(CARDS_COUNT);
         mCardsTweenAnimator = new CardsTweenAnimator();
-        mCardsTouchProcessor = new CardsTouchProcessor(mCardNodesArray,mCardsTweenAnimator);
+        mCardsTouchProcessor = new CardsTouchProcessor(mCardNodesArray, mCardsTweenAnimator);
+        mCardsTouchProcessor.setCardsTouchProcessorListener(new CardsTouchProcessor.CardsTouchProcessorListener() {
+            @Override
+            public void onSelectedCardTap(YANTexturedNode card) {
+                removeCardFromHand(card);
+            }
+        });
     }
 
 
@@ -63,6 +69,10 @@ public class LayoutingTestScreen extends BaseGameScreen {
 
         //removing a random card from the hand
         final YANTexturedNode cardToRemove = mCardNodesArray.get((int) YANMathUtils.randomInRange(0, mCardNodesArray.size() - 1));
+        removeCardFromHand(cardToRemove);
+    }
+
+    private void removeCardFromHand(final YANTexturedNode cardToRemove) {
         mCardNodesArray.remove(cardToRemove);
         float targetRotation = YANMathUtils.randomInRange(0, 360);
 
@@ -113,7 +123,7 @@ public class LayoutingTestScreen extends BaseGameScreen {
         float cardWidth = Math.min(getSceneSize().getX(), getSceneSize().getY()) / (float) ((MAX_CARDS_IN_LINE) / 2);
         float cardHeight = cardWidth / aspectRatio;
 
-        mCardsTouchProcessor.setOriginalCardSize(cardWidth,cardHeight);
+        mCardsTouchProcessor.setOriginalCardSize(cardWidth, cardHeight);
 
         for (YANTexturedNode cardNode : mCardNodesArray) {
             cardNode.setSize(cardWidth, cardHeight);

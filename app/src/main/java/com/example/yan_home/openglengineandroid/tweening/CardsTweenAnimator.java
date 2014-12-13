@@ -42,7 +42,46 @@ public class CardsTweenAnimator {
                 .start(mTweenManager);
     }
 
+    public void animateCardToAlpha(YANTexturedNode card, float targetAlpha, float duration) {
+        Timeline.createSequence()
+                .push(Tween.to(card, YANTweenNodeAccessor.OPACITY, duration).target(targetAlpha))
+                .start(mTweenManager);
+    }
+
+    public void animateCardToXY(YANTexturedNode card, float targetX, float targetY, float duration) {
+        Timeline.createSequence()
+                .beginParallel()
+                .push(Tween.to(card, YANTweenNodeAccessor.POSITION_X, duration).target(targetX))
+                .push(Tween.to(card, YANTweenNodeAccessor.POSITION_Y, duration).target(targetY))
+                .start(mTweenManager);
+    }
+
+    public void animateCardToY(YANTexturedNode card, float targetY, float duration, TweenCallback animationEndCallback) {
+        Timeline.createSequence()
+                .push(Tween.to(card, YANTweenNodeAccessor.POSITION_Y, duration).target(targetY))
+                .setCallback(animationEndCallback)
+                .start(mTweenManager);
+    }
+
     public void update(float deltaTime) {
         mTweenManager.update(deltaTime);
+    }
+
+    public void animateSize(YANTexturedNode card, float width, float height, float duration) {
+        Timeline.createSequence()
+                .beginParallel()
+                .push(Tween.to(card, YANTweenNodeAccessor.SIZE_X, duration).target(width))
+                .push(Tween.to(card, YANTweenNodeAccessor.SIZE_Y, duration).target(height))
+                .start(mTweenManager);
+    }
+
+    public void animateSizeAndPositionXY(YANTexturedNode card, float width, float height,float targetX,float targetY, float duration) {
+        Timeline.createSequence()
+                .beginParallel()
+                .push(Tween.to(card, YANTweenNodeAccessor.SIZE_X, duration).target(width))
+                .push(Tween.to(card, YANTweenNodeAccessor.SIZE_Y, duration).target(height))
+                .push(Tween.to(card, YANTweenNodeAccessor.POSITION_X, duration).target(targetX))
+                .push(Tween.to(card, YANTweenNodeAccessor.POSITION_Y, duration).target(targetY))
+                .start(mTweenManager);
     }
 }

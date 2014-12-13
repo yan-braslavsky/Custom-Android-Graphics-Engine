@@ -5,6 +5,8 @@ package com.example.yan_home.openglengineandroid.input.cards;
  */
 public abstract class CardsTouchProcessorState {
 
+    protected static final float BACK_IN_PLACE_ANIMATION_DURATION = 0.2f;
+
     protected CardsTouchProcessor mCardsTouchProcessor;
 
     public CardsTouchProcessorState(CardsTouchProcessor cardsTouchProcessor) {

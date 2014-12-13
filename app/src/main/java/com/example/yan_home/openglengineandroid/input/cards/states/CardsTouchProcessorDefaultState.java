@@ -12,13 +12,17 @@ import com.yan.glengine.util.math.YANVector2;
  */
 public class CardsTouchProcessorDefaultState extends CardsTouchProcessorState {
 
+
     public CardsTouchProcessorDefaultState(CardsTouchProcessor cardsTouchProcessor) {
         super(cardsTouchProcessor);
     }
 
     @Override
     public void applyState() {
-        //TODO : Make all the cards at their regular alpha , position and size
+        //Make all the cards at their regular alpha , position and size
+        for (YANTexturedNode card : mCardsTouchProcessor.getCardNodesArray()) {
+            mCardsTouchProcessor.getCardsTweenAnimator().animateCardToAlpha(card, 1f, BACK_IN_PLACE_ANIMATION_DURATION);
+        }
     }
 
     @Override
