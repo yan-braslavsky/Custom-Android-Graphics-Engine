@@ -1,5 +1,7 @@
 package com.example.yan_home.openglengineandroid.screens;
 
+import com.example.yan_home.openglengineandroid.entities.cards.Card;
+import com.example.yan_home.openglengineandroid.entities.cards.CardsHelper;
 import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessor;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayoutSlot;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayouter;
@@ -168,8 +170,9 @@ public class LayoutingTestScreen extends BaseGameScreen {
     }
 
     private void initCardsArray() {
-        for (int i = 0; i < CARDS_COUNT; i++) {
-            String name = "card_" + (i + 1) + ".png";
+        ArrayList<Card> cardEntities = CardsHelper.create36Deck();
+        for (Card cardEntity : cardEntities) {
+            String name = "cards_" + cardEntity.getSuit() + "_" + cardEntity.getRank() + ".png";
             YANTexturedNode card = new YANTexturedNode(mAtlas.getTextureRegion(name));
             mCardNodesArray.add(card);
         }
