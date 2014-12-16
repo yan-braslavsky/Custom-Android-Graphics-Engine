@@ -36,7 +36,7 @@ public class CardsTouchProcessorHoverState extends CardsTouchProcessorState {
         //return previously hovered back card in place
         if (mPoppedUpCard != null) {
 //            mPoppedUpCard.setPosition(mPoppedUpCard.getPosition().getX() ,mPoppedUpCard.getPosition().getY() + yOffset);
-            mCardsTouchProcessor.getCardsTweenAnimator().animateCardToY(mHoveredCard, mHoveredCard.getPosition().getY() + yOffset, HOVERED_ALPHA_ANIMATION_DURATION, null);
+//            mCardsTouchProcessor.getCardsTweenAnimator().animateCardToY(mHoveredCard, mHoveredCard.getPosition().getY() + yOffset, HOVERED_ALPHA_ANIMATION_DURATION, null);
             mPoppedUpCard = null;
         }
 
@@ -77,11 +77,11 @@ public class CardsTouchProcessorHoverState extends CardsTouchProcessorState {
 
     public void setHoveredCard(YANTexturedNode hoveredCard) {
 
-        float yOffset = (mCardsTouchProcessor.getOriginalCardSize().getY() * Y_OFFSET_MULTIPLIER);
+//        float yOffset = (mCardsTouchProcessor.getOriginalCardSize().getY() * Y_OFFSET_MULTIPLIER);
 
         //return previously hovered back card in place
         if (mPoppedUpCard != null) {
-            mPoppedUpCard.setPosition(mPoppedUpCard.getPosition().getX() ,mPoppedUpCard.getPosition().getY() + yOffset);
+//            mPoppedUpCard.setPosition(mPoppedUpCard.getPosition().getX() ,mPoppedUpCard.getPosition().getY() + yOffset);
             mPoppedUpCard = null;
         }
 
@@ -89,7 +89,7 @@ public class CardsTouchProcessorHoverState extends CardsTouchProcessorState {
         mHoveredCard = hoveredCard;
 
         //popup card new hovered card
-        mHoveredCard.setPosition(hoveredCard.getPosition().getX() ,hoveredCard.getPosition().getY() - yOffset);
+//        mHoveredCard.setPosition(hoveredCard.getPosition().getX() ,hoveredCard.getPosition().getY() - yOffset);
 //        mCardsTouchProcessor.getCardsTweenAnimator().animateCardToY(hoveredCard, hoveredCard.getPosition().getY() - yOffset, HOVERED_ALPHA_ANIMATION_DURATION, null);
         mPoppedUpCard = mHoveredCard;
 

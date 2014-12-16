@@ -43,6 +43,15 @@ public class LayoutingTestScreen extends BaseGameScreen {
             public void onSelectedCardTap(YANTexturedNode card) {
                 removeCardFromHand(card);
             }
+
+            @Override
+            public void onDraggedCardReleased(YANTexturedNode card) {
+                if(card.getPosition().getY() <= getSceneSize().getY()/2){
+                    removeCardFromHand(card);
+                }else {
+                    layoutCards();
+                }
+            }
         });
     }
 

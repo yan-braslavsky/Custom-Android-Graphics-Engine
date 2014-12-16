@@ -23,6 +23,7 @@ public class CardsTouchProcessorSelectedState extends CardsTouchProcessorState {
     private float mOriginalYPosition;
     private float mInitialYOffset;
     private YANDelayedTask mDelayedTask;
+    private long mLastTouchDownForTap;
 
     public CardsTouchProcessorSelectedState(CardsTouchProcessor cardsTouchProcessor) {
         super(cardsTouchProcessor);
@@ -30,6 +31,9 @@ public class CardsTouchProcessorSelectedState extends CardsTouchProcessorState {
 
     @Override
     public void applyState() {
+
+        //fix in case card is faded out
+        mCardsTouchProcessor.getCardsTweenAnimator().animateCardToAlpha(mSelectedCard, 1f, 0.1f);
 
         //cache original values
         mOriginalYPosition = mSelectedCard.getPosition().getY();
@@ -39,10 +43,10 @@ public class CardsTouchProcessorSelectedState extends CardsTouchProcessorState {
         mSelectedCard.setSortingLayer(100);
 
         //make card bigger
-        float yOffset = mSelectedCard.getPosition().getY() * 0.1f;
-        mCardsTouchProcessor.getCardsTweenAnimator().animateSizeAndPositionXY(mSelectedCard,
-                mCardsTouchProcessor.getOriginalCardSize().getX() * SELECTED_CARD_SIZE_SCALE, mCardsTouchProcessor.getOriginalCardSize().getY() * SELECTED_CARD_SIZE_SCALE,
-                mSelectedCard.getPosition().getX(), mSelectedCard.getPosition().getY() - yOffset, SELECTION_ANIMATION_DURATION);
+//        float yOffset = mSelectedCard.getPosition().getY() * 0.1f;
+//        mCardsTouchProcessor.getCardsTweenAnimator().animateSizeAndPositionXY(mSelectedCard,
+//                mCardsTouchProcessor.getOriginalCardSize().getX() * SELECTED_CARD_SIZE_SCALE, mCardsTouchProcessor.getOriginalCardSize().getY() * SELECTED_CARD_SIZE_SCALE,
+//                mSelectedCard.getPosition().getX(), mSelectedCard.getPosition().getY() - yOffset, SELECTION_ANIMATION_DURATION);
 
         mDelayedTask = new YANDelayedTask(RETURN_TO_DEFAULT_STATE_DELAY_SECONDS, new YANDelayedTask.YANDelayedTaskListener() {
             @Override
@@ -59,10 +63,10 @@ public class CardsTouchProcessorSelectedState extends CardsTouchProcessorState {
         mDelayedTask.stop();
         mSelectedCard.setSortingLayer(originalSortingLayer);
 
-        mCardsTouchProcessor.getCardsTweenAnimator().animateSizeAndPositionXY(mSelectedCard,
-                mCardsTouchProcessor.getOriginalCardSize().getX(), mCardsTouchProcessor.getOriginalCardSize().getY(),
-                mSelectedCard.getPosition().getX(), mOriginalYPosition + mInitialYOffset,
-                BACK_IN_PLACE_ANIMATION_DURATION);
+//        mCardsTouchProcessor.getCardsTweenAnimator().animateSizeAndPositionXY(mSelectedCard,
+//                mCardsTouchProcessor.getOriginalCardSize().getX(), mCardsTouchProcessor.getOriginalCardSize().getY(),
+//                mSelectedCard.getPosition().getX(), mOriginalYPosition + mInitialYOffset,
+//                BACK_IN_PLACE_ANIMATION_DURATION);
 
         CardsTouchProcessorDefaultState defaultState = new CardsTouchProcessorDefaultState(mCardsTouchProcessor);
         mCardsTouchProcessor.setCardsTouchProcessorState(defaultState);
@@ -70,16 +74,6 @@ public class CardsTouchProcessorSelectedState extends CardsTouchProcessorState {
 
     @Override
     public boolean onTouchUp(float normalizedX, float normalizedY) {
-        return false;
-    }
-
-    @Override
-    public boolean onTouchDrag(float normalizedX, float normalizedY) {
-        return false;
-    }
-
-    @Override
-    public boolean onTouchDown(float normalizedX, float normalizedY) {
 
         //if touch down not on the selected card , go back to  default state , else go to drag state
         YANVector2 touchToWorldPoint = YANInputManager.touchToWorld(normalizedX, normalizedY,
@@ -97,10 +91,55 @@ public class CardsTouchProcessorSelectedState extends CardsTouchProcessorState {
             return true;
         }
 
+        return false;
+    }
 
-        //else we returning to default state
-        returnToDefaultState();
-        return true;
+    @Override
+    public boolean onTouchDrag(float normalizedX, float normalizedY) {
+
+        //we need a small delay between touch down and touch up to identify TAP
+        if ((System.currentTimeMillis() - mLastTouchDownForTap) < 65) {
+            return false;
+        }
+
+        //if touch down not on the selected card , go back to  default state , else go to drag state
+        YANVector2 touchToWorldPoint = YANInputManager.touchToWorld(normalizedX, normalizedY,
+                EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY());
+
+        //find touched card under the touch point
+        YANTexturedNode touchedCard = mCardsTouchProcessor.findTouchedCard(touchToWorldPoint);
+        if (touchedCard == mSelectedCard) {
+            // go to drag state
+            mDelayedTask.stop();
+            CardsTouchProcessorDragState dragState = new CardsTouchProcessorDragState(mCardsTouchProcessor);
+            dragState.setDraggedCard(mSelectedCard);
+            dragState.setTouchPositionOffset(touchToWorldPoint.getX() - mSelectedCard.getPosition().getX(), touchToWorldPoint.getY() - mSelectedCard.getPosition().getY());
+            mCardsTouchProcessor.setCardsTouchProcessorState(dragState);
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onTouchDown(float normalizedX, float normalizedY) {
+
+        //if touch down not on the selected card , go back to  default state , else go to drag state
+        YANVector2 touchToWorldPoint = YANInputManager.touchToWorld(normalizedX, normalizedY,
+                EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY());
+
+        //find touched card under the touch point
+        YANTexturedNode touchedCard = mCardsTouchProcessor.findTouchedCard(touchToWorldPoint);
+        if (touchedCard != mSelectedCard) {
+            // we returning to default state
+            returnToDefaultState();
+            return true;
+        } else {
+            //start tap counting
+            mLastTouchDownForTap = System.currentTimeMillis();
+        }
+
+        return false;
     }
 
 

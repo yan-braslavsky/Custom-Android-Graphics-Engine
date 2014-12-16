@@ -19,6 +19,7 @@ public class CardsTouchProcessor {
 
     public interface CardsTouchProcessorListener{
         void onSelectedCardTap(YANTexturedNode card);
+        void onDraggedCardReleased(YANTexturedNode card);
     }
 
     //I assume there gonna be maximum of cards underneath a touch point
