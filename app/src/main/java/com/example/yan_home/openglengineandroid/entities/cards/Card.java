@@ -5,14 +5,14 @@ package com.example.yan_home.openglengineandroid.entities.cards;
  */
 public class Card {
 
-    public static class Suit{
+    public static class Suit {
         public static final String CLUBS = "clubs";
         public static final String DIAMONDS = "diamonds";
         public static final String HEARTS = "hearts";
         public static final String SPADES = "spades";
     }
 
-    public static class Rank{
+    public static class Rank {
         public static final String SIX = "six";
         public static final String SEVEN = "seven";
         public static final String EIGHT = "eight";
@@ -38,5 +38,33 @@ public class Card {
 
     public String getSuit() {
         return mSuit;
+    }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "mRank='" + mRank + '\'' +
+                ", mSuit='" + mSuit + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Card)) return false;
+
+        Card card = (Card) o;
+
+        if (!mRank.equals(card.mRank)) return false;
+        if (!mSuit.equals(card.mSuit)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mRank.hashCode();
+        result = 31 * result + mSuit.hashCode();
+        return result;
     }
 }

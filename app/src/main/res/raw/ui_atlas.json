@@ -19,313 +19,7 @@
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
-	"filename": "cards_clubs_ace.png",
-	"frame": {"x":539,"y":701,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_clubs_eight.png",
-	"frame": {"x":897,"y":701,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_clubs_jack.png",
-	"frame": {"x":718,"y":701,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_clubs_king.png",
-	"frame": {"x":360,"y":701,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_clubs_nine.png",
-	"frame": {"x":181,"y":701,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_clubs_queen.png",
-	"frame": {"x":1076,"y":468,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_clubs_seven.png",
-	"frame": {"x":897,"y":468,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_clubs_six.png",
-	"frame": {"x":1076,"y":701,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_clubs_ten.png",
-	"frame": {"x":2,"y":701,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_diamonds_ace.png",
-	"frame": {"x":2,"y":934,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_diamonds_eight.png",
-	"frame": {"x":1076,"y":934,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_diamonds_jack.png",
-	"frame": {"x":2,"y":1167,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_diamonds_king.png",
-	"frame": {"x":181,"y":1167,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_diamonds_nine.png",
-	"frame": {"x":897,"y":934,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_diamonds_queen.png",
-	"frame": {"x":718,"y":934,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_diamonds_seven.png",
-	"frame": {"x":181,"y":934,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_diamonds_six.png",
-	"frame": {"x":539,"y":934,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_diamonds_ten.png",
-	"frame": {"x":360,"y":934,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_hearts_ace.png",
-	"frame": {"x":718,"y":468,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_hearts_eight.png",
-	"frame": {"x":1070,"y":235,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_hearts_jack.png",
-	"frame": {"x":668,"y":2,"w":176,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
-	"sourceSize": {"w":176,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_hearts_king.png",
-	"frame": {"x":490,"y":2,"w":176,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
-	"sourceSize": {"w":176,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_hearts_nine.png",
-	"frame": {"x":2,"y":468,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_hearts_queen.png",
-	"frame": {"x":312,"y":2,"w":176,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
-	"sourceSize": {"w":176,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_hearts_seven.png",
-	"frame": {"x":181,"y":468,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_hearts_six.png",
-	"frame": {"x":360,"y":468,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_hearts_ten.png",
-	"frame": {"x":539,"y":468,"w":177,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
-	"sourceSize": {"w":177,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_spades_ace.png",
-	"frame": {"x":134,"y":2,"w":176,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
-	"sourceSize": {"w":176,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_spades_eight.png",
-	"frame": {"x":1024,"y":2,"w":176,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
-	"sourceSize": {"w":176,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_spades_jack.png",
-	"frame": {"x":846,"y":2,"w":176,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
-	"sourceSize": {"w":176,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_spades_king.png",
-	"frame": {"x":536,"y":235,"w":176,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
-	"sourceSize": {"w":176,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_spades_nine.png",
-	"frame": {"x":714,"y":235,"w":176,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
-	"sourceSize": {"w":176,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_spades_queen.png",
-	"frame": {"x":892,"y":235,"w":176,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
-	"sourceSize": {"w":176,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_spades_seven.png",
-	"frame": {"x":358,"y":235,"w":176,"h":231},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
-	"sourceSize": {"w":176,"h":231},
-	"pivot": {"x":0.5,"y":0.5}
-},
-{
-	"filename": "cards_spades_six.png",
+	"filename": "cards_back.png",
 	"frame": {"x":180,"y":235,"w":176,"h":231},
 	"rotated": false,
 	"trimmed": false,
@@ -334,8 +28,323 @@
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
-	"filename": "cards_spades_ten.png",
+	"filename": "cards_clubs_ace.png",
+	"frame": {"x":897,"y":701,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_clubs_eight.png",
+	"frame": {"x":2,"y":934,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_clubs_jack.png",
+	"frame": {"x":1076,"y":701,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_clubs_king.png",
+	"frame": {"x":718,"y":701,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_clubs_nine.png",
+	"frame": {"x":539,"y":701,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_clubs_queen.png",
+	"frame": {"x":181,"y":701,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_clubs_seven.png",
+	"frame": {"x":2,"y":701,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_clubs_six.png",
+	"frame": {"x":181,"y":934,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_clubs_ten.png",
+	"frame": {"x":360,"y":701,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_diamonds_ace.png",
+	"frame": {"x":181,"y":1167,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_diamonds_eight.png",
+	"frame": {"x":2,"y":1167,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_diamonds_jack.png",
+	"frame": {"x":360,"y":1167,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_diamonds_king.png",
+	"frame": {"x":1076,"y":934,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_diamonds_nine.png",
+	"frame": {"x":718,"y":934,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_diamonds_queen.png",
+	"frame": {"x":897,"y":934,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_diamonds_seven.png",
+	"frame": {"x":539,"y":934,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_diamonds_six.png",
+	"frame": {"x":360,"y":934,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_diamonds_ten.png",
+	"frame": {"x":1076,"y":468,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_hearts_ace.png",
+	"frame": {"x":360,"y":468,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_hearts_eight.png",
+	"frame": {"x":2,"y":468,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_hearts_jack.png",
+	"frame": {"x":846,"y":2,"w":176,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
+	"sourceSize": {"w":176,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_hearts_king.png",
+	"frame": {"x":668,"y":2,"w":176,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
+	"sourceSize": {"w":176,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_hearts_nine.png",
+	"frame": {"x":897,"y":468,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_hearts_queen.png",
+	"frame": {"x":490,"y":2,"w":176,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
+	"sourceSize": {"w":176,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_hearts_seven.png",
+	"frame": {"x":539,"y":468,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_hearts_six.png",
+	"frame": {"x":718,"y":468,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_hearts_ten.png",
+	"frame": {"x":181,"y":468,"w":177,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":231},
+	"sourceSize": {"w":177,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_spades_ace.png",
+	"frame": {"x":312,"y":2,"w":176,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
+	"sourceSize": {"w":176,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_spades_eight.png",
 	"frame": {"x":2,"y":235,"w":176,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
+	"sourceSize": {"w":176,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_spades_jack.png",
+	"frame": {"x":134,"y":2,"w":176,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
+	"sourceSize": {"w":176,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_spades_king.png",
+	"frame": {"x":1024,"y":2,"w":176,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
+	"sourceSize": {"w":176,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_spades_nine.png",
+	"frame": {"x":536,"y":235,"w":176,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
+	"sourceSize": {"w":176,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_spades_queen.png",
+	"frame": {"x":1070,"y":235,"w":176,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
+	"sourceSize": {"w":176,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_spades_seven.png",
+	"frame": {"x":892,"y":235,"w":176,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
+	"sourceSize": {"w":176,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_spades_six.png",
+	"frame": {"x":714,"y":235,"w":176,"h":231},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
+	"sourceSize": {"w":176,"h":231},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cards_spades_ten.png",
+	"frame": {"x":358,"y":235,"w":176,"h":231},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":231},
@@ -353,7 +362,7 @@
 },
 {
 	"filename": "glade.png",
-	"frame": {"x":360,"y":1167,"w":750,"h":764},
+	"frame": {"x":539,"y":1167,"w":750,"h":764},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":750,"h":764},
@@ -365,8 +374,8 @@
 	"version": "1.0",
 	"image": "ui_atlas.png",
 	"format": "RGBA8888",
-	"size": {"w":1255,"h":2028},
+	"size": {"w":1291,"h":2028},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:fb4249c272827446710936cd6dd01408:91228de663c2bb567bc70cb96968efd4:b5d3be34114d9e44e607c8ae1c6193a6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:aad3f6cee80321077b612ee6a3f2e23d:7851292cd1f46d44e47d1bc2d6985a7c:b5d3be34114d9e44e607c8ae1c6193a6$"
 }
 }
