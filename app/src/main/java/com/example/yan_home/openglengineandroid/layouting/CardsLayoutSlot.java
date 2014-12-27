@@ -1,6 +1,6 @@
 package com.example.yan_home.openglengineandroid.layouting;
 
-import com.yan.glengine.util.math.YANReadOnlyVector2;
+import com.yan.glengine.util.geometry.YANReadOnlyVector2;
 
 /**
  * Created by Yan-Home on 11/8/2014.

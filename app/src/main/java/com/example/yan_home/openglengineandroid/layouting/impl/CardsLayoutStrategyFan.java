@@ -2,7 +2,7 @@ package com.example.yan_home.openglengineandroid.layouting.impl;
 
 import com.example.yan_home.openglengineandroid.layouting.CardsLayoutStrategy;
 import com.yan.glengine.util.math.YANMathUtils;
-import com.yan.glengine.util.math.YANVector2;
+import com.yan.glengine.util.geometry.YANVector2;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,10 +30,10 @@ public class CardsLayoutStrategyFan extends CardsLayoutStrategy {
 
         boolean isEvenAmountOfSlots = slots.size() % 2 == 0;
 
-        float xCenterPosition = mBaseXPosition;
-        float yStartPosition = mBaseYPosition - mSlotHeight;
+        float xCenterPosition = mNormalizedBaseXPosition;
+        float yStartPosition = mNormalizedBaseYPosition - mSlotHeight;
 
-        float yRotationPoint = mBaseYPosition * 3;
+        float yRotationPoint = mNormalizedBaseYPosition * 3;
         float halfAvailableWidth = (mMaxWidth / 2);
         double tanHalfAngle = halfAvailableWidth / (yRotationPoint - yStartPosition);
         double halfAngleInRadians = Math.atan(tanHalfAngle);

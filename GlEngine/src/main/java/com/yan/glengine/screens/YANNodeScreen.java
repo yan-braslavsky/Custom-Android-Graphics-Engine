@@ -2,7 +2,7 @@ package com.yan.glengine.screens;
 
 import com.yan.glengine.nodes.YANIRenderableNode;
 import com.yan.glengine.renderer.YANGLRenderer;
-import com.yan.glengine.util.math.YANReadOnlyVector2;
+import com.yan.glengine.util.geometry.YANReadOnlyVector2;
 
 import java.util.ArrayList;
 import java.util.Collections;

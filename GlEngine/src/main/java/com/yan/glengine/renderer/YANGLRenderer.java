@@ -13,7 +13,7 @@ import com.yan.glengine.screens.YANIScreen;
 import com.yan.glengine.tasks.YANTaskManager;
 import com.yan.glengine.util.YANMatrixHelper;
 import com.yan.glengine.util.colors.YANColor;
-import com.yan.glengine.util.math.YANVector2;
+import com.yan.glengine.util.geometry.YANVector2;
 
 /**
  * Created by Yan-Home on 10/3/2014.

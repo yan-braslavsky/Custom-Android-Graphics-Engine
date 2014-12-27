@@ -5,7 +5,7 @@ import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessorS
 import com.yan.glengine.EngineWrapper;
 import com.yan.glengine.input.YANInputManager;
 import com.yan.glengine.nodes.YANTexturedNode;
-import com.yan.glengine.util.math.YANVector2;
+import com.yan.glengine.util.geometry.YANVector2;
 
 /**
  * Created by Yan-Home on 11/21/2014.

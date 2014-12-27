@@ -1,4 +1,4 @@
-package com.yan.glengine.util.math;
+package com.yan.glengine.util.geometry;
 
 /**
  * Created by Yan-Home on 10/3/2014.
@@ -38,4 +38,5 @@ public class YANVector2 implements YANReadOnlyVector2 {
     public void setY(float y) {
         mY = y;
     }
+
 }

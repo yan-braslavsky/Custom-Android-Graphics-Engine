@@ -1,6 +1,6 @@
 package com.yan.glengine.input;
 
-import com.yan.glengine.util.math.YANVector2;
+import com.yan.glengine.util.geometry.YANVector2;
 
 import java.util.ArrayList;
 import java.util.List;

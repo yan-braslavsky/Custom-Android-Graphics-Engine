@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.util.math.YANMathUtils;
-import com.yan.glengine.util.math.YANVector2;
+import com.yan.glengine.util.geometry.YANVector2;
 
 import java.util.ArrayList;
 import java.util.HashMap;

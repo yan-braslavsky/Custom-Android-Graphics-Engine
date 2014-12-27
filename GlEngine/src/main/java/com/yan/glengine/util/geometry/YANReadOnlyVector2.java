@@ -1,4 +1,4 @@
-package com.yan.glengine.util.math;
+package com.yan.glengine.util.geometry;
 
 /**
  * Created by Yan-Home on 11/8/2014.

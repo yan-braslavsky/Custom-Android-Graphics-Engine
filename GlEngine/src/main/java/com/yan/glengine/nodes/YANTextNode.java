@@ -2,9 +2,9 @@ package com.yan.glengine.nodes;
 
 import com.yan.glengine.data.YANVertexArray;
 import com.yan.glengine.programs.ShaderProgram;
-import com.yan.glengine.util.math.YANReadOnlyVector2;
-import com.yan.glengine.util.math.YANRectangle;
-import com.yan.glengine.util.math.YANVector2;
+import com.yan.glengine.util.geometry.YANReadOnlyVector2;
+import com.yan.glengine.util.geometry.YANRectangle;
+import com.yan.glengine.util.geometry.YANVector2;
 
 /**
  * Created by Yan-Home on 10/26/2014.

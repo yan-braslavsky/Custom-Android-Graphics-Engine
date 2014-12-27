@@ -12,9 +12,9 @@ public class CardsLayoutStrategyLine extends CardsLayoutStrategy {
 
     public void layoutRowOfSlots(List<CardsLayouterSlotImpl> slots) {
 
-        float yStartPosition = mBaseYPosition - mSlotHeight;
+        float yStartPosition = mNormalizedBaseYPosition - mSlotHeight;
         float distanceBetweenCards = mSlotWidth / 2;
-        float xStartPosition = mBaseXPosition - (distanceBetweenCards * (slots.size() / 2));
+        float xStartPosition = mNormalizedBaseXPosition - (distanceBetweenCards * (slots.size() / 2));
 
         CardsLayouterSlotImpl slot;
         float cursorPosition = xStartPosition;

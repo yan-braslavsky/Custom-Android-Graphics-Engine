@@ -1,7 +1,7 @@
 package com.example.yan_home.openglengineandroid.layouting.impl;
 
 import com.example.yan_home.openglengineandroid.layouting.CardsLayoutSlot;
-import com.yan.glengine.util.math.YANVector2;
+import com.yan.glengine.util.geometry.YANVector2;
 
 /**
  * Created by Yan-Home on 11/8/2014.

@@ -1,7 +1,6 @@
 package com.example.yan_home.openglengineandroid.layouting.impl;
 
 import com.example.yan_home.openglengineandroid.layouting.CardsLayoutSlot;
-import com.example.yan_home.openglengineandroid.layouting.CardsLayoutStrategy;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayouter;
 
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.List;
 /**
  * Created by Yan-Home on 11/8/2014.
  */
-public class CardsLayouterImpl implements CardsLayouter {
+public class OpponentCardsLayouter implements CardsLayouter {
 
     public static final int BASE_SORTING_LAYER = 5;
     private int mActiveSlotsAmount;
@@ -24,7 +23,6 @@ public class CardsLayouterImpl implements CardsLayouter {
     private float mCardWidth;
     private float mCardHeight;
     private float mMaxAvailableWidth;
-    private float mMaxAvailibleHeight;
     private float mBaseXPosition;
     private float mBaseYPosition;
 
@@ -32,7 +30,7 @@ public class CardsLayouterImpl implements CardsLayouter {
     private List<List<CardsLayouterSlotImpl>> mLinesOfSlots;
 
     //external data that required
-    public CardsLayouterImpl(int maxSlotsAmount) {
+    public OpponentCardsLayouter(int maxSlotsAmount) {
         mFanStrategy = new CardsLayoutStrategyFan();
         mLineStrategy = new CardsLayoutStrategyLine();
         mSlots = new ArrayList<>(maxSlotsAmount);
@@ -52,52 +50,40 @@ public class CardsLayouterImpl implements CardsLayouter {
     }
 
     @Override
-    public void init(float cardWidth, float cardHeight, float maxAvailableWidth, float maxAvailableHeight, float baseXPosition, float baseYPosition) {
+    public void init(float cardWidth, float cardHeight, float maxAvailableWidth,  float baseXPosition, float baseYPosition) {
         mCardWidth = cardWidth;
         mCardHeight = cardHeight;
         mMaxAvailableWidth = maxAvailableWidth;
-        mMaxAvailibleHeight = maxAvailableHeight;
         mBaseXPosition = baseXPosition;
         mBaseYPosition = baseYPosition;
     }
 
     private void recalculateSlotsData() {
-
         mLinesOfSlots.clear();
 
-        //for now we will only implement line layout
-        float yPosition = mBaseYPosition;
 
-        //the step will change according to logic
-        int step = calculateStep();
-        float yDeltaBetweenRows = mCardHeight / 4;
-        int i = 0;
-        CardsLayoutStrategy strategy;
-        while (i < mActiveSlotsAmount) {
-            int start = i;
-            int end = Math.min(i + step, mActiveSlotsAmount);
+        mFanStrategy.init(mBaseXPosition, mBaseYPosition, mMaxAvailableWidth, mCardWidth, mCardHeight);
 
-            //strategy will change depending on amount of cards in line
-            int cardsInLine = end - start;
-            boolean isLineStrategy = cardsInLine == 2;
-            if (isLineStrategy)
-                strategy = mLineStrategy;
-            else
-                strategy = mFanStrategy;
+        //TODO : remove
+//        tempInit();
 
-            strategy.init(mBaseXPosition, yPosition, mMaxAvailableWidth, mCardWidth, mCardHeight);
-            List<CardsLayouterSlotImpl> subList = mSlots.subList(start, end);
-            strategy.layoutRowOfSlots(subList);
 
-            //add subList to list of lines of slots
-            mLinesOfSlots.add(subList);
-
-            yPosition -= yDeltaBetweenRows;
-            i += step;
-        }
-
+        List<CardsLayouterSlotImpl> slotsSubsist = mSlots.subList(0, mActiveSlotsAmount);
+        mFanStrategy.layoutRowOfSlots(slotsSubsist);
+        mLinesOfSlots.add(slotsSubsist);
         calculateSortingLayer();
     }
+
+//    private void tempInit() {
+//        YANVector2 rotatedPointOne = new YANVector2(0,200);
+//        YANVector2 rotatedPointTwo = new YANVector2(0,200);
+//
+//        YANVector2 origin = new YANVector2(0,0);
+//        YANMathUtils.rotatePointAroundOrigin(rotatedPointOne, origin, -70);
+//        YANMathUtils.rotatePointAroundOrigin(rotatedPointTwo, origin,-20);
+//
+//        mFanStrategy.initFan(new YANTriangle(origin,rotatedPointOne,rotatedPointTwo) , mCardWidth, mCardHeight);
+//    }
 
     private void calculateSortingLayer() {
         // 1 is the bottom line
@@ -110,11 +96,6 @@ public class CardsLayouterImpl implements CardsLayouter {
                 sortingLayer++;
             }
         }
-    }
-
-    private int calculateStep() {
-        //the step is defined according to  logic
-        return (mActiveSlotsAmount > 21) ? 11 : (mActiveSlotsAmount > 14) ? 9 : 7;
     }
 
     @Override

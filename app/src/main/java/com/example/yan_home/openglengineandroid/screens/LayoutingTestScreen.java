@@ -5,7 +5,7 @@ import com.example.yan_home.openglengineandroid.entities.cards.CardsHelper;
 import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessor;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayoutSlot;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayouter;
-import com.example.yan_home.openglengineandroid.layouting.impl.CardsLayouterImpl;
+import com.example.yan_home.openglengineandroid.layouting.impl.PlayerCardsLayouter;
 import com.example.yan_home.openglengineandroid.tweening.CardsTweenAnimator;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.renderer.YANGLRenderer;
@@ -35,7 +35,8 @@ public class LayoutingTestScreen extends BaseGameScreen {
         super(renderer);
         mCardNodesArray = new ArrayList<>(CARDS_COUNT);
         mNodesToRemove = new ArrayList<>();
-        mCardsLayouter = new CardsLayouterImpl(CARDS_COUNT);
+        mCardsLayouter = new PlayerCardsLayouter(CARDS_COUNT);
+//        mCardsLayouter = new OpponentCardsLayouter(CARDS_COUNT);
         mCardsTweenAnimator = new CardsTweenAnimator();
         mCardsTouchProcessor = new CardsTouchProcessor(mCardNodesArray, mCardsTweenAnimator);
         mCardsTouchProcessor.setCardsTouchProcessorListener(new CardsTouchProcessor.CardsTouchProcessorListener() {
@@ -46,9 +47,9 @@ public class LayoutingTestScreen extends BaseGameScreen {
 
             @Override
             public void onDraggedCardReleased(YANTexturedNode card) {
-                if(card.getPosition().getY() <= getSceneSize().getY()/2){
+                if (card.getPosition().getY() <= getSceneSize().getY() / 2) {
                     removeCardFromHand(card);
-                }else {
+                } else {
                     layoutCards();
                 }
             }
@@ -144,8 +145,6 @@ public class LayoutingTestScreen extends BaseGameScreen {
         mCardsLayouter.init(cardWidth, cardHeight,
                 //maximum available width
                 getSceneSize().getX() - (SCREEN_PADDING * 2),
-                //maximum available height
-                getSceneSize().getY(),
                 //base x position ( center )
                 getSceneSize().getX() / 2,
                 //base y position

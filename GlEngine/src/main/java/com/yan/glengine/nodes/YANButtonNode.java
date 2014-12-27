@@ -3,8 +3,8 @@ package com.yan.glengine.nodes;
 import com.yan.glengine.EngineWrapper;
 import com.yan.glengine.assets.atlas.YANTextureRegion;
 import com.yan.glengine.input.YANInputManager;
-import com.yan.glengine.util.math.YANRectangle;
-import com.yan.glengine.util.math.YANVector2;
+import com.yan.glengine.util.geometry.YANRectangle;
+import com.yan.glengine.util.geometry.YANVector2;
 
 /**
  * Created by Yan-Home on 10/12/2014.

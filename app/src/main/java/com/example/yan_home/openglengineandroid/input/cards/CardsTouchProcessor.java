@@ -4,8 +4,8 @@ import com.example.yan_home.openglengineandroid.input.cards.states.CardsTouchPro
 import com.example.yan_home.openglengineandroid.tweening.CardsTweenAnimator;
 import com.yan.glengine.input.YANInputManager;
 import com.yan.glengine.nodes.YANTexturedNode;
-import com.yan.glengine.util.math.YANReadOnlyVector2;
-import com.yan.glengine.util.math.YANVector2;
+import com.yan.glengine.util.geometry.YANReadOnlyVector2;
+import com.yan.glengine.util.geometry.YANVector2;
 
 import java.util.ArrayList;
 import java.util.Collections;
