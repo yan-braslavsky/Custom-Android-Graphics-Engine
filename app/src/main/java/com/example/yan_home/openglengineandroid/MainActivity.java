@@ -1,6 +1,6 @@
 package com.example.yan_home.openglengineandroid;
 
-import com.example.yan_home.openglengineandroid.screens.LayoutingTestScreen;
+import com.example.yan_home.openglengineandroid.screens.ThreePointLayoutingTestScreen;
 import com.yan.glengine.EngineActivity;
 import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.screens.YANIScreen;
@@ -17,7 +17,7 @@ public class MainActivity extends EngineActivity {
 
     @Override
     protected YANIScreen onCreateStartScreen(YANGLRenderer renderer) {
-        return new LayoutingTestScreen(renderer);
+        return new ThreePointLayoutingTestScreen(renderer);
     }
 
 }

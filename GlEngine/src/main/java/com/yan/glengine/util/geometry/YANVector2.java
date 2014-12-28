@@ -39,4 +39,11 @@ public class YANVector2 implements YANReadOnlyVector2 {
         mY = y;
     }
 
+    @Override
+    public String toString() {
+        return "{" +
+                "X=" + mX +
+                ",Y=" + mY +
+                '}';
+    }
 }

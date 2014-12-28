@@ -2,16 +2,17 @@ package com.example.yan_home.openglengineandroid.screens;
 
 import com.example.yan_home.openglengineandroid.entities.cards.Card;
 import com.example.yan_home.openglengineandroid.entities.cards.CardsHelper;
-import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessor;
-import com.example.yan_home.openglengineandroid.layouting.CardsLayoutSlot;
-import com.example.yan_home.openglengineandroid.layouting.CardsLayouter;
-import com.example.yan_home.openglengineandroid.layouting.impl.PlayerCardsLayouter;
+import com.example.yan_home.openglengineandroid.layouting.impl.CardsLayouterSlotImpl;
+import com.example.yan_home.openglengineandroid.layouting.threepoint.ThreePointFanLayouter;
+import com.example.yan_home.openglengineandroid.layouting.threepoint.ThreePointLayouter;
 import com.example.yan_home.openglengineandroid.tweening.CardsTweenAnimator;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.renderer.YANGLRenderer;
+import com.yan.glengine.util.geometry.YANVector2;
 import com.yan.glengine.util.math.YANMathUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.TweenCallback;
@@ -19,53 +20,39 @@ import aurelienribon.tweenengine.TweenCallback;
 /**
  * Created by Yan-Home on 10/3/2014.
  */
-public class LayoutingTestScreen extends BaseGameScreen {
+public class ThreePointLayoutingTestScreen extends BaseGameScreen {
 
     private static final int CARDS_COUNT = 36;
-    private static final int SCREEN_PADDING = 0;
     private static final int MAX_CARDS_IN_LINE = 8;
 
     private ArrayList<YANTexturedNode> mCardNodesArray;
     private ArrayList<YANTexturedNode> mNodesToRemove;
     private CardsTweenAnimator mCardsTweenAnimator;
-    private CardsLayouter mCardsLayouter;
-    private CardsTouchProcessor mCardsTouchProcessor;
+    private ThreePointLayouter mThreePointLayouter;
+    private List<CardsLayouterSlotImpl> mSlots;
 
-    public LayoutingTestScreen(YANGLRenderer renderer) {
+    public ThreePointLayoutingTestScreen(YANGLRenderer renderer) {
         super(renderer);
         mCardNodesArray = new ArrayList<>(CARDS_COUNT);
         mNodesToRemove = new ArrayList<>();
-        mCardsLayouter = new PlayerCardsLayouter(CARDS_COUNT);
         mCardsTweenAnimator = new CardsTweenAnimator();
-        mCardsTouchProcessor = new CardsTouchProcessor(mCardNodesArray, mCardsTweenAnimator);
-        mCardsTouchProcessor.setCardsTouchProcessorListener(new CardsTouchProcessor.CardsTouchProcessorListener() {
-            @Override
-            public void onSelectedCardTap(YANTexturedNode card) {
-                removeCardFromHand(card);
-            }
+        mThreePointLayouter = new ThreePointFanLayouter();
+        mSlots = new ArrayList<>(CARDS_COUNT);
 
-            @Override
-            public void onDraggedCardReleased(YANTexturedNode card) {
-                if (card.getPosition().getY() <= getSceneSize().getY() / 2) {
-                    removeCardFromHand(card);
-                } else {
-                    layoutCards();
-                }
-            }
-        });
+        for (int i = 0; i < CARDS_COUNT; i++) {
+            mSlots.add(new CardsLayouterSlotImpl());
+        }
     }
 
 
     @Override
     public void onSetActive() {
         super.onSetActive();
-        mCardsTouchProcessor.register();
     }
 
     @Override
     public void onSetNotActive() {
         super.onSetNotActive();
-        mCardsTouchProcessor.unRegister();
     }
 
     @Override
@@ -110,14 +97,29 @@ public class LayoutingTestScreen extends BaseGameScreen {
 
     private void layoutCards() {
 
-        mCardsLayouter.setActiveSlotsAmount(mCardNodesArray.size());
+        //TODO : uncomment original coordinates
+//        YANVector2 originPoint = new YANVector2(getSceneSize().getX() / 2, getSceneSize().getY());
+//        YANVector2 leftBasis = new YANVector2(0, getSceneSize().getY() / 2);
+//        YANVector2 righBasis = new YANVector2(getSceneSize().getX(), getSceneSize().getY() / 2);
 
-        //each index in cards array corresponds to slot index
-        for (int i = 0; i < mCardNodesArray.size(); i++) {
-            YANTexturedNode card = mCardNodesArray.get(i);
-            CardsLayoutSlot slot = mCardsLayouter.getSlotAtPosition(i);
-            card.setSortingLayer(slot.getSortingLayer());
-            mCardsTweenAnimator.animateCardToSlot(card, slot);
+        YANVector2 originPoint = new YANVector2(getSceneSize().getX() / 2, getSceneSize().getY() / 2 + getSceneSize().getY() / 6);
+        YANVector2 leftBasis = new YANVector2(getSceneSize().getX() / 4, getSceneSize().getY() / 2);
+        YANVector2 righBasis = new YANVector2(getSceneSize().getX() - (getSceneSize().getX() / 4), getSceneSize().getY() / 2);
+
+//        YANVector2 originPoint = new YANVector2(0, 0);
+//        YANVector2 leftBasis = new YANVector2(1, 1);
+//        YANVector2 righBasis = new YANVector2(-1, 1);
+
+        mThreePointLayouter.setThreePoints(originPoint, leftBasis, righBasis);
+        mThreePointLayouter.layoutRowOfSlots(mSlots);
+
+        for (int i = 0; i < mSlots.size(); i++) {
+            CardsLayouterSlotImpl slot = mSlots.get(i);
+            YANTexturedNode node = mCardNodesArray.get(i);
+
+            //set slot values to node
+            node.setPosition(slot.getPosition().getX(), slot.getPosition().getY());
+            node.setRotation(slot.getRotation());
         }
     }
 
@@ -134,20 +136,22 @@ public class LayoutingTestScreen extends BaseGameScreen {
         float cardWidth = Math.min(getSceneSize().getX(), getSceneSize().getY()) / (float) ((MAX_CARDS_IN_LINE) / 2);
         float cardHeight = cardWidth / aspectRatio;
 
-        mCardsTouchProcessor.setOriginalCardSize(cardWidth, cardHeight);
+        for (YANTexturedNode texturedNode : mCardNodesArray) {
+            texturedNode.setAnchorPoint(0.5f,0);
+        }
+
+        //TODO : for testing point rotations
+//        float cardWidth = 40;
+//        float cardHeight = 40;
 
         for (YANTexturedNode cardNode : mCardNodesArray) {
             cardNode.setSize(cardWidth, cardHeight);
         }
 
-        //init the layouter
-        mCardsLayouter.init(cardWidth, cardHeight,
-                //maximum available width
-                getSceneSize().getX() - (SCREEN_PADDING * 2),
-                //base x position ( center )
-                getSceneSize().getX() / 2,
-                //base y position
-                getSceneSize().getY() - mFence.getSize().getY() / 2);
+//        for (CardsLayouterSlotImpl slot : mSlots) {
+//            slot.setSize(cardWidth, cardHeight);
+//        }
+
     }
 
     protected void onResetLayoutButtonClicked() {

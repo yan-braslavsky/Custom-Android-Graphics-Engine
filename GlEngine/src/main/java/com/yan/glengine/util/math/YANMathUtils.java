@@ -12,14 +12,25 @@ public class YANMathUtils {
     }
 
     /**
-     * Rotates the point towards negative xy direction
+     * Rotates point around other point counter clockwise.
      */
     public static void rotatePointAroundOrigin(YANVector2 point, YANVector2 origin, float angleDegrees) {
         double angleRadians = Math.toRadians(angleDegrees);
-        double newX = origin.getX() + (point.getX() - origin.getX()) * Math.cos(angleRadians) - (point.getY() - origin.getY()) * Math.sin(angleRadians);
-        double newY = origin.getY() + (point.getX() - origin.getX()) * Math.sin(angleRadians) + (point.getY() - origin.getY()) * Math.cos(angleRadians);
-        point.setX((float) newX);
-        point.setY((float) newY);
+
+        float s = (angleRadians == Math.PI) ? 0 : (angleRadians == (Math.PI * 2)) ? 0 : (float) Math.sin(angleRadians);
+        float c = (angleRadians == (Math.PI / 2)) ? 0 : (angleRadians == (Math.PI + (Math.PI / 2))) ? 0 : (float) Math.cos(angleRadians);
+
+        // translate point back to origin:
+        point.setX(point.getX() - origin.getX());
+        point.setY(point.getY() - origin.getY());
+
+        // rotate point
+        float xNew = point.getX() * c - point.getY() * s;
+        float yNew = point.getX() * s + point.getY() * c;
+
+        // translate point back:
+        point.setX(xNew + origin.getX());
+        point.setY(yNew + origin.getY());
     }
 
 }
