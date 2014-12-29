@@ -14,9 +14,9 @@ import com.yan.glengine.util.colors.YANColor;
 public abstract class BaseGameScreen extends YANNodeScreen {
 
     private static final int BG_HEX_COLOR = 0x9F9E36;
+    protected static final int HIGHEST_SORTING_LAYER = 50;
 
     protected YANTextureAtlas mAtlas;
-
     protected YANTexturedNode mFence;
     private YANTexturedNode mGlade;
 
@@ -67,7 +67,7 @@ public abstract class BaseGameScreen extends YANNodeScreen {
         mFence = new YANTexturedNode(mAtlas.getTextureRegion("fence.png"));
 
         //fence is on top of cards
-        mFence.setSortingLayer(50);
+        mFence.setSortingLayer(HIGHEST_SORTING_LAYER);
         mGlade = new YANTexturedNode(mAtlas.getTextureRegion("glade.png"));
     }
 
