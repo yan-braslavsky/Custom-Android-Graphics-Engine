@@ -42,6 +42,19 @@ public class CardsTweenAnimator {
                 .start(mTweenManager);
     }
 
+    public void animateCardToValues(YANTexturedNode card, float targetXPosition, float targetYPosition,float targetWidthPosition, float targetHeightPosition, float targetRotation, TweenCallback animationEndCallback) {
+        Timeline.createSequence()
+                .beginParallel()
+                .push(Tween.to(card, YANTweenNodeAccessor.POSITION_X, 0.5f).target(targetXPosition))
+                .setCallback(
+                        animationEndCallback)
+                .push(Tween.to(card, YANTweenNodeAccessor.POSITION_Y, 0.5f).target(targetYPosition))
+                .push(Tween.to(card, YANTweenNodeAccessor.ROTATION_CW, 0.5f).target(targetRotation))
+                .push(Tween.to(card, YANTweenNodeAccessor.SIZE_X, 0.5f).target(targetWidthPosition))
+                .push(Tween.to(card, YANTweenNodeAccessor.SIZE_Y, 0.5f).target(targetHeightPosition))
+                .start(mTweenManager);
+    }
+
     public void animateCardToAlpha(YANTexturedNode card, float targetAlpha, float duration) {
         Timeline.createSequence()
                 .push(Tween.to(card, YANTweenNodeAccessor.OPACITY, duration).target(targetAlpha))
@@ -75,7 +88,7 @@ public class CardsTweenAnimator {
                 .start(mTweenManager);
     }
 
-    public void animateSizeAndPositionXY(YANTexturedNode card, float width, float height,float targetX,float targetY, float duration) {
+    public void animateSizeAndPositionXY(YANTexturedNode card, float width, float height, float targetX, float targetY, float duration) {
         Timeline.createSequence()
                 .beginParallel()
                 .push(Tween.to(card, YANTweenNodeAccessor.SIZE_X, duration).target(width))
@@ -83,5 +96,9 @@ public class CardsTweenAnimator {
                 .push(Tween.to(card, YANTweenNodeAccessor.POSITION_X, duration).target(targetX))
                 .push(Tween.to(card, YANTweenNodeAccessor.POSITION_Y, duration).target(targetY))
                 .start(mTweenManager);
+    }
+
+    public void kill(YANTexturedNode node) {
+        mTweenManager.killTarget(node);
     }
 }
