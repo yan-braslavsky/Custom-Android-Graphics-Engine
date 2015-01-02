@@ -8,8 +8,12 @@ import com.example.yan_home.openglengineandroid.layouting.CardsLayoutSlot;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayouter;
 import com.example.yan_home.openglengineandroid.layouting.impl.PlayerCardsLayouter;
 import com.example.yan_home.openglengineandroid.layouting.threepoint.ThreePointFanLayouter;
-import com.example.yan_home.openglengineandroid.protocol.BaseProtocolMessage;
+import com.example.yan_home.openglengineandroid.protocol.messages.BlankProtocolMessage;
 import com.example.yan_home.openglengineandroid.protocol.messages.CardMovedProtocolMessage;
+import com.example.yan_home.openglengineandroid.protocol.messages.RequestCardForAttackMessage;
+import com.example.yan_home.openglengineandroid.protocol.messages.RequestRetaliatePilesMessage;
+import com.example.yan_home.openglengineandroid.protocol.messages.ResponseCardForAttackMessage;
+import com.example.yan_home.openglengineandroid.protocol.messages.ResponseRetaliatePilesMessage;
 import com.example.yan_home.openglengineandroid.tweening.CardsTweenAnimator;
 import com.google.gson.Gson;
 import com.yan.glengine.assets.atlas.YANTextureRegion;
@@ -20,6 +24,7 @@ import com.yan.glengine.util.math.YANMathUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +33,7 @@ import java.util.Map;
 public class RemoteGameTestScreen extends BaseGameScreen {
 
     //connection details
-    public static final String SERVER_ADDRESS = "192.168.1.100";
+    public static final String SERVER_ADDRESS = "192.168.1.101";
     public static final int SERVER_PORT = 7000;
 
     private static final int CARDS_COUNT = 36;
@@ -88,6 +93,8 @@ public class RemoteGameTestScreen extends BaseGameScreen {
 
 
     private ArrayList<YANTexturedNode> mAvatarPlaceHoldersArray;
+    private boolean mCardForAttackRequested;
+    private boolean mRequestedRetaliation;
 
     public RemoteGameTestScreen(YANGLRenderer renderer) {
         super(renderer);
@@ -120,13 +127,51 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         mCardsTouchProcessor.setCardsTouchProcessorListener(new CardsTouchProcessor.CardsTouchProcessorListener() {
             @Override
             public void onSelectedCardTap(YANTexturedNode card) {
+
+                //TODO : here we are taking a card
+                if(mRequestedRetaliation){
+                    mRequestedRetaliation = false;
+
+                    ResponseRetaliatePilesMessage responseRetaliatePilesMessage = new ResponseRetaliatePilesMessage(new ArrayList<List<Card>>());
+                    SocketConnectionManager.getInstance().sendMessageToRemoteServer(responseRetaliatePilesMessage.toJsonString());
+                }
+
             }
 
             @Override
             public void onDraggedCardReleased(YANTexturedNode card) {
+                if (mCardForAttackRequested) {
+                    mCardForAttackRequested = false;
+                    for (Map.Entry<Card, YANTexturedNode> entry : mCardNodesMap.entrySet()) {
+                        if (entry.getValue().equals(card)) {
+                            ResponseCardForAttackMessage responseCardForAttackMessage = new ResponseCardForAttackMessage(entry.getKey());
+                            SocketConnectionManager.getInstance().sendMessageToRemoteServer(responseCardForAttackMessage.toJsonString());
+                            return;
+                        }
+                    }
+                } else if (mRequestedRetaliation) {
+                    mRequestedRetaliation = false;
 
-                //TODO : send real messages to server when card is released
-                layoutPlayerOneCards();
+                    Card retaliationCard = null;
+                    for (Map.Entry<Card, YANTexturedNode> entry : mCardNodesMap.entrySet()) {
+                        if (entry.getValue().equals(card)) {
+                            retaliationCard = entry.getKey();
+                            break;
+                        }
+                    }
+
+                    //TODO : For now we are "assuming" there is only one field pile always
+                    List<List<Card>> list = new ArrayList<>();
+                    Card cardOnFiled = mPileIndexToCardListMap.get(5).get(0);
+                    List<Card> innerList = new ArrayList<>();
+                    innerList.add(retaliationCard);
+                    innerList.add(cardOnFiled);
+                    list.add(innerList);
+                    ResponseRetaliatePilesMessage responseRetaliatePilesMessage = new ResponseRetaliatePilesMessage(list);
+                    SocketConnectionManager.getInstance().sendMessageToRemoteServer(responseRetaliatePilesMessage.toJsonString());
+                } else {
+                    layoutPlayerOneCards();
+                }
             }
         });
     }
@@ -339,13 +384,42 @@ public class RemoteGameTestScreen extends BaseGameScreen {
 
     private void handleServerMessage(String msg) {
 
-        BaseProtocolMessage message = mGson.fromJson(msg, CardMovedProtocolMessage.class);
+        BlankProtocolMessage message = mGson.fromJson(msg, BlankProtocolMessage.class);
 
         //TODO : this is not an efficient way to handle messages
         if (message.getMessageName().equals(CardMovedProtocolMessage.MESSAGE_NAME)) {
-            CardMovedProtocolMessage cardMovedMessage = mGson.fromJson(msg, CardMovedProtocolMessage.class);
-            handleCardMoveMessage(cardMovedMessage);
+            handleCardMoveMessage(mGson.fromJson(msg, CardMovedProtocolMessage.class));
+        } else if (message.getMessageName().equals(RequestCardForAttackMessage.MESSAGE_NAME)) {
+            handleRequestCardForAttackMessage(mGson.fromJson(msg, RequestCardForAttackMessage.class));
+        } else if (message.getMessageName().equals(RequestRetaliatePilesMessage.MESSAGE_NAME)) {
+            handleRequestRetaliatePilesMessage(mGson.fromJson(msg, RequestRetaliatePilesMessage.class));
         }
+    }
+
+    private void handleRequestRetaliatePilesMessage(RequestRetaliatePilesMessage requestRetaliatePilesMessage) {
+
+        mRequestedRetaliation = true;
+
+//        List<List<Card>> list = new ArrayList<>();
+//
+//        for (List<CardData> cardDatas : requestRetaliatePilesMessage.getMessageData().getPilesBeforeRetaliation()) {
+//            List<Card> cardList = new ArrayList<>();
+//            for (CardData cardData : cardDatas) {
+//                cardList.add(new Card(cardData.getRank(), cardData.getSuit()));
+//            }
+//            list.add(cardList);
+//        }
+//
+//        //TODO : For now we are always taking
+//
+//        ResponseRetaliatePilesMessage responseRetaliatePilesMessage = new ResponseRetaliatePilesMessage(list);
+//        SocketConnectionManager.getInstance().sendMessageToRemoteServer(responseRetaliatePilesMessage.toJsonString());
+
+    }
+
+    private void handleRequestCardForAttackMessage(RequestCardForAttackMessage requestCardForAttackMessage) {
+        //TODO :
+        mCardForAttackRequested = true;
     }
 
     private void handleCardMoveMessage(CardMovedProtocolMessage cardMovedMessage) {
