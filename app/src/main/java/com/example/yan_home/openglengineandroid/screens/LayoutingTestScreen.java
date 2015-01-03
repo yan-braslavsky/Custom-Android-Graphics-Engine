@@ -6,6 +6,7 @@ import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessor;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayoutSlot;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayouter;
 import com.example.yan_home.openglengineandroid.layouting.impl.PlayerCardsLayouter;
+import com.example.yan_home.openglengineandroid.nodes.CardNode;
 import com.example.yan_home.openglengineandroid.tweening.CardsTweenAnimator;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.renderer.YANGLRenderer;
@@ -25,8 +26,8 @@ public class LayoutingTestScreen extends BaseGameScreen {
     private static final int SCREEN_PADDING = 0;
     private static final int MAX_CARDS_IN_LINE = 8;
 
-    private ArrayList<YANTexturedNode> mCardNodesArray;
-    private ArrayList<YANTexturedNode> mNodesToRemove;
+    private ArrayList<CardNode> mCardNodesArray;
+    private ArrayList<CardNode> mNodesToRemove;
     private CardsTweenAnimator mCardsTweenAnimator;
     private CardsLayouter mCardsLayouter;
     private CardsTouchProcessor mCardsTouchProcessor;
@@ -40,12 +41,12 @@ public class LayoutingTestScreen extends BaseGameScreen {
         mCardsTouchProcessor = new CardsTouchProcessor(mCardNodesArray, mCardsTweenAnimator);
         mCardsTouchProcessor.setCardsTouchProcessorListener(new CardsTouchProcessor.CardsTouchProcessorListener() {
             @Override
-            public void onSelectedCardTap(YANTexturedNode card) {
+            public void onSelectedCardTap(CardNode card) {
                 removeCardFromHand(card);
             }
 
             @Override
-            public void onDraggedCardReleased(YANTexturedNode card) {
+            public void onDraggedCardReleased(CardNode card) {
                 if (card.getPosition().getY() <= getSceneSize().getY() / 2) {
                     removeCardFromHand(card);
                 } else {
@@ -79,11 +80,11 @@ public class LayoutingTestScreen extends BaseGameScreen {
             return;
 
         //removing a random card from the hand
-        final YANTexturedNode cardToRemove = mCardNodesArray.get((int) YANMathUtils.randomInRange(0, mCardNodesArray.size() - 1));
+        final CardNode cardToRemove = mCardNodesArray.get((int) YANMathUtils.randomInRange(0, mCardNodesArray.size() - 1));
         removeCardFromHand(cardToRemove);
     }
 
-    private void removeCardFromHand(final YANTexturedNode cardToRemove) {
+    private void removeCardFromHand(final CardNode cardToRemove) {
         mCardNodesArray.remove(cardToRemove);
         float targetRotation = YANMathUtils.randomInRange(0, 360);
 
@@ -180,7 +181,7 @@ public class LayoutingTestScreen extends BaseGameScreen {
         ArrayList<Card> cardEntities = CardsHelper.create36Deck();
         for (Card cardEntity : cardEntities) {
             String name = "cards_" + cardEntity.getSuit() + "_" + cardEntity.getRank() + ".png";
-            YANTexturedNode card = new YANTexturedNode(mAtlas.getTextureRegion(name));
+            CardNode card = new CardNode(mAtlas.getTextureRegion(name),mAtlas.getTextureRegion("cards_back.png"),cardEntity);
             mCardNodesArray.add(card);
         }
     }

@@ -2,6 +2,7 @@ package com.example.yan_home.openglengineandroid.input.cards.states;
 
 import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessor;
 import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessorState;
+import com.example.yan_home.openglengineandroid.nodes.CardNode;
 import com.yan.glengine.EngineWrapper;
 import com.yan.glengine.input.YANInputManager;
 import com.yan.glengine.nodes.YANTexturedNode;
@@ -16,8 +17,8 @@ public class CardsTouchProcessorHoverState extends CardsTouchProcessorState {
     private static final float HOVERED_ALPHA_ANIMATION_DURATION = 0.05f;
     private static final float NOT_HOVERED_ALPHA_ANIMATION_DURATION = 0.07f;
     public static final float Y_OFFSET_MULTIPLIER = 0.6f;
-    YANTexturedNode mHoveredCard;
-    YANTexturedNode mPoppedUpCard;
+    CardNode mHoveredCard;
+    CardNode mPoppedUpCard;
 
     public CardsTouchProcessorHoverState(CardsTouchProcessor cardsTouchProcessor) {
         super(cardsTouchProcessor);
@@ -54,7 +55,7 @@ public class CardsTouchProcessorHoverState extends CardsTouchProcessorState {
                 EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY());
 
         //find touched card under the touch point
-        YANTexturedNode touchedCard = mCardsTouchProcessor.findTouchedCard(touchToWorldPoint);
+        CardNode touchedCard = mCardsTouchProcessor.findTouchedCard(touchToWorldPoint);
 
         //no card touched ?
         if (touchedCard == null)
@@ -75,7 +76,7 @@ public class CardsTouchProcessorHoverState extends CardsTouchProcessorState {
     }
 
 
-    public void setHoveredCard(YANTexturedNode hoveredCard) {
+    public void setHoveredCard(CardNode hoveredCard) {
 
 //        float yOffset = (mCardsTouchProcessor.getOriginalCardSize().getY() * Y_OFFSET_MULTIPLIER);
 

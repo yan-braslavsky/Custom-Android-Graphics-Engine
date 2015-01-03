@@ -2,9 +2,9 @@ package com.example.yan_home.openglengineandroid.input.cards.states;
 
 import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessor;
 import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessorState;
+import com.example.yan_home.openglengineandroid.nodes.CardNode;
 import com.yan.glengine.EngineWrapper;
 import com.yan.glengine.input.YANInputManager;
-import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.util.geometry.YANVector2;
 
 /**
@@ -12,7 +12,7 @@ import com.yan.glengine.util.geometry.YANVector2;
  */
 public class CardsTouchProcessorDragState extends CardsTouchProcessorState {
 
-    private YANTexturedNode mDraggedCard;
+    private CardNode mDraggedCard;
     private YANVector2 mTouchPositionOffset;
 
     public CardsTouchProcessorDragState(CardsTouchProcessor cardsTouchProcessor) {
@@ -55,7 +55,7 @@ public class CardsTouchProcessorDragState extends CardsTouchProcessorState {
     }
 
 
-    public void setDraggedCard(YANTexturedNode draggedCard) {
+    public void setDraggedCard(CardNode draggedCard) {
         mDraggedCard = draggedCard;
     }
 

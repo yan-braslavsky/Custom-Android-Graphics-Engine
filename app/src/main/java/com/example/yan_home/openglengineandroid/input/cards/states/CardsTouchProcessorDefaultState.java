@@ -2,6 +2,7 @@ package com.example.yan_home.openglengineandroid.input.cards.states;
 
 import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessor;
 import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessorState;
+import com.example.yan_home.openglengineandroid.nodes.CardNode;
 import com.yan.glengine.EngineWrapper;
 import com.yan.glengine.input.YANInputManager;
 import com.yan.glengine.nodes.YANTexturedNode;
@@ -41,7 +42,7 @@ public class CardsTouchProcessorDefaultState extends CardsTouchProcessorState {
                 EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY());
 
         //find touched card under the touch point
-        YANTexturedNode touchedCard = mCardsTouchProcessor.findTouchedCard(touchToWorldPoint);
+        CardNode touchedCard = mCardsTouchProcessor.findTouchedCard(touchToWorldPoint);
         if (touchedCard == null)
             return false;
 

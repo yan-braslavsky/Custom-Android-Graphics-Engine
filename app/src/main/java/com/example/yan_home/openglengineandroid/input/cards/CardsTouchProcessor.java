@@ -1,6 +1,7 @@
 package com.example.yan_home.openglengineandroid.input.cards;
 
 import com.example.yan_home.openglengineandroid.input.cards.states.CardsTouchProcessorDefaultState;
+import com.example.yan_home.openglengineandroid.nodes.CardNode;
 import com.example.yan_home.openglengineandroid.tweening.CardsTweenAnimator;
 import com.yan.glengine.input.YANInputManager;
 import com.yan.glengine.nodes.YANTexturedNode;
@@ -18,23 +19,23 @@ import java.util.List;
 public class CardsTouchProcessor {
 
     public interface CardsTouchProcessorListener {
-        void onSelectedCardTap(YANTexturedNode card);
+        void onSelectedCardTap(CardNode card);
 
-        void onDraggedCardReleased(YANTexturedNode card);
+        void onDraggedCardReleased(CardNode card);
     }
 
     //I assume there gonna be maximum of cards underneath a touch point
     private static final int MAX_CARDS_TO_PROCESS = 6;
     private final YANInputManager.TouchListener mTouchListener;
-    private List<YANTexturedNode> mCardNodesArray;
+    private List<CardNode> mCardNodesArray;
     private final CardsTweenAnimator mCardsTweenAnimator;
     private YANReadOnlyVector2 mOriginalCardSize;
     private CardsTouchProcessorState mCardsTouchProcessorState;
-    private List<YANTexturedNode> mTouchedCards;
+    private List<CardNode> mTouchedCards;
     private Comparator<YANTexturedNode> mComparator;
     private CardsTouchProcessorListener mCardsTouchProcessorListener;
 
-    public CardsTouchProcessor(final ArrayList<YANTexturedNode> cardNodesArray, CardsTweenAnimator cardsTweenAnimator) {
+    public CardsTouchProcessor(final ArrayList<CardNode> cardNodesArray, CardsTweenAnimator cardsTweenAnimator) {
 
         //cache reference to tween animator
         mCardsTweenAnimator = cardsTweenAnimator;
@@ -95,12 +96,12 @@ public class CardsTouchProcessor {
      * Goes over all cards underneath the touch point and puts them into array
      * Returns the touched card or null if there no card was touched
      */
-    public YANTexturedNode findTouchedCard(YANVector2 touchToWorldPoint) {
+    public CardNode findTouchedCard(YANVector2 touchToWorldPoint) {
         mTouchedCards.clear();
 
         //see if one of the cards was touched
         for (int i = mCardNodesArray.size() - 1; i >= 0; i--) {
-            YANTexturedNode card = mCardNodesArray.get(i);
+            CardNode card = mCardNodesArray.get(i);
             if (card.getBoundingRectangle().contains(touchToWorldPoint)) {
                 mTouchedCards.add(card);
             }
@@ -121,7 +122,7 @@ public class CardsTouchProcessor {
         mCardsTouchProcessorState.applyState();
     }
 
-    public List<YANTexturedNode> getCardNodesArray() {
+    public List<CardNode> getCardNodesArray() {
         return mCardNodesArray;
     }
 

@@ -2,6 +2,7 @@ package com.example.yan_home.openglengineandroid.input.cards.states;
 
 import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessor;
 import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessorState;
+import com.example.yan_home.openglengineandroid.nodes.CardNode;
 import com.yan.glengine.EngineWrapper;
 import com.yan.glengine.input.YANInputManager;
 import com.yan.glengine.nodes.YANTexturedNode;
@@ -18,7 +19,7 @@ public class CardsTouchProcessorSelectedState extends CardsTouchProcessorState {
     public static final int RETURN_TO_DEFAULT_STATE_DELAY_SECONDS = 2;
     public static final float SELECTION_ANIMATION_DURATION = 0.1f;
 
-    private YANTexturedNode mSelectedCard;
+    private CardNode mSelectedCard;
     private int originalSortingLayer;
     private float mOriginalYPosition;
     private float mInitialYOffset;
@@ -143,7 +144,7 @@ public class CardsTouchProcessorSelectedState extends CardsTouchProcessorState {
     }
 
 
-    public void setSelectedCard(YANTexturedNode selectedCard) {
+    public void setSelectedCard(CardNode selectedCard) {
         mSelectedCard = selectedCard;
     }
 

@@ -8,6 +8,7 @@ import com.example.yan_home.openglengineandroid.layouting.CardsLayoutSlot;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayouter;
 import com.example.yan_home.openglengineandroid.layouting.impl.PlayerCardsLayouter;
 import com.example.yan_home.openglengineandroid.layouting.threepoint.ThreePointFanLayouter;
+import com.example.yan_home.openglengineandroid.nodes.CardNode;
 import com.example.yan_home.openglengineandroid.protocol.messages.BlankProtocolMessage;
 import com.example.yan_home.openglengineandroid.protocol.messages.CardMovedProtocolMessage;
 import com.example.yan_home.openglengineandroid.protocol.messages.RequestCardForAttackMessage;
@@ -16,7 +17,6 @@ import com.example.yan_home.openglengineandroid.protocol.messages.ResponseCardFo
 import com.example.yan_home.openglengineandroid.protocol.messages.ResponseRetaliatePilesMessage;
 import com.example.yan_home.openglengineandroid.tweening.CardsTweenAnimator;
 import com.google.gson.Gson;
-import com.yan.glengine.assets.atlas.YANTextureRegion;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.util.geometry.YANVector2;
@@ -39,6 +39,10 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     private static final int CARDS_COUNT = 36;
     private static final int MAX_CARDS_IN_LINE = 8;
 
+    //TODO : change to magic enumeration ?
+    //  http://tools.android.com/tech-docs/support-annotations
+    //  http://blog.jetbrains.com/idea/2012/02/new-magic-constant-inspection/
+
     //pile indices (it is hard coded to have 3 players)
     public static final int STOCK_PILE_INDEX = 0;
     public static final int DISCARD_PILE_INDEX = 1;
@@ -54,9 +58,9 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     private ThreePointFanLayouter mThreePointFanLayouterPlayerThree;
 
     /**
-     * Mapping between logical cards representation and cards textures
+     * Actual Texture nodes that hold necessary card data
      */
-    private Map<Card, YANTexturedNode> mCardNodesMap;
+    private Map<Card,CardNode> mCardNodes ;
 
 
     private CardsTweenAnimator mCardsTweenAnimator;
@@ -74,11 +78,6 @@ public class RemoteGameTestScreen extends BaseGameScreen {
      */
     private Map<Integer, YANVector2> mPileIndexToPositionMap;
 
-    /**
-     * Maps card to texture for easier change from back to front
-     */
-    private Map<Card, YANTextureRegion> mCardToTextureMap;
-
     //cached card dimensions
     private float mCardWidth;
     private float mCardHeight;
@@ -87,7 +86,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     private Gson mGson;
 
     //cached player texture nodes of cards
-    private ArrayList<YANTexturedNode> mPlayerOneTextureNodeCards;
+    private ArrayList<CardNode> mPlayerOneCardNodes;
     private ArrayList<YANTexturedNode> mPlayerTwoTextureNodeCards;
     private ArrayList<YANTexturedNode> mPlayerThreeTextureNodeCards;
 
@@ -98,7 +97,8 @@ public class RemoteGameTestScreen extends BaseGameScreen {
 
     public RemoteGameTestScreen(YANGLRenderer renderer) {
         super(renderer);
-        mCardNodesMap = new HashMap<>(CARDS_COUNT);
+        mCardNodes = new HashMap<>(CARDS_COUNT);
+
         mPileIndexToCardListMap = new HashMap<>(CARDS_COUNT / 2);
         mPileIndexToPositionMap = new HashMap<>(CARDS_COUNT / 2);
         mCardsTweenAnimator = new CardsTweenAnimator();
@@ -115,21 +115,20 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         mPlayerCardsLayouter = new PlayerCardsLayouter(CARDS_COUNT);
 
         //allocate temp array of texture cards
-        mPlayerOneTextureNodeCards = new ArrayList<>(36);
+        mPlayerOneCardNodes = new ArrayList<>(36);
         mPlayerTwoTextureNodeCards = new ArrayList<>(36);
         mPlayerThreeTextureNodeCards = new ArrayList<>(36);
-        mCardToTextureMap = new HashMap<>(36);
 
         //currently we are initializing with empty array , cards will be set every time player pile content changes
-        mCardsTouchProcessor = new CardsTouchProcessor(mPlayerOneTextureNodeCards, mCardsTweenAnimator);
+        mCardsTouchProcessor = new CardsTouchProcessor(mPlayerOneCardNodes, mCardsTweenAnimator);
 
         //set listener to handle touches
         mCardsTouchProcessor.setCardsTouchProcessorListener(new CardsTouchProcessor.CardsTouchProcessorListener() {
             @Override
-            public void onSelectedCardTap(YANTexturedNode card) {
+            public void onSelectedCardTap(CardNode cardNode) {
 
-                //TODO : here we are taking a card
-                if(mRequestedRetaliation){
+                //TODO : here we are taking a cardNode
+                if (mRequestedRetaliation) {
                     mRequestedRetaliation = false;
 
                     ResponseRetaliatePilesMessage responseRetaliatePilesMessage = new ResponseRetaliatePilesMessage(new ArrayList<List<Card>>());
@@ -139,32 +138,21 @@ public class RemoteGameTestScreen extends BaseGameScreen {
             }
 
             @Override
-            public void onDraggedCardReleased(YANTexturedNode card) {
+            public void onDraggedCardReleased(CardNode cardNode) {
                 if (mCardForAttackRequested) {
                     mCardForAttackRequested = false;
-                    for (Map.Entry<Card, YANTexturedNode> entry : mCardNodesMap.entrySet()) {
-                        if (entry.getValue().equals(card)) {
-                            ResponseCardForAttackMessage responseCardForAttackMessage = new ResponseCardForAttackMessage(entry.getKey());
-                            SocketConnectionManager.getInstance().sendMessageToRemoteServer(responseCardForAttackMessage.toJsonString());
-                            return;
-                        }
-                    }
+
+                    ResponseCardForAttackMessage responseCardForAttackMessage = new ResponseCardForAttackMessage(cardNode.getCard());
+                    SocketConnectionManager.getInstance().sendMessageToRemoteServer(responseCardForAttackMessage.toJsonString());
+
                 } else if (mRequestedRetaliation) {
                     mRequestedRetaliation = false;
-
-                    Card retaliationCard = null;
-                    for (Map.Entry<Card, YANTexturedNode> entry : mCardNodesMap.entrySet()) {
-                        if (entry.getValue().equals(card)) {
-                            retaliationCard = entry.getKey();
-                            break;
-                        }
-                    }
 
                     //TODO : For now we are "assuming" there is only one field pile always
                     List<List<Card>> list = new ArrayList<>();
                     Card cardOnFiled = mPileIndexToCardListMap.get(5).get(0);
                     List<Card> innerList = new ArrayList<>();
-                    innerList.add(retaliationCard);
+                    innerList.add(cardNode.getCard());
                     innerList.add(cardOnFiled);
                     list.add(innerList);
                     ResponseRetaliatePilesMessage responseRetaliatePilesMessage = new ResponseRetaliatePilesMessage(list);
@@ -195,8 +183,9 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     protected void onAddNodesToScene() {
         super.onAddNodesToScene();
 
-        for (YANTexturedNode texturedNode : mCardNodesMap.values()) {
-            addNode(texturedNode);
+        //add card nodes
+        for (CardNode cardNode : mCardNodes.values()) {
+            addNode(cardNode);
         }
 
         for (YANTexturedNode avatar : mAvatarPlaceHoldersArray) {
@@ -278,7 +267,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     private void layoutPile(int pileIndex, float x, float y) {
         ArrayList<Card> cardsInStockPile = mPileIndexToCardListMap.get(pileIndex);
         for (Card card : cardsInStockPile) {
-            YANTexturedNode cardTexturedNode = mCardNodesMap.get(card);
+            CardNode cardTexturedNode = mCardNodes.get(card);
             cardTexturedNode.setPosition(x, y);
             cardTexturedNode.setRotation(90);
         }
@@ -301,8 +290,8 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         mCardsTouchProcessor.setOriginalCardSize(mCardWidth, mCardHeight);
 
         //set size for each card
-        for (YANTexturedNode node : mCardNodesMap.values()) {
-            node.setSize(mCardWidth, mCardHeight);
+        for (YANTexturedNode cardNode : mCardNodes.values()) {
+            cardNode.setSize(mCardWidth, mCardHeight);
         }
 
         //init the player cards layouter
@@ -327,7 +316,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     @Override
     protected void onCreateNodes() {
         super.onCreateNodes();
-        mBackOfCardNode = new YANTexturedNode(mAtlas.getTextureRegion("cards_back.png"));
+
         initCardsMap();
 
         //add 3 avatars for 3 players
@@ -337,15 +326,16 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     }
 
     private void initCardsMap() {
+        mBackOfCardNode = new YANTexturedNode(mAtlas.getTextureRegion("cards_back.png"));
         ArrayList<Card> cardEntities = CardsHelper.create36Deck();
+
         for (Card card : cardEntities) {
             String name = "cards_" + card.getSuit() + "_" + card.getRank() + ".png";
-            YANTexturedNode texturedNode = new YANTexturedNode(mAtlas.getTextureRegion(name));
-            mCardNodesMap.put(card, texturedNode);
-            mCardToTextureMap.put(card, texturedNode.getTextureRegion());
+            CardNode cardNode = new CardNode(mAtlas.getTextureRegion(name), mBackOfCardNode.getTextureRegion(), card);
+            mCardNodes.put(card,cardNode);
 
             //hide the card
-            texturedNode.setTextureRegion(mBackOfCardNode.getTextureRegion());
+            cardNode.useBackTextureRegion();
         }
 
         //put everything in the stock pile
@@ -397,28 +387,10 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     }
 
     private void handleRequestRetaliatePilesMessage(RequestRetaliatePilesMessage requestRetaliatePilesMessage) {
-
         mRequestedRetaliation = true;
-
-//        List<List<Card>> list = new ArrayList<>();
-//
-//        for (List<CardData> cardDatas : requestRetaliatePilesMessage.getMessageData().getPilesBeforeRetaliation()) {
-//            List<Card> cardList = new ArrayList<>();
-//            for (CardData cardData : cardDatas) {
-//                cardList.add(new Card(cardData.getRank(), cardData.getSuit()));
-//            }
-//            list.add(cardList);
-//        }
-//
-//        //TODO : For now we are always taking
-//
-//        ResponseRetaliatePilesMessage responseRetaliatePilesMessage = new ResponseRetaliatePilesMessage(list);
-//        SocketConnectionManager.getInstance().sendMessageToRemoteServer(responseRetaliatePilesMessage.toJsonString());
-
     }
 
     private void handleRequestCardForAttackMessage(RequestCardForAttackMessage requestCardForAttackMessage) {
-        //TODO :
         mCardForAttackRequested = true;
     }
 
@@ -436,80 +408,26 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         if (toPile == PLAYER_ONE_PILE_INDEX || fromPile == PLAYER_ONE_PILE_INDEX) {
 
             if (toPile == PLAYER_ONE_PILE_INDEX) {
-                mPlayerOneTextureNodeCards.add(mCardNodesMap.get(movedCard));
+                mPlayerOneCardNodes.add(mCardNodes.get(movedCard));
             } else {
-                mPlayerOneTextureNodeCards.remove(mCardNodesMap.get(movedCard));
+                mPlayerOneCardNodes.remove(movedCard);
             }
 
             layoutPlayerOneCards();
-        }
-
-//        //player 2
-//        else if (toPile == PLAYER_TWO_PILE_INDEX || fromPile == PLAYER_TWO_PILE_INDEX) {
-//            if (toPile == PLAYER_TWO_PILE_INDEX) {
-//                mPlayerTwoTextureNodeCards.add(mCardNodesMap.get(movedCard));
-//            } else {
-//                mPlayerTwoTextureNodeCards.remove(mCardNodesMap.get(movedCard));
-//            }
-//
-//            //TODO : cache slots for efficiency
-//            List<CardsLayouterSlotImpl> slots = new ArrayList<>(mPlayerTwoTextureNodeCards.size());
-//            for (int i = 0; i < mPlayerTwoTextureNodeCards.size(); i++) {
-//                slots.add(new CardsLayouterSlotImpl());
-//            }
-//
-//            //layout the slots
-//            mThreePointFanLayouterPlayerTwo.layoutRowOfSlots(slots);
-//
-//            //make the layouting
-//            for (int i = 0; i < slots.size(); i++) {
-//                CardsLayouterSlotImpl slot = slots.get(i);
-//                YANTexturedNode node = mPlayerTwoTextureNodeCards.get(i);
-//                //make the animation
-//                mCardsTweenAnimator.animateCardToValues(node, slot.getPosition().getX(), slot.getPosition().getY(), mCardWidth * 0.7f, mCardHeight * 0.7f, slot.getRotation(), null);
-//            }
-//        }
-
-//        //player 3
-//        else if (toPile == PLAYER_THREE_PILE_INDEX || fromPile == PLAYER_THREE_PILE_INDEX) {
-//            if (toPile == PLAYER_THREE_PILE_INDEX) {
-//                mPlayerThreeTextureNodeCards.add(mCardNodesMap.get(movedCard));
-//            } else {
-//                mPlayerThreeTextureNodeCards.remove(mCardNodesMap.get(movedCard));
-//            }
-//
-//            List<CardsLayouterSlotImpl> slots = new ArrayList<>(mPlayerThreeTextureNodeCards.size());
-//            for (int i = 0; i < mPlayerThreeTextureNodeCards.size(); i++) {
-//                slots.add(new CardsLayouterSlotImpl());
-//            }
-//
-//            //layout the slots
-//            mThreePointFanLayouterPlayerThree.layoutRowOfSlots(slots);
-//
-//            //make the layouting
-//            for (int i = 0; i < slots.size(); i++) {
-//                CardsLayouterSlotImpl slot = slots.get(i);
-//                YANTexturedNode node = mPlayerThreeTextureNodeCards.get(i);
-//                //make the animation
-//                mCardsTweenAnimator.animateCardToValues(node, slot.getPosition().getX(), slot.getPosition().getY(), slot.getRotation(), null);
-//                mCardsTweenAnimator.animateSize(node, mCardWidth * 0.7f, mCardHeight * 0.7f, 0.5f);
-//            }
-//        }
-
-        else {
+        } else {
             //set the sorting layer higher
             mTopCardOnFieldSortingLayer++;
-            mCardNodesMap.get(movedCard).setSortingLayer(mTopCardOnFieldSortingLayer);
+            mCardNodes.get(movedCard).setSortingLayer(mTopCardOnFieldSortingLayer);
         }
     }
 
     private void layoutPlayerOneCards() {
         //update layouter to recalculate positions
-        mPlayerCardsLayouter.setActiveSlotsAmount(mPlayerOneTextureNodeCards.size());
+        mPlayerCardsLayouter.setActiveSlotsAmount(mPlayerOneCardNodes.size());
 
         //each index in nodes array corresponds to slot index
-        for (int i = 0; i < mPlayerOneTextureNodeCards.size(); i++) {
-            YANTexturedNode card = mPlayerOneTextureNodeCards.get(i);
+        for (int i = 0; i < mPlayerOneCardNodes.size(); i++) {
+            YANTexturedNode card = mPlayerOneCardNodes.get(i);
             CardsLayoutSlot slot = mPlayerCardsLayouter.getSlotAtPosition(i);
             card.setSortingLayer(slot.getSortingLayer());
             mCardsTweenAnimator.animateCardToSlot(card, slot);
@@ -525,7 +443,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         mPileIndexToCardListMap.get(toPile).add(movedCard);
 
         //find node
-        YANTexturedNode txtrNode = mCardNodesMap.get(movedCard);
+        CardNode cardNode = mCardNodes.get(movedCard);
 
         //find destination position
         float destX = mPileIndexToPositionMap.get(toPile).getX();
@@ -533,15 +451,15 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         float destRotation = YANMathUtils.randomInRange(-70, 70);
 
         //make the animation
-        mCardsTweenAnimator.animateCardToValues(txtrNode, destX, destY, destRotation, null);
-        mCardsTweenAnimator.animateSize(txtrNode, mCardWidth, mCardHeight, 0.5f);
+        mCardsTweenAnimator.animateCardToValues(cardNode, destX, destY, destRotation, null);
+        mCardsTweenAnimator.animateSize(cardNode, mCardWidth, mCardHeight, 0.5f);
 
         if (fromPile == PLAYER_ONE_PILE_INDEX || toPile == PLAYER_ONE_PILE_INDEX || toPile > PLAYER_THREE_PILE_INDEX || toPile == DISCARD_PILE_INDEX) {
             //show the card
-            txtrNode.setTextureRegion(mCardToTextureMap.get(movedCard));
+            cardNode.useFrontTextureRegion();
         } else {
             //hide the card
-            txtrNode.setTextureRegion(mBackOfCardNode.getTextureRegion());
+            cardNode.useBackTextureRegion();
         }
 
     }
