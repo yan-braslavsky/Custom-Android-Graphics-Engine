@@ -6,6 +6,7 @@ import com.example.yan_home.openglengineandroid.entities.cards.CardsHelper;
 import com.example.yan_home.openglengineandroid.input.cards.CardsTouchProcessor;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayoutSlot;
 import com.example.yan_home.openglengineandroid.layouting.CardsLayouter;
+import com.example.yan_home.openglengineandroid.layouting.impl.CardsLayouterSlotImpl;
 import com.example.yan_home.openglengineandroid.layouting.impl.PlayerCardsLayouter;
 import com.example.yan_home.openglengineandroid.layouting.threepoint.ThreePointFanLayouter;
 import com.example.yan_home.openglengineandroid.nodes.CardNode;
@@ -60,7 +61,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     /**
      * Actual Texture nodes that hold necessary card data
      */
-    private Map<Card,CardNode> mCardNodes ;
+    private Map<Card, CardNode> mCardNodes;
 
 
     private CardsTweenAnimator mCardsTweenAnimator;
@@ -87,8 +88,8 @@ public class RemoteGameTestScreen extends BaseGameScreen {
 
     //cached player texture nodes of cards
     private ArrayList<CardNode> mPlayerOneCardNodes;
-    private ArrayList<YANTexturedNode> mPlayerTwoTextureNodeCards;
-    private ArrayList<YANTexturedNode> mPlayerThreeTextureNodeCards;
+    private ArrayList<CardNode> mPlayerTwoTextureNodeCards;
+    private ArrayList<CardNode> mPlayerThreeTextureNodeCards;
 
 
     private ArrayList<YANTexturedNode> mAvatarPlaceHoldersArray;
@@ -332,7 +333,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         for (Card card : cardEntities) {
             String name = "cards_" + card.getSuit() + "_" + card.getRank() + ".png";
             CardNode cardNode = new CardNode(mAtlas.getTextureRegion(name), mBackOfCardNode.getTextureRegion(), card);
-            mCardNodes.put(card,cardNode);
+            mCardNodes.put(card, cardNode);
 
             //hide the card
             cardNode.useBackTextureRegion();
@@ -410,10 +411,64 @@ public class RemoteGameTestScreen extends BaseGameScreen {
             if (toPile == PLAYER_ONE_PILE_INDEX) {
                 mPlayerOneCardNodes.add(mCardNodes.get(movedCard));
             } else {
-                mPlayerOneCardNodes.remove(movedCard);
+                mPlayerOneCardNodes.remove(mCardNodes.get(movedCard));
             }
 
             layoutPlayerOneCards();
+        }
+
+        //player 2
+        else if (toPile == PLAYER_TWO_PILE_INDEX || fromPile == PLAYER_TWO_PILE_INDEX) {
+            if (toPile == PLAYER_TWO_PILE_INDEX) {
+                mPlayerTwoTextureNodeCards.add(mCardNodes.get(movedCard));
+            } else {
+                mPlayerTwoTextureNodeCards.remove(mCardNodes.get(movedCard));
+            }
+
+
+            //TODO : cache slots
+            List<CardsLayouterSlotImpl> slots = new ArrayList<>(mPlayerTwoTextureNodeCards.size());
+            for (int i = 0; i < mPlayerTwoTextureNodeCards.size(); i++) {
+                slots.add(new CardsLayouterSlotImpl());
+            }
+
+            //layout the slots
+            mThreePointFanLayouterPlayerTwo.layoutRowOfSlots(slots);
+
+            //make the layouting
+            for (int i = 0; i < slots.size(); i++) {
+                CardsLayouterSlotImpl slot = slots.get(i);
+                YANTexturedNode node = mPlayerTwoTextureNodeCards.get(i);
+                //make the animation
+                mCardsTweenAnimator.animateCardToValues(node, slot.getPosition().getX(), slot.getPosition().getY(), slot.getRotation(), null);
+                mCardsTweenAnimator.animateSize(node, mCardWidth * 0.7f, mCardHeight * 0.7f, 0.5f);
+            }
+        }
+
+        //player 3
+        else if (toPile == PLAYER_THREE_PILE_INDEX || fromPile == PLAYER_THREE_PILE_INDEX) {
+            if (toPile == PLAYER_THREE_PILE_INDEX) {
+                mPlayerThreeTextureNodeCards.add(mCardNodes.get(movedCard));
+            } else {
+                mPlayerThreeTextureNodeCards.remove(mCardNodes.get(movedCard));
+            }
+
+            List<CardsLayouterSlotImpl> slots = new ArrayList<>(mPlayerThreeTextureNodeCards.size());
+            for (int i = 0; i < mPlayerThreeTextureNodeCards.size(); i++) {
+                slots.add(new CardsLayouterSlotImpl());
+            }
+
+            //layout the slots
+            mThreePointFanLayouterPlayerThree.layoutRowOfSlots(slots);
+
+            //make the layouting
+            for (int i = 0; i < slots.size(); i++) {
+                CardsLayouterSlotImpl slot = slots.get(i);
+                YANTexturedNode node = mPlayerThreeTextureNodeCards.get(i);
+                //make the animation
+                mCardsTweenAnimator.animateCardToValues(node, slot.getPosition().getX(), slot.getPosition().getY(), slot.getRotation(), null);
+                mCardsTweenAnimator.animateSize(node, mCardWidth * 0.7f, mCardHeight * 0.7f, 0.5f);
+            }
         } else {
             //set the sorting layer higher
             mTopCardOnFieldSortingLayer++;
@@ -427,7 +482,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
 
         //each index in nodes array corresponds to slot index
         for (int i = 0; i < mPlayerOneCardNodes.size(); i++) {
-            YANTexturedNode card = mPlayerOneCardNodes.get(i);
+            CardNode card = mPlayerOneCardNodes.get(i);
             CardsLayoutSlot slot = mPlayerCardsLayouter.getSlotAtPosition(i);
             card.setSortingLayer(slot.getSortingLayer());
             mCardsTweenAnimator.animateCardToSlot(card, slot);

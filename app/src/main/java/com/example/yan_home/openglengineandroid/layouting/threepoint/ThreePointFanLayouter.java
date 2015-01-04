@@ -22,7 +22,8 @@ public class ThreePointFanLayouter implements ThreePointLayouter {
     private YANVector2 mNormalizedOriginPoint;
     private YANVector2 mNormalizedLeftBasis;
     private YANVector2 mNormalizedRightBasis;
-    private float mNormalizedFanAngle;
+    private float mSourceFanAngle;
+    private float mDestFanAngle;
 
     private RealMatrix mAffineMappingMatrix;
 
@@ -40,6 +41,45 @@ public class ThreePointFanLayouter implements ThreePointLayouter {
         //from normalized triangle to given triangle
         mAffineMappingMatrix = findAffineMatrixUsingSourceAndDestinationPoints();
 
+        //find the angle between two sides of the triangle
+        mDestFanAngle = calculateDestinationAngle(originPoint, leftBasis, rightBasis);
+
+    }
+
+    private float calculateDestinationAngle(YANVector2 originPoint, YANVector2 leftBasis, YANVector2 rightBasis) {
+
+        //We have a triangle with 3 points (R,P,Q) and 3 angles between the sides (r,p,q)
+        //now we are calculating all the sides in order to find an angle R
+
+        double p = calculateDistanceBetween2Points(rightBasis, originPoint);
+        double q = calculateDistanceBetween2Points(leftBasis, originPoint);
+        double r = calculateDistanceBetween2Points(leftBasis, rightBasis);
+
+        //now we can calculate the actual angle
+        double angle = findAngleBetween2Sides(r, p, q);
+        return (float) angle;
+    }
+
+    private double findAngleBetween2Sides(double oppositeToAngleSide, double rightToAngleSide, double leftToAngleSide) {
+        //using the formula r^2 = p^2 + q^2 - 2pq*cos(R)
+        //taken from http://www.mathsisfun.com/algebra/trig-solving-sas-triangles.html
+        double p = rightToAngleSide;
+        double q = leftToAngleSide;
+        double r = oppositeToAngleSide;
+
+        //find cos(R)
+        double cosR = ((p * p) + (q * q) - (r * r)) / (2 * p * q);
+
+        //find angle in degrees
+        double angle = Math.toDegrees(Math.acos(cosR));
+        return angle;
+    }
+
+    private double calculateDistanceBetween2Points(YANVector2 fromPoint, YANVector2 toPoint) {
+        //taken from http://www.purplemath.com/modules/distform.htm
+        float xDistance = fromPoint.getX() - toPoint.getX();
+        float yDistance = fromPoint.getY() - toPoint.getY();
+        return Math.sqrt((xDistance * xDistance) + (yDistance * yDistance));
     }
 
     //taken from :
@@ -96,7 +136,7 @@ public class ThreePointFanLayouter implements ThreePointLayouter {
         //calculate the angle between 2 basis meridians
         float opposite = Math.abs(mNormalizedLeftBasis.getX() - mNormalizedRightBasis.getX()) / 2;
         float adjacent = Math.abs(mNormalizedOriginPoint.getY() - mNormalizedLeftBasis.getY());
-        mNormalizedFanAngle = (float) Math.toDegrees(Math.atan(opposite / adjacent) * 2);
+        mSourceFanAngle = (float) Math.toDegrees(Math.atan(opposite / adjacent) * 2);
     }
 
     @Override
@@ -106,7 +146,17 @@ public class ThreePointFanLayouter implements ThreePointLayouter {
         //to reach the centered highest point
         YANVector2 startingPosition = new YANVector2(mNormalizedLeftBasis);
 
-        float angleStep = mNormalizedFanAngle / (slots.size() - 1);
+        int angleStepDivider = slots.size() - 1;
+        int rotationStepDivider = slots.size();
+
+        //correction for edge cases
+        if (slots.size() == 1) {
+            angleStepDivider = 1;
+            rotationStepDivider = 2;
+        }
+
+        float angleStep = mSourceFanAngle / angleStepDivider;
+        float rotationStep = mDestFanAngle / rotationStepDivider;
 
         //rotate slots
         for (int i = 0; i < slots.size(); i++) {
@@ -114,7 +164,7 @@ public class ThreePointFanLayouter implements ThreePointLayouter {
 
             //set slot to initial position and rotation
             slot.setPosition(startingPosition.getX(), startingPosition.getY());
-            slot.setRotation(angleStep * i - (mNormalizedFanAngle / 2));
+            slot.setRotation(rotationStep * (i + 1));
 
             YANMathUtils.rotatePointAroundOrigin(slot.getPosition(), mNormalizedOriginPoint, angleStep * i);
 

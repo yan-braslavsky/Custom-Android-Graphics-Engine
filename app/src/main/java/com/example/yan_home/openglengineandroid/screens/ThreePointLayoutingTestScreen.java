@@ -22,7 +22,7 @@ import aurelienribon.tweenengine.TweenCallback;
  */
 public class ThreePointLayoutingTestScreen extends BaseGameScreen {
 
-    private static final int CARDS_COUNT = 6;
+    private static final int CARDS_COUNT = 6;//6;
     private static final int MAX_CARDS_IN_LINE = /*8*/10;
 
     private ArrayList<YANTexturedNode> mCardNodesArray;
@@ -30,6 +30,7 @@ public class ThreePointLayoutingTestScreen extends BaseGameScreen {
     private CardsTweenAnimator mCardsTweenAnimator;
     private ThreePointLayouter mThreePointLayouter;
     private List<CardsLayouterSlotImpl> mSlots;
+    private ArrayList<YANTexturedNode> mTriangleIndication;
 
     public ThreePointLayoutingTestScreen(YANGLRenderer renderer) {
         super(renderer);
@@ -38,6 +39,7 @@ public class ThreePointLayoutingTestScreen extends BaseGameScreen {
         mCardsTweenAnimator = new CardsTweenAnimator();
         mThreePointLayouter = new ThreePointFanLayouter();
         mSlots = new ArrayList<>(CARDS_COUNT);
+        mTriangleIndication = new ArrayList<>(3);
 
         for (int i = 0; i < CARDS_COUNT; i++) {
             mSlots.add(new CardsLayouterSlotImpl());
@@ -97,25 +99,38 @@ public class ThreePointLayoutingTestScreen extends BaseGameScreen {
 
     private void layoutCards() {
 
-        //TODO : uncomment original coordinates
-//        YANVector2 originPoint = new YANVector2(getSceneSize().getX() / 2, getSceneSize().getY());
-//        YANVector2 leftBasis = new YANVector2(0, getSceneSize().getY() / 2);
-//        YANVector2 righBasis = new YANVector2(getSceneSize().getX(), getSceneSize().getY() / 2);
-
-//        YANVector2 originPoint = new YANVector2(getSceneSize().getX() / 2, getSceneSize().getY() / 2 + getSceneSize().getY() / 6);
-//        YANVector2 leftBasis = new YANVector2(getSceneSize().getX() / 4, getSceneSize().getY() / 2);
-//        YANVector2 righBasis = new YANVector2(getSceneSize().getX() - (getSceneSize().getX() / 4), getSceneSize().getY() / 2);
-
         float length = getSceneSize().getX() / 8;
         float offset = getSceneSize().getX() / 16;
         float w = getSceneSize().getX();
-        YANVector2 originPoint = new YANVector2(w - offset, 0);
-        YANVector2 leftBasis = new YANVector2(w - offset , length );
-        YANVector2 righBasis = new YANVector2(w - length - offset, 0);
+        float yOffset = offset;
+        YANVector2 originPoint = new YANVector2(w - offset, 0 + yOffset);
+        YANVector2 leftBasis = new YANVector2(w - (offset * 1.5f), length + yOffset);
+        YANVector2 righBasis = new YANVector2(w - length - offset, length * 0.5f + yOffset);
 
-//        YANVector2 originPoint = new YANVector2(0, 0);
-//        YANVector2 leftBasis = new YANVector2(1, 1);
-//        YANVector2 righBasis = new YANVector2(-1, 1);
+
+        int size = 20;
+        //origin indication
+        String textureName = "call_btn_default.png";
+        YANTexturedNode originIndicationNode = new YANTexturedNode(mAtlas.getTextureRegion(textureName));
+        originIndicationNode.setSize(size, size);
+        originIndicationNode.setPosition(originPoint.getX(), originPoint.getY());
+        mTriangleIndication.add(originIndicationNode);
+
+        //left basis indication
+        YANTexturedNode leftBasisIndicationNode = new YANTexturedNode(mAtlas.getTextureRegion(textureName));
+        leftBasisIndicationNode.setSize(size, size);
+        leftBasisIndicationNode.setPosition(leftBasis.getX(), leftBasis.getY());
+        mTriangleIndication.add(leftBasisIndicationNode);
+
+        YANTexturedNode rightBasisIndicationNode = new YANTexturedNode(mAtlas.getTextureRegion(textureName));
+        rightBasisIndicationNode.setSize(size, size);
+        rightBasisIndicationNode.setPosition(righBasis.getX(), righBasis.getY());
+        mTriangleIndication.add(rightBasisIndicationNode);
+
+        for (YANTexturedNode node : mTriangleIndication) {
+            addNode(node);
+        }
+
 
         mThreePointLayouter.setThreePoints(originPoint, leftBasis, righBasis);
         mThreePointLayouter.layoutRowOfSlots(mSlots);
@@ -143,16 +158,9 @@ public class ThreePointLayoutingTestScreen extends BaseGameScreen {
         float cardWidth = Math.min(getSceneSize().getX(), getSceneSize().getY()) / (float) ((MAX_CARDS_IN_LINE) / 2);
         float cardHeight = cardWidth / aspectRatio;
 
-        for (YANTexturedNode texturedNode : mCardNodesArray) {
-            texturedNode.setAnchorPoint(0.5f, 0);
-        }
-
-        //TODO : for testing point rotations
-//        float cardWidth = 40;
-//        float cardHeight = 40;
-
         for (YANTexturedNode cardNode : mCardNodesArray) {
             cardNode.setSize(cardWidth, cardHeight);
+            cardNode.setAnchorPoint(0.5f,0f);
         }
 
     }
@@ -186,17 +194,12 @@ public class ThreePointLayoutingTestScreen extends BaseGameScreen {
     private void initCardsArray() {
         ArrayList<Card> cardEntities = CardsHelper.create36Deck();
 
-        //TODO : uncomment real cards loading
         for (Card cardEntity : cardEntities) {
             String name = "cards_back.png";
             YANTexturedNode card = new YANTexturedNode(mAtlas.getTextureRegion(name));
             mCardNodesArray.add(card);
         }
-//        for (Card cardEntity : cardEntities) {
-//            String name = "cards_" + cardEntity.getSuit() + "_" + cardEntity.getRank() + ".png";
-//            YANTexturedNode card = new YANTexturedNode(mAtlas.getTextureRegion(name));
-//            mCardNodesArray.add(card);
-//        }
+
     }
 
     @Override

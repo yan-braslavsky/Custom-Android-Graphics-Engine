@@ -81,7 +81,7 @@ public class CardsTouchProcessorSelectedState extends CardsTouchProcessorState {
                 EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY());
 
         //find touched card under the touch point
-        YANTexturedNode touchedCard = mCardsTouchProcessor.findTouchedCard(touchToWorldPoint);
+        CardNode touchedCard = mCardsTouchProcessor.findTouchedCard(touchToWorldPoint);
         if (touchedCard == mSelectedCard) {
             if (mCardsTouchProcessor.getCardsTouchProcessorListener() != null) {
                 mDelayedTask.stop();
