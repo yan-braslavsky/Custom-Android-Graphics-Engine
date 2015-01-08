@@ -15,6 +15,7 @@ import java.util.List;
  * Created by Yan-Home on 12/28/2014.
  */
 public class ThreePointFanLayouter implements ThreePointLayouter {
+
     private YANVector2 mOriginPoint;
     private YANVector2 mLeftBasis;
     private YANVector2 mRightBasis;
@@ -26,7 +27,14 @@ public class ThreePointFanLayouter implements ThreePointLayouter {
     private float mDestFanAngle;
 
     private RealMatrix mAffineMappingMatrix;
+    private int mSmallestSortingLayer;
+    private LayoutDirection mDirection;
 
+
+    public ThreePointFanLayouter(int smallestSortingLayer) {
+        mSmallestSortingLayer = smallestSortingLayer;
+        mDirection = LayoutDirection.LTR;
+    }
 
     @Override
     public void setThreePoints(YANVector2 originPoint, YANVector2 leftBasis, YANVector2 rightBasis) {
@@ -144,7 +152,7 @@ public class ThreePointFanLayouter implements ThreePointLayouter {
 
         //we are are rotating left basis counter clockwise half the fan angle
         //to reach the centered highest point
-        YANVector2 startingPosition = new YANVector2(mNormalizedLeftBasis);
+        YANVector2 startingPosition = new YANVector2((mDirection == LayoutDirection.LTR) ? mNormalizedLeftBasis : mNormalizedRightBasis);
 
         int angleStepDivider = slots.size() - 1;
         int rotationStepDivider = slots.size();
@@ -158,6 +166,12 @@ public class ThreePointFanLayouter implements ThreePointLayouter {
         float angleStep = mSourceFanAngle / angleStepDivider;
         float rotationStep = mDestFanAngle / rotationStepDivider;
 
+        if (mDirection == LayoutDirection.RTL) {
+            rotationStep *= -1;
+            angleStep *= -1;
+        }
+
+
         //rotate slots
         for (int i = 0; i < slots.size(); i++) {
             CardsLayouterSlotImpl slot = slots.get(i);
@@ -165,6 +179,7 @@ public class ThreePointFanLayouter implements ThreePointLayouter {
             //set slot to initial position and rotation
             slot.setPosition(startingPosition.getX(), startingPosition.getY());
             slot.setRotation(rotationStep * (i + 1));
+            slot.setSortingLayer(mSmallestSortingLayer + i);
 
             YANMathUtils.rotatePointAroundOrigin(slot.getPosition(), mNormalizedOriginPoint, angleStep * i);
 
@@ -183,5 +198,8 @@ public class ThreePointFanLayouter implements ThreePointLayouter {
         }
     }
 
-
+    @Override
+    public void setDirection(LayoutDirection direction) {
+        mDirection = direction;
+    }
 }

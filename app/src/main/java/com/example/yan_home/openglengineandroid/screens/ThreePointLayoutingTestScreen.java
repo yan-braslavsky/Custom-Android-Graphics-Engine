@@ -37,7 +37,7 @@ public class ThreePointLayoutingTestScreen extends BaseGameScreen {
         mCardNodesArray = new ArrayList<>(CARDS_COUNT);
         mNodesToRemove = new ArrayList<>();
         mCardsTweenAnimator = new CardsTweenAnimator();
-        mThreePointLayouter = new ThreePointFanLayouter();
+        mThreePointLayouter = new ThreePointFanLayouter(2);
         mSlots = new ArrayList<>(CARDS_COUNT);
         mTriangleIndication = new ArrayList<>(3);
 
@@ -103,9 +103,15 @@ public class ThreePointLayoutingTestScreen extends BaseGameScreen {
         float offset = getSceneSize().getX() / 16;
         float w = getSceneSize().getX();
         float yOffset = offset;
-        YANVector2 originPoint = new YANVector2(w - offset, 0 + yOffset);
-        YANVector2 leftBasis = new YANVector2(w - (offset * 1.5f), length + yOffset);
-        YANVector2 righBasis = new YANVector2(w - length - offset, length * 0.5f + yOffset);
+
+
+//        YANVector2 originPoint = new YANVector2(w - offset, 0 + yOffset);
+//        YANVector2 leftBasis = new YANVector2(w - (offset * 1.5f), length + yOffset);
+//        YANVector2 righBasis = new YANVector2(w - length - offset, length * 0.5f + yOffset);
+
+        YANVector2 originPoint = new YANVector2(getSceneSize().getX() / 2, getSceneSize().getY() * 0.8f);
+        YANVector2 leftBasis = new YANVector2(length, getSceneSize().getY() / 2);
+        YANVector2 righBasis = new YANVector2(getSceneSize().getX() - length, getSceneSize().getY() / 2);
 
 
         int size = 20;
@@ -133,6 +139,7 @@ public class ThreePointLayoutingTestScreen extends BaseGameScreen {
 
 
         mThreePointLayouter.setThreePoints(originPoint, leftBasis, righBasis);
+        mThreePointLayouter.setDirection(ThreePointLayouter.LayoutDirection.RTL);
         mThreePointLayouter.layoutRowOfSlots(mSlots);
 
         for (int i = 0; i < mSlots.size(); i++) {
@@ -142,6 +149,7 @@ public class ThreePointLayoutingTestScreen extends BaseGameScreen {
             //set slot values to node
             node.setPosition(slot.getPosition().getX(), slot.getPosition().getY());
             node.setRotation(slot.getRotation());
+            node.setSortingLayer(slot.getSortingLayer());
         }
     }
 
@@ -160,7 +168,7 @@ public class ThreePointLayoutingTestScreen extends BaseGameScreen {
 
         for (YANTexturedNode cardNode : mCardNodesArray) {
             cardNode.setSize(cardWidth, cardHeight);
-            cardNode.setAnchorPoint(0.5f,0f);
+            cardNode.setAnchorPoint(0.5f, 0f);
         }
 
     }

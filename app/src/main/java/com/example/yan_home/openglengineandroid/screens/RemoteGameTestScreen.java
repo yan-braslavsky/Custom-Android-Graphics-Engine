@@ -109,8 +109,8 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         mAvatarPlaceHoldersArray = new ArrayList<>();
 
         //init 3 points layouter to create a fan of opponents hands
-        mThreePointFanLayouterPlayerTwo = new ThreePointFanLayouter();
-        mThreePointFanLayouterPlayerThree = new ThreePointFanLayouter();
+        mThreePointFanLayouterPlayerTwo = new ThreePointFanLayouter(2);
+        mThreePointFanLayouterPlayerThree = new ThreePointFanLayouter(2);
 
         //init player cards layouter
         mPlayerCardsLayouter = new PlayerCardsLayouter(CARDS_COUNT);
@@ -237,6 +237,9 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         avatar.setSortingLayer(HIGHEST_SORTING_LAYER + 1);
         avatar.setPosition(getSceneSize().getX() - offsetX, getSceneSize().getY() - offsetX);
 
+        //used to layout fans
+        float offsetFromAvatarEdge = avatar.getSize().getX() / 16;
+
         //second player
         float topOffset = getSceneSize().getY() * 0.07f;
         avatar = mAvatarPlaceHoldersArray.get(1);
@@ -246,9 +249,10 @@ public class RemoteGameTestScreen extends BaseGameScreen {
 
         //setup 3 points for player 2
         float fanDistance = getSceneSize().getX() * 0.05f;
+
         YANVector2 origin = new YANVector2(avatar.getPosition().getX() - avatar.getSize().getX(), avatar.getPosition().getY());
-        YANVector2 leftBasis = new YANVector2(origin.getX() /*- fanDistance / 2*/, origin.getY() + fanDistance);
-        YANVector2 rightBasis = new YANVector2(origin.getX() - fanDistance, origin.getY() /*+ fanDistance / 2*/);
+        YANVector2 leftBasis = new YANVector2(origin.getX(), origin.getY() + fanDistance);
+        YANVector2 rightBasis = new YANVector2(origin.getX() - fanDistance, origin.getY());
         mThreePointFanLayouterPlayerTwo.setThreePoints(origin, leftBasis, rightBasis);
 
         //third player
@@ -258,11 +262,14 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         avatar.setPosition(offsetX, topOffset);
 
         //setup 3 points for player 3
-        origin = new YANVector2(avatar.getPosition().getX(), avatar.getPosition().getY());
-        rightBasis = new YANVector2(origin.getX() /*- fanDistance / 2*/, origin.getY() + fanDistance);
-        leftBasis = new YANVector2(origin.getX() + fanDistance, origin.getY() /*+ fanDistance / 2*/);
+
+        origin = new YANVector2(avatar.getPosition().getX() + offsetFromAvatarEdge, avatar.getPosition().getY());
+        leftBasis = new YANVector2(origin.getX() + fanDistance, origin.getY());
+        rightBasis = new YANVector2(origin.getX(), origin.getY() + fanDistance);
         mThreePointFanLayouterPlayerThree.setThreePoints(origin, leftBasis, rightBasis);
 
+        //swap direction
+        mThreePointFanLayouterPlayerThree.setDirection(ThreePointFanLayouter.LayoutDirection.RTL);
     }
 
     private void layoutPile(int pileIndex, float x, float y) {
@@ -439,6 +446,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
             for (int i = 0; i < slots.size(); i++) {
                 CardsLayouterSlotImpl slot = slots.get(i);
                 YANTexturedNode node = mPlayerTwoTextureNodeCards.get(i);
+                node.setSortingLayer(slot.getSortingLayer());
                 //make the animation
                 mCardsTweenAnimator.animateCardToValues(node, slot.getPosition().getX(), slot.getPosition().getY(), slot.getRotation(), null);
                 mCardsTweenAnimator.animateSize(node, mCardWidth * 0.7f, mCardHeight * 0.7f, 0.5f);
@@ -465,6 +473,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
             for (int i = 0; i < slots.size(); i++) {
                 CardsLayouterSlotImpl slot = slots.get(i);
                 YANTexturedNode node = mPlayerThreeTextureNodeCards.get(i);
+                node.setSortingLayer(slot.getSortingLayer());
                 //make the animation
                 mCardsTweenAnimator.animateCardToValues(node, slot.getPosition().getX(), slot.getPosition().getY(), slot.getRotation(), null);
                 mCardsTweenAnimator.animateSize(node, mCardWidth * 0.7f, mCardHeight * 0.7f, 0.5f);
@@ -510,12 +519,28 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         mCardsTweenAnimator.animateSize(cardNode, mCardWidth, mCardHeight, 0.5f);
 
         if (fromPile == PLAYER_ONE_PILE_INDEX || toPile == PLAYER_ONE_PILE_INDEX || toPile > PLAYER_THREE_PILE_INDEX || toPile == DISCARD_PILE_INDEX) {
+
+
             //show the card
             cardNode.useFrontTextureRegion();
         } else {
             //hide the card
             cardNode.useBackTextureRegion();
         }
+
+        if (toPile > PLAYER_THREE_PILE_INDEX) {
+            //moving to field pile
+            //we need to adjust sorting layer
+            int sortingLayer = (mPileIndexToCardListMap.get(toPile).size() == 1) ? 1 : 2;
+            cardNode.setSortingLayer(sortingLayer);
+        }
+
+        if (fromPile > PLAYER_THREE_PILE_INDEX) {
+            //we need to adjust sorting layer
+            int sortingLayer = (mPileIndexToCardListMap.get(fromPile).size() > 0) ? 2 : 1;
+            cardNode.setSortingLayer(sortingLayer);
+        }
+
 
     }
 

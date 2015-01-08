@@ -12,6 +12,10 @@ import java.util.List;
  */
 public interface ThreePointLayouter {
 
+    public enum LayoutDirection {
+        LTR, RTL;
+    }
+
     /**
      * Set the 3 points to define the layout
      *
@@ -25,4 +29,10 @@ public interface ThreePointLayouter {
      * Takes the slots list and layouts them in a row
      */
     void layoutRowOfSlots(List<CardsLayouterSlotImpl> slots);
+
+    /**
+     * Direction defines the order of laying out.
+     * from right to left or from left to right
+     */
+    void setDirection(LayoutDirection direction);
 }
