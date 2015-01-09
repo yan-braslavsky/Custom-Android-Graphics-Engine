@@ -12,6 +12,7 @@ import com.example.yan_home.openglengineandroid.layouting.threepoint.ThreePointF
 import com.example.yan_home.openglengineandroid.nodes.CardNode;
 import com.example.yan_home.openglengineandroid.protocol.messages.BlankProtocolMessage;
 import com.example.yan_home.openglengineandroid.protocol.messages.CardMovedProtocolMessage;
+import com.example.yan_home.openglengineandroid.protocol.messages.GameSetupProtocolMessage;
 import com.example.yan_home.openglengineandroid.protocol.messages.RequestCardForAttackMessage;
 import com.example.yan_home.openglengineandroid.protocol.messages.RequestRetaliatePilesMessage;
 import com.example.yan_home.openglengineandroid.protocol.messages.ResponseCardForAttackMessage;
@@ -35,7 +36,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
 
     //connection details
     public static final String SERVER_ADDRESS = "192.168.1.101";
-    public static final int SERVER_PORT = 7000;
+    public static final int SERVER_PORT = 5000;
 
     private static final int CARDS_COUNT = 36;
     private static final int MAX_CARDS_IN_LINE = 8;
@@ -47,9 +48,11 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     //pile indices (it is hard coded to have 3 players)
     public static final int STOCK_PILE_INDEX = 0;
     public static final int DISCARD_PILE_INDEX = 1;
-    public static final int PLAYER_ONE_PILE_INDEX = 2;
-    public static final int PLAYER_TWO_PILE_INDEX = 3;
-    public static final int PLAYER_THREE_PILE_INDEX = 4;
+
+    //default values may change
+    public static int CURRENT_PLAYER_PILE_INDEX = -1;
+    public static int PLAYER_TO_THE_RIGHT_PILE_INDEX = -1;
+    public static int PLAYER_TO_THE_LEFT_PILE_INDEX = -1;
 
     //Player hand related
     private CardsLayouter mPlayerCardsLayouter;
@@ -199,34 +202,34 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     protected void onLayoutNodes() {
         super.onLayoutNodes();
 
-        //stock pile
-        layoutPile(STOCK_PILE_INDEX, (getSceneSize().getX() - mCardWidth) / 2, 0);
-
-        //discard pile (off the screen)
-        layoutPile(DISCARD_PILE_INDEX, -getSceneSize().getX(), getSceneSize().getY() / 2);
-
-        //player one pile (bottom middle)
-        layoutPile(PLAYER_ONE_PILE_INDEX, (getSceneSize().getX() - mCardWidth) / 2, getSceneSize().getY() - mCardHeight);
-
-        //player two pile (top right)
-        layoutPile(PLAYER_TWO_PILE_INDEX, (getSceneSize().getX() - mCardWidth), 0);
-
-        //player three pile (top left)
-        layoutPile(PLAYER_THREE_PILE_INDEX, 0, 0);
-
-
-        float leftBorderX = getSceneSize().getX() * 0.3f;
-        float rightBorderX = getSceneSize().getX() * 0.7f;
-
-        float leftBorderY = getSceneSize().getY() * 0.3f;
-        float rightBorderY = getSceneSize().getY() * 0.5f;
-
-        //init "field piles" positions
-        for (int i = (PLAYER_THREE_PILE_INDEX + 1); i < CARDS_COUNT / 2; i++) {
-            float x = YANMathUtils.randomInRange(leftBorderX, rightBorderX);
-            float y = YANMathUtils.randomInRange(leftBorderY, rightBorderY);
-            mPileIndexToPositionMap.put(i, new YANVector2(x, y));
-        }
+//        //stock pile
+//        layoutPile(STOCK_PILE_INDEX, (getSceneSize().getX() - mCardWidth) / 2, 0);
+//
+//        //discard pile (off the screen)
+//        layoutPile(DISCARD_PILE_INDEX, -getSceneSize().getX(), getSceneSize().getY() / 2);
+//
+//        //player one pile (bottom middle)
+//        layoutPile(CURRENT_PLAYER_PILE_INDEX, (getSceneSize().getX() - mCardWidth) / 2, getSceneSize().getY() - mCardHeight);
+//
+//        //player two pile (top right)
+//        layoutPile(PLAYER_TO_THE_RIGHT_PILE_INDEX, (getSceneSize().getX() - mCardWidth), 0);
+//
+//        //player three pile (top left)
+//        layoutPile(PLAYER_TO_THE_LEFT_PILE_INDEX, 0, 0);
+//
+//
+//        float leftBorderX = getSceneSize().getX() * 0.3f;
+//        float rightBorderX = getSceneSize().getX() * 0.7f;
+//
+//        float leftBorderY = getSceneSize().getY() * 0.3f;
+//        float rightBorderY = getSceneSize().getY() * 0.5f;
+//
+//        //init "field piles" positions
+//        for (int i = (PLAYER_TO_THE_LEFT_PILE_INDEX + 1); i < CARDS_COUNT / 2; i++) {
+//            float x = YANMathUtils.randomInRange(leftBorderX, rightBorderX);
+//            float y = YANMathUtils.randomInRange(leftBorderY, rightBorderY);
+//            mPileIndexToPositionMap.put(i, new YANVector2(x, y));
+//        }
 
         //layout avatars
         float offsetX = getSceneSize().getX() * 0.01f;
@@ -351,14 +354,14 @@ public class RemoteGameTestScreen extends BaseGameScreen {
 
         //init rest of a piles
         mPileIndexToCardListMap.put(DISCARD_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
-        mPileIndexToCardListMap.put(PLAYER_ONE_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
-        mPileIndexToCardListMap.put(PLAYER_TWO_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
-        mPileIndexToCardListMap.put(PLAYER_THREE_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
-
-        //init "field piles" ( can be no more than 2 cards)
-        for (int i = (PLAYER_THREE_PILE_INDEX + 1); i < CARDS_COUNT / 2; i++) {
-            mPileIndexToCardListMap.put(i, new ArrayList<Card>(2));
-        }
+//        mPileIndexToCardListMap.put(CURRENT_PLAYER_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
+//        mPileIndexToCardListMap.put(PLAYER_TO_THE_RIGHT_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
+//        mPileIndexToCardListMap.put(PLAYER_TO_THE_LEFT_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
+//
+//        //init "field piles" ( can be no more than 2 cards)
+//        for (int i = (PLAYER_TO_THE_LEFT_PILE_INDEX + 1); i < CARDS_COUNT / 2; i++) {
+//            mPileIndexToCardListMap.put(i, new ArrayList<Card>(2));
+//        }
 
     }
 
@@ -391,6 +394,54 @@ public class RemoteGameTestScreen extends BaseGameScreen {
             handleRequestCardForAttackMessage(mGson.fromJson(msg, RequestCardForAttackMessage.class));
         } else if (message.getMessageName().equals(RequestRetaliatePilesMessage.MESSAGE_NAME)) {
             handleRequestRetaliatePilesMessage(mGson.fromJson(msg, RequestRetaliatePilesMessage.class));
+        } else if (message.getMessageName().equals(GameSetupProtocolMessage.MESSAGE_NAME)) {
+            handleGameSetupMessage(mGson.fromJson(msg, GameSetupProtocolMessage.class));
+        }
+    }
+
+    private void handleGameSetupMessage(GameSetupProtocolMessage gameSetupProtocolMessage) {
+
+        //TODO : get rid of the statics and make it more generic
+        CURRENT_PLAYER_PILE_INDEX = gameSetupProtocolMessage.getMessageData().getMyPileIndex();
+        PLAYER_TO_THE_RIGHT_PILE_INDEX = (CURRENT_PLAYER_PILE_INDEX + 1) % 5;
+        PLAYER_TO_THE_LEFT_PILE_INDEX = (CURRENT_PLAYER_PILE_INDEX + 2) % 5;
+
+        //TODO : encapsulate
+        mPileIndexToCardListMap.put(CURRENT_PLAYER_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
+        mPileIndexToCardListMap.put(PLAYER_TO_THE_RIGHT_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
+        mPileIndexToCardListMap.put(PLAYER_TO_THE_LEFT_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
+
+        //init "field piles" ( can be no more than 2 cards)
+        for (int i = (PLAYER_TO_THE_LEFT_PILE_INDEX + 1); i < CARDS_COUNT / 2; i++) {
+            mPileIndexToCardListMap.put(i, new ArrayList<Card>(2));
+        }
+
+        //stock pile
+        layoutPile(STOCK_PILE_INDEX, (getSceneSize().getX() - mCardWidth) / 2, 0);
+
+        //discard pile (off the screen)
+        layoutPile(DISCARD_PILE_INDEX, -getSceneSize().getX(), getSceneSize().getY() / 2);
+
+        //player one pile (bottom middle)
+        layoutPile(CURRENT_PLAYER_PILE_INDEX, (getSceneSize().getX() - mCardWidth) / 2, getSceneSize().getY() - mCardHeight);
+
+        //player two pile (top right)
+        layoutPile(PLAYER_TO_THE_RIGHT_PILE_INDEX, (getSceneSize().getX() - mCardWidth), 0);
+
+        //player three pile (top left)
+        layoutPile(PLAYER_TO_THE_LEFT_PILE_INDEX, 0, 0);
+
+        float leftBorderX = getSceneSize().getX() * 0.3f;
+        float rightBorderX = getSceneSize().getX() * 0.7f;
+
+        float leftBorderY = getSceneSize().getY() * 0.3f;
+        float rightBorderY = getSceneSize().getY() * 0.5f;
+
+        //init "field piles" positions
+        for (int i = (PLAYER_TO_THE_LEFT_PILE_INDEX + 1); i < CARDS_COUNT / 2; i++) {
+            float x = YANMathUtils.randomInRange(leftBorderX, rightBorderX);
+            float y = YANMathUtils.randomInRange(leftBorderY, rightBorderY);
+            mPileIndexToPositionMap.put(i, new YANVector2(x, y));
         }
     }
 
@@ -413,9 +464,9 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         moveCardFromPileToPile(movedCard, fromPile, toPile);
 
         //check if card goes to or from player 1 pile
-        if (toPile == PLAYER_ONE_PILE_INDEX || fromPile == PLAYER_ONE_PILE_INDEX) {
+        if (toPile == CURRENT_PLAYER_PILE_INDEX || fromPile == CURRENT_PLAYER_PILE_INDEX) {
 
-            if (toPile == PLAYER_ONE_PILE_INDEX) {
+            if (toPile == CURRENT_PLAYER_PILE_INDEX) {
                 mPlayerOneCardNodes.add(mCardNodes.get(movedCard));
             } else {
                 mPlayerOneCardNodes.remove(mCardNodes.get(movedCard));
@@ -425,8 +476,8 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         }
 
         //player 2
-        else if (toPile == PLAYER_TWO_PILE_INDEX || fromPile == PLAYER_TWO_PILE_INDEX) {
-            if (toPile == PLAYER_TWO_PILE_INDEX) {
+        else if (toPile == PLAYER_TO_THE_RIGHT_PILE_INDEX || fromPile == PLAYER_TO_THE_RIGHT_PILE_INDEX) {
+            if (toPile == PLAYER_TO_THE_RIGHT_PILE_INDEX) {
                 mPlayerTwoTextureNodeCards.add(mCardNodes.get(movedCard));
             } else {
                 mPlayerTwoTextureNodeCards.remove(mCardNodes.get(movedCard));
@@ -454,8 +505,8 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         }
 
         //player 3
-        else if (toPile == PLAYER_THREE_PILE_INDEX || fromPile == PLAYER_THREE_PILE_INDEX) {
-            if (toPile == PLAYER_THREE_PILE_INDEX) {
+        else if (toPile == PLAYER_TO_THE_LEFT_PILE_INDEX || fromPile == PLAYER_TO_THE_LEFT_PILE_INDEX) {
+            if (toPile == PLAYER_TO_THE_LEFT_PILE_INDEX) {
                 mPlayerThreeTextureNodeCards.add(mCardNodes.get(movedCard));
             } else {
                 mPlayerThreeTextureNodeCards.remove(mCardNodes.get(movedCard));
@@ -518,7 +569,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         mCardsTweenAnimator.animateCardToValues(cardNode, destX, destY, destRotation, null);
         mCardsTweenAnimator.animateSize(cardNode, mCardWidth, mCardHeight, 0.5f);
 
-        if (fromPile == PLAYER_ONE_PILE_INDEX || toPile == PLAYER_ONE_PILE_INDEX || toPile > PLAYER_THREE_PILE_INDEX || toPile == DISCARD_PILE_INDEX) {
+        if (fromPile == CURRENT_PLAYER_PILE_INDEX || toPile == CURRENT_PLAYER_PILE_INDEX || toPile > PLAYER_TO_THE_LEFT_PILE_INDEX || toPile == DISCARD_PILE_INDEX) {
 
 
             //show the card
@@ -528,14 +579,14 @@ public class RemoteGameTestScreen extends BaseGameScreen {
             cardNode.useBackTextureRegion();
         }
 
-        if (toPile > PLAYER_THREE_PILE_INDEX) {
+        if (toPile > PLAYER_TO_THE_LEFT_PILE_INDEX) {
             //moving to field pile
             //we need to adjust sorting layer
             int sortingLayer = (mPileIndexToCardListMap.get(toPile).size() == 1) ? 1 : 2;
             cardNode.setSortingLayer(sortingLayer);
         }
 
-        if (fromPile > PLAYER_THREE_PILE_INDEX) {
+        if (fromPile > PLAYER_TO_THE_LEFT_PILE_INDEX) {
             //we need to adjust sorting layer
             int sortingLayer = (mPileIndexToCardListMap.get(fromPile).size() > 0) ? 2 : 1;
             cardNode.setSortingLayer(sortingLayer);

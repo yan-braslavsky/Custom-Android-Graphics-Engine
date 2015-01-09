@@ -1,5 +1,7 @@
 package com.example.yan_home.openglengineandroid.communication.socket;
 
+import com.yan.glengine.util.YANLogger;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.LinkedList;
@@ -48,10 +50,11 @@ public class SocketConnectionManager {
                 }
 
                 while (isConnected()) {
-                    String message = mSocketClient.readMessage();
-                    if (message != null) {
+                    String msg = mSocketClient.readMessage();
+                    if (msg != null) {
                         synchronized (mMessageQueue) {
-                            mMessageQueue.add(message);
+                            YANLogger.log("[RECEIVED] " + msg);
+                            mMessageQueue.add(msg);
                         }
                     }
                 }
@@ -68,6 +71,8 @@ public class SocketConnectionManager {
     }
 
     public void sendMessageToRemoteServer(String msg) {
+
+        YANLogger.log("[SENT] " + msg);
         mSocketClient.sendMessage(msg);
     }
 
