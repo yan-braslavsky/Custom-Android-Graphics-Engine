@@ -14,8 +14,8 @@ public class MainActivity extends EngineActivity {
     @Override
     protected ArrayList<YANAssetDescriptor> onCreateAssets() {
         ArrayList<YANAssetDescriptor> assets = new ArrayList<>();
-        YANAssetDescriptor atlasAsset = new YANAssetDescriptor(YANAssetDescriptor.YANAssetType.TEXTURE_ATLAS, "texture_atlasses" + File.separator, "ui_atlas", "json");
-        assets.add(atlasAsset);
+        assets.add(new YANAssetDescriptor(YANAssetDescriptor.YANAssetType.TEXTURE_ATLAS, "texture_atlases" + File.separator, "ui_atlas", "json"));
+        assets.add(new YANAssetDescriptor(YANAssetDescriptor.YANAssetType.FONT, "fonts" + File.separator, "standard_font", "fnt"));
         return assets;
     }
 

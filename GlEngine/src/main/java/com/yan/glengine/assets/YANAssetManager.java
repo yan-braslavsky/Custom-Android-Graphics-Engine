@@ -4,6 +4,7 @@ package com.yan.glengine.assets;
 import com.yan.glengine.EngineWrapper;
 import com.yan.glengine.assets.atlas.YANTextureAtlasLoader;
 import com.yan.glengine.assets.atlas.YANTextureAtlas;
+import com.yan.glengine.assets.font.YANFontLoader;
 import com.yan.glengine.util.YANTextureHelper;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class YANAssetManager {
 
     private static final YANAssetManager INSTANCE = new YANAssetManager();
     private YANTextureAtlasLoader mTextureAtlasLoader;
+    private YANFontLoader mFontLoader;
 
     public static final YANAssetManager getInstance() {
         return INSTANCE;
@@ -40,6 +42,7 @@ public class YANAssetManager {
         mAtlasesMap = new HashMap<>();
         mTextureHandlesMap = new HashMap<>();
         mTextureAtlasLoader = new YANTextureAtlasLoader();
+        mFontLoader = new YANFontLoader();
     }
 
     /**
@@ -62,11 +65,17 @@ public class YANAssetManager {
                     loadTextureAtlas(asset);
                     break;
                 case FONT:
+                    loadFont(asset);
                     break;
                 default:
                     throw new RuntimeException("don't know how to load asset type " + asset.getType());
             }
         }
+    }
+
+    private void loadFont(YANAssetDescriptor asset) {
+        //TODO
+        mFontLoader.loadAsset(asset);
     }
 
     /**
@@ -75,7 +84,7 @@ public class YANAssetManager {
      * @param atlasAsset asset descriptor
      */
     private void loadTextureAtlas(YANAssetDescriptor atlasAsset) {
-        YANTextureAtlas atlas = mTextureAtlasLoader.loadAtlas(atlasAsset);
+        YANTextureAtlas atlas = mTextureAtlasLoader.loadAsset(atlasAsset);
         mAtlasesMap.put(atlasAsset.getAssetName(), atlas);
     }
 
