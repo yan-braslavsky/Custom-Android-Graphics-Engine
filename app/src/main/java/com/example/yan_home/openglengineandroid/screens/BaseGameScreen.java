@@ -1,6 +1,5 @@
 package com.example.yan_home.openglengineandroid.screens;
 
-import com.example.yan_home.openglengineandroid.R;
 import com.yan.glengine.assets.YANAssetManager;
 import com.yan.glengine.assets.atlas.YANTextureAtlas;
 import com.yan.glengine.nodes.YANTexturedNode;
@@ -16,13 +15,13 @@ public abstract class BaseGameScreen extends YANNodeScreen {
     private static final int BG_HEX_COLOR = 0x9F9E36;
     protected static final int HIGHEST_SORTING_LAYER = 50;
 
-    protected YANTextureAtlas mAtlas;
+    protected YANTextureAtlas mUiAtlas;
     protected YANTexturedNode mFence;
     private YANTexturedNode mGlade;
 
     public BaseGameScreen(YANGLRenderer renderer) {
         super(renderer);
-        mAtlas = YANAssetManager.getInstance().getLoadedAtlas(R.raw.ui_atlas);
+        mUiAtlas = YANAssetManager.getInstance().getLoadedAtlas("ui_atlas");
     }
 
     @Override
@@ -64,23 +63,27 @@ public abstract class BaseGameScreen extends YANNodeScreen {
     @Override
     protected void onCreateNodes() {
 
-        mFence = new YANTexturedNode(mAtlas.getTextureRegion("fence.png"));
+        mFence = new YANTexturedNode(mUiAtlas.getTextureRegion("fence.png"));
 
         //fence is on top of cards
         mFence.setSortingLayer(HIGHEST_SORTING_LAYER);
-        mGlade = new YANTexturedNode(mAtlas.getTextureRegion("glade.png"));
+        mGlade = new YANTexturedNode(mUiAtlas.getTextureRegion("glade.png"));
     }
 
     @Override
     public void onSetActive() {
         super.onSetActive();
         getRenderer().setRendererBackgroundColor(YANColor.createFromHexColor(BG_HEX_COLOR));
-        YANAssetManager.getInstance().loadTexture(mAtlas.getAtlasImageResourceID());
+
+        //for efficiency reasons we are not loading texture into openGL until we are need it
+        YANAssetManager.getInstance().loadTexture(mUiAtlas.getAtlasImageFileName());
     }
 
     @Override
     public void onSetNotActive() {
         super.onSetNotActive();
-        YANAssetManager.getInstance().unloadTexture(mAtlas.getAtlasImageResourceID());
+
+        //for efficiency reasons we are deleting loaded texture into openGL
+        YANAssetManager.getInstance().unloadTexture(mUiAtlas.getAtlasImageFileName());
     }
 }

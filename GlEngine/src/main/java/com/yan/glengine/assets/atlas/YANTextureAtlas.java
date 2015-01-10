@@ -7,25 +7,22 @@ import java.util.Map;
  */
 public class YANTextureAtlas {
 
-    private int mAtlasResourceID;
-    private int mAtlasImageResourceID;
+    private final String mAtlasImageFileName;
     private Map<String, YANTextureRegion> mTextureRegions;
 
-    public YANTextureAtlas(int atlasResourceID,int atlasImageResourceID,  Map<String, YANTextureRegion> textureRegions) {
-        mAtlasResourceID = atlasResourceID;
-        mTextureRegions = textureRegions;
-        mAtlasImageResourceID = atlasImageResourceID;
-    }
-
-    public int getAtlasResourceID() {
-        return mAtlasResourceID;
+    public YANTextureAtlas(String atlasImageFileName) {
+        mAtlasImageFileName = atlasImageFileName;
     }
 
     public YANTextureRegion getTextureRegion(String name) {
         return mTextureRegions.get(name);
     }
 
-    public int getAtlasImageResourceID() {
-        return mAtlasImageResourceID;
+    public String getAtlasImageFileName() {
+        return mAtlasImageFileName;
+    }
+
+    public void setTextureRegions(Map<String, YANTextureRegion> textureRegions) {
+        mTextureRegions = textureRegions;
     }
 }

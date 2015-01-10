@@ -117,18 +117,18 @@ public class ThreePointLayoutingTestScreen extends BaseGameScreen {
         int size = 20;
         //origin indication
         String textureName = "call_btn_default.png";
-        YANTexturedNode originIndicationNode = new YANTexturedNode(mAtlas.getTextureRegion(textureName));
+        YANTexturedNode originIndicationNode = new YANTexturedNode(mUiAtlas.getTextureRegion(textureName));
         originIndicationNode.setSize(size, size);
         originIndicationNode.setPosition(originPoint.getX(), originPoint.getY());
         mTriangleIndication.add(originIndicationNode);
 
         //left basis indication
-        YANTexturedNode leftBasisIndicationNode = new YANTexturedNode(mAtlas.getTextureRegion(textureName));
+        YANTexturedNode leftBasisIndicationNode = new YANTexturedNode(mUiAtlas.getTextureRegion(textureName));
         leftBasisIndicationNode.setSize(size, size);
         leftBasisIndicationNode.setPosition(leftBasis.getX(), leftBasis.getY());
         mTriangleIndication.add(leftBasisIndicationNode);
 
-        YANTexturedNode rightBasisIndicationNode = new YANTexturedNode(mAtlas.getTextureRegion(textureName));
+        YANTexturedNode rightBasisIndicationNode = new YANTexturedNode(mUiAtlas.getTextureRegion(textureName));
         rightBasisIndicationNode.setSize(size, size);
         rightBasisIndicationNode.setPosition(righBasis.getX(), righBasis.getY());
         mTriangleIndication.add(rightBasisIndicationNode);
@@ -204,7 +204,7 @@ public class ThreePointLayoutingTestScreen extends BaseGameScreen {
 
         for (Card cardEntity : cardEntities) {
             String name = "cards_back.png";
-            YANTexturedNode card = new YANTexturedNode(mAtlas.getTextureRegion(name));
+            YANTexturedNode card = new YANTexturedNode(mUiAtlas.getTextureRegion(name));
             mCardNodesArray.add(card);
         }
 

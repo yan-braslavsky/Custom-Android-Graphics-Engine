@@ -332,17 +332,17 @@ public class RemoteGameTestScreen extends BaseGameScreen {
 
         //add 3 avatars for 3 players
         for (int i = 0; i < 3; i++) {
-            mAvatarPlaceHoldersArray.add(new YANTexturedNode(mAtlas.getTextureRegion("stump.png")));
+            mAvatarPlaceHoldersArray.add(new YANTexturedNode(mUiAtlas.getTextureRegion("stump.png")));
         }
     }
 
     private void initCardsMap() {
-        mBackOfCardNode = new YANTexturedNode(mAtlas.getTextureRegion("cards_back.png"));
+        mBackOfCardNode = new YANTexturedNode(mUiAtlas.getTextureRegion("cards_back.png"));
         ArrayList<Card> cardEntities = CardsHelper.create36Deck();
 
         for (Card card : cardEntities) {
             String name = "cards_" + card.getSuit() + "_" + card.getRank() + ".png";
-            CardNode cardNode = new CardNode(mAtlas.getTextureRegion(name), mBackOfCardNode.getTextureRegion(), card);
+            CardNode cardNode = new CardNode(mUiAtlas.getTextureRegion(name), mBackOfCardNode.getTextureRegion(), card);
             mCardNodes.put(card, cardNode);
 
             //hide the card

@@ -104,7 +104,7 @@ public class YANGLRenderer {
                 textureProgram.useProgram();
                 textureProgram.setUniforms(
                         YANMatrixHelper.modelViewProjectionMatrix,
-                        YANAssetManager.getInstance().getLoadedTextureHandle(((YANTexturedNode) iNode).getTextureRegion().getAtlasImageResourceId()),
+                        YANAssetManager.getInstance().getLoadedTextureOpenGLHandle(((YANTexturedNode) iNode).getTextureRegion().getAtlas().getAtlasImageFileName()),
                         iNode.getOpacity());
             } else {
                 throw new RuntimeException("Don't know how to render node of type " + iNode.getClass().getSimpleName());

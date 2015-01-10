@@ -12,12 +12,13 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Toast;
 
+import com.yan.glengine.assets.YANAssetDescriptor;
 import com.yan.glengine.assets.YANAssetManager;
 import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.screens.YANIScreen;
 import com.yan.glengine.setup.YANEngineSetup;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public abstract class EngineActivity extends Activity {
 
@@ -35,27 +36,20 @@ public abstract class EngineActivity extends Activity {
         if (renderer == null) {
             renderer = new EngineWrapper(getApplicationContext());
 
-//            HashMap<Integer, Integer> map = new HashMap<>();
-//            map.put(R.raw.ui_atlas, R.drawable.ui_atlas);
+            //can be loaded during the atlas parsing
+            ArrayList<YANAssetDescriptor> assets = onCreateAssets();
 
-            //TODO : change assets map to assets array , image corrisponding to atlass
-            //can be loaded during the atlass parsing
-            HashMap<Integer, Integer> map = onCreateAssetsMap();
+            //preload assets
+            YANAssetManager.getInstance().preloadAssets(assets);
 
-            YANAssetManager.getInstance().preloadAssets(map, new YANAssetManager.YANAssetManagerListener() {
-                @Override
-                public void onAssetsPreloaded() {
+            //setup the tween engine
+            YANEngineSetup.setupTweenEngine();
 
-                    //setup the tween engine
-                    YANEngineSetup.setupTweenEngine();
+            //set the first screen
+            EngineWrapper.getRenderer().setActiveScreen(onCreateStartScreen(EngineWrapper.getRenderer()));
 
-                    //set the first screen
-                    EngineWrapper.getRenderer().setActiveScreen(onCreateStartScreen(EngineWrapper.getRenderer()));
-
-                    //init the engine
-                    init();
-                }
-            });
+            //init the engine
+            init();
         } else {
 
             //init the engine
@@ -64,7 +58,7 @@ public abstract class EngineActivity extends Activity {
 
     }
 
-    protected abstract HashMap<Integer, Integer> onCreateAssetsMap();
+    protected abstract ArrayList<YANAssetDescriptor> onCreateAssets();
 
     protected abstract YANIScreen onCreateStartScreen(YANGLRenderer renderer);
 

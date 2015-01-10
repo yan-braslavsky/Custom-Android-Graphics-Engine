@@ -14,6 +14,9 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.util.Log;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import static android.opengl.GLES20.GL_LINEAR;
 import static android.opengl.GLES20.GL_LINEAR_MIPMAP_LINEAR;
 import static android.opengl.GLES20.GL_TEXTURE_2D;
@@ -36,9 +39,38 @@ public class YANTextureHelper {
      *
      * @param context
      * @param resourceId
-     * @return
+     * @return 0 if the load failed.
      */
     public static int loadTexture(Context context, int resourceId) {
+        final Bitmap bitmap = loadBitmapFromResources(context, resourceId);
+        return loadBitmapIntoOpenGL(bitmap);
+    }
+
+    /**
+     * Loads a texture from an assets folder with provided name and path, returning the OpenGL ID for that
+     * texture. Returns 0 if the load failed.
+     *
+     * @param context
+     * @param texturePath a full path starting from assets folder as a root with image name and extention.
+     * @return 0 if the load failed.
+     */
+    public static int loadTexture(Context context, String texturePath) {
+        final Bitmap bitmap = loadBitmapFromAssets(context, texturePath);
+        return loadBitmapIntoOpenGL(bitmap);
+    }
+
+    private static Bitmap loadBitmapFromAssets(Context context, String texturePath) {
+        Bitmap loadedBitmap = null;
+        try {
+            InputStream ims = context.getAssets().open(texturePath);
+            loadedBitmap = BitmapFactory.decodeStream(ims);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return loadedBitmap;
+    }
+
+    private static int loadBitmapIntoOpenGL(Bitmap bitmap) {
         final int[] textureObjectIds = new int[1];
         glGenTextures(1, textureObjectIds, 0);
 
@@ -49,16 +81,9 @@ public class YANTextureHelper {
             return 0;
         }
 
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inScaled = false;
-
-        // Read in the resource
-        final Bitmap bitmap = BitmapFactory.decodeResource(
-                context.getResources(), resourceId, options);
-
         if (bitmap == null) {
             if (IS_LOGGING_ON) {
-                Log.w(TAG, "Resource ID " + resourceId + " could not be decoded.");
+                Log.w(TAG, "Bitmap could not be decoded.");
             }
 
             glDeleteTextures(1, textureObjectIds, 0);
@@ -92,6 +117,15 @@ public class YANTextureHelper {
         glBindTexture(GL_TEXTURE_2D, 0);
 
         return textureObjectIds[0];
+    }
+
+    private static Bitmap loadBitmapFromResources(Context context, int resourceId) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+
+        // Read in the resource
+        return BitmapFactory.decodeResource(
+                context.getResources(), resourceId, options);
     }
 
     public static void deleteTexture(Integer textureHandle) {

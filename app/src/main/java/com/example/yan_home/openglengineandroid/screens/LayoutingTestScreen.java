@@ -181,7 +181,7 @@ public class LayoutingTestScreen extends BaseGameScreen {
         ArrayList<Card> cardEntities = CardsHelper.create36Deck();
         for (Card cardEntity : cardEntities) {
             String name = "cards_" + cardEntity.getSuit() + "_" + cardEntity.getRank() + ".png";
-            CardNode card = new CardNode(mAtlas.getTextureRegion(name),mAtlas.getTextureRegion("cards_back.png"),cardEntity);
+            CardNode card = new CardNode(mUiAtlas.getTextureRegion(name), mUiAtlas.getTextureRegion("cards_back.png"),cardEntity);
             mCardNodesArray.add(card);
         }
     }

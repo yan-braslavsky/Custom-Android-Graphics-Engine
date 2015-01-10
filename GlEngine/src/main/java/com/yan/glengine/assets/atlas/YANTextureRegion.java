@@ -5,55 +5,58 @@ package com.yan.glengine.assets.atlas;
  */
 public class YANTextureRegion {
 
-    private final float width;
-    private final float height;
+    private final float mWidth;
+    private final float mHeight;
+    private final YANTextureAtlas mAtlas;
     private String mRegionName;
-    private int mAtlasImageResourceId;
-    private float u0;
-    private float u1;
-    private float v0;
-    private float v1;
+    private float mU0;
+    private float mU1;
+    private float mV0;
+    private float mV1;
 
-    public YANTextureRegion(String regionName, int atlasImageResourceID, float u0, float u1, float v0, float v1,float width,float height) {
-        mRegionName = regionName;
-        mAtlasImageResourceId = atlasImageResourceID;
-        this.u0 = u0;
-        this.u1 = u1;
-        this.v0 = v0;
-        this.v1 = v1;
-        this.width = width;
-        this.height = height;
+    public YANTextureRegion(YANTextureAtlas atlas, String regionName, float u0, float u1, float v0, float v1, float width, float height) {
+        this.mRegionName = regionName;
+        this.mU0 = u0;
+        this.mU1 = u1;
+        this.mV0 = v0;
+        this.mV1 = v1;
+        this.mWidth = width;
+        this.mHeight = height;
+        this.mAtlas = atlas;
     }
 
     public String getRegionName() {
         return mRegionName;
     }
 
-    public int getAtlasImageResourceId() {
-        return mAtlasImageResourceId;
-    }
-
     public float getU0() {
-        return u0;
+        return mU0;
     }
 
     public float getU1() {
-        return u1;
+        return mU1;
     }
 
     public float getV0() {
-        return v0;
+        return mV0;
     }
 
     public float getV1() {
-        return v1;
+        return mV1;
     }
 
     public float getWidth() {
-        return width;
+        return mWidth;
     }
 
     public float getHeight() {
-        return height;
+        return mHeight;
+    }
+
+    /**
+     * @return and atlas this region is associated with
+     */
+    public YANTextureAtlas getAtlas() {
+        return mAtlas;
     }
 }
