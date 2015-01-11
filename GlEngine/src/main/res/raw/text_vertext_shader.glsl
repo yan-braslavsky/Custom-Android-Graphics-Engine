@@ -9,5 +9,5 @@ void main()
 {
   gl_Position = u_Matrix * a_Position;
   v_TextureCoordinates = a_TextureCoordinates;
-  v_Color = a_Color;
+  //v_Color = a_Color;
 }

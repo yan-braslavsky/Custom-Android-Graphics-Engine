@@ -25,7 +25,7 @@ public class YANTextureAtlasLoader implements YANAssetLoader<YANTextureAtlas> {
         YANTextureAtlas atlas = new YANTextureAtlas(assetDescriptor.getPathToAsset() + loadedPojo.getMetaData().getAtlasImageFileName());
 
         //load texture regions
-        Map<String, YANTextureRegion> textureRegionsMap = createTextureRegionsMap(loadedPojo, atlas);
+        Map<String, YANAtlasTextureRegion> textureRegionsMap = createTextureRegionsMap(loadedPojo, atlas);
 
         //assign texture regions to atlas
         atlas.setTextureRegions(textureRegionsMap);
@@ -34,8 +34,8 @@ public class YANTextureAtlasLoader implements YANAssetLoader<YANTextureAtlas> {
         return atlas;
     }
 
-    private Map<String, YANTextureRegion> createTextureRegionsMap(YANTexturePackerPojos.WrappingObject loadedPojo, YANTextureAtlas atlas) {
-        Map<String, YANTextureRegion> retMap = new HashMap<>();
+    private Map<String, YANAtlasTextureRegion> createTextureRegionsMap(YANTexturePackerPojos.WrappingObject loadedPojo, YANTextureAtlas atlas) {
+        Map<String, YANAtlasTextureRegion> retMap = new HashMap<>();
         for (YANTexturePackerPojos.Frame frame : loadedPojo.getFramesList()) {
             retMap.put(frame.getTextureFileName(), createTextureRegionFromFrame(atlas, frame, loadedPojo.getMetaData().getAtlasImageSize()));
         }
@@ -43,13 +43,13 @@ public class YANTextureAtlasLoader implements YANAssetLoader<YANTextureAtlas> {
         return retMap;
     }
 
-    private YANTextureRegion createTextureRegionFromFrame(YANTextureAtlas atlas, YANTexturePackerPojos.Frame frame, YANTexturePackerPojos.AtlasImageSize atlasImageSize) {
+    private YANAtlasTextureRegion createTextureRegionFromFrame(YANTextureAtlas atlas, YANTexturePackerPojos.Frame frame, YANTexturePackerPojos.AtlasImageSize atlasImageSize) {
         String regionName = frame.getTextureFileName();
         float u0 = frame.getFrameData().getX() / atlasImageSize.getW();
         float u1 = (frame.getFrameData().getX() + frame.getFrameData().getW()) / atlasImageSize.getW();
         float v0 = ((frame.getFrameData().getY()) / atlasImageSize.getH());
         float v1 = ((frame.getFrameData().getY() + frame.getFrameData().getH()) / atlasImageSize.getH());
-        return new YANTextureRegion(atlas, regionName, u0, u1, v0, v1, frame.getFrameData().getW(), frame.getFrameData().getH());
+        return new YANAtlasTextureRegion(atlas, regionName, u0, u1, v0, v1, frame.getFrameData().getW(), frame.getFrameData().getH());
     }
 
 

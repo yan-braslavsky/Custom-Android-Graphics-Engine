@@ -76,7 +76,7 @@ public abstract class BaseGameScreen extends YANNodeScreen {
         getRenderer().setRendererBackgroundColor(YANColor.createFromHexColor(BG_HEX_COLOR));
 
         //for efficiency reasons we are not loading texture into openGL until we are need it
-        YANAssetManager.getInstance().loadTexture(mUiAtlas.getAtlasImageFileName());
+        YANAssetManager.getInstance().loadTexture(mUiAtlas.getAtlasImageFilePath());
     }
 
     @Override
@@ -84,6 +84,6 @@ public abstract class BaseGameScreen extends YANNodeScreen {
         super.onSetNotActive();
 
         //for efficiency reasons we are deleting loaded texture into openGL
-        YANAssetManager.getInstance().unloadTexture(mUiAtlas.getAtlasImageFileName());
+        YANAssetManager.getInstance().unloadTexture(mUiAtlas.getAtlasImageFilePath());
     }
 }

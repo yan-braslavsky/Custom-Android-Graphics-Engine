@@ -1,7 +1,7 @@
 package com.yan.glengine.nodes;
 
 import com.yan.glengine.EngineWrapper;
-import com.yan.glengine.assets.atlas.YANTextureRegion;
+import com.yan.glengine.assets.atlas.YANAtlasTextureRegion;
 import com.yan.glengine.input.YANInputManager;
 import com.yan.glengine.util.geometry.YANRectangle;
 import com.yan.glengine.util.geometry.YANVector2;
@@ -11,8 +11,8 @@ import com.yan.glengine.util.geometry.YANVector2;
  */
 public class YANButtonNode extends YANTexturedNode {
 
-    private YANTextureRegion mDefaultTextureRegion;
-    private YANTextureRegion mPressedTextureRegion;
+    private YANAtlasTextureRegion mDefaultTextureRegion;
+    private YANAtlasTextureRegion mPressedTextureRegion;
     private YANButtonState mState;
     private YanButtonNodeClickListener mClickListener;
     private YANInputManager.TouchListener mInputManagerTouchListener = new YANInputManager.TouchListener() {
@@ -76,7 +76,7 @@ public class YANButtonNode extends YANTexturedNode {
         setTextureRegion(getCurrentStateTextureRegion());
     }
 
-    public YANTextureRegion getCurrentStateTextureRegion() {
+    public YANAtlasTextureRegion getCurrentStateTextureRegion() {
         if (mState == YANButtonState.DEFAULT)
             return mDefaultTextureRegion;
         else return mPressedTextureRegion;
@@ -86,7 +86,7 @@ public class YANButtonNode extends YANTexturedNode {
         void onButtonClick();
     }
 
-    public YANButtonNode(YANTextureRegion defaultTextureRegion, YANTextureRegion pressedTextureRegion) {
+    public YANButtonNode(YANAtlasTextureRegion defaultTextureRegion, YANAtlasTextureRegion pressedTextureRegion) {
         super(defaultTextureRegion);
         mDefaultTextureRegion = defaultTextureRegion;
         mPressedTextureRegion = pressedTextureRegion;
@@ -113,11 +113,11 @@ public class YANButtonNode extends YANTexturedNode {
         PRESSED, DEFAULT;
     }
 
-    public YANTextureRegion getDefaultTextureRegion() {
+    public YANAtlasTextureRegion getDefaultTextureRegion() {
         return mDefaultTextureRegion;
     }
 
-    public YANTextureRegion getPressedTextureRegion() {
+    public YANAtlasTextureRegion getPressedTextureRegion() {
         return mPressedTextureRegion;
     }
 
@@ -129,11 +129,11 @@ public class YANButtonNode extends YANTexturedNode {
         mState = state;
     }
 
-    public void setDefaultTextureRegion(YANTextureRegion defaultTextureRegion) {
+    public void setDefaultTextureRegion(YANAtlasTextureRegion defaultTextureRegion) {
         mDefaultTextureRegion = defaultTextureRegion;
     }
 
-    public void setPressedTextureRegion(YANTextureRegion pressedTextureRegion) {
+    public void setPressedTextureRegion(YANAtlasTextureRegion pressedTextureRegion) {
         mPressedTextureRegion = pressedTextureRegion;
     }
 

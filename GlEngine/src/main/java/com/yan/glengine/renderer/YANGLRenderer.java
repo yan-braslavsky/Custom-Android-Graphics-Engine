@@ -6,8 +6,10 @@ import android.opengl.Matrix;
 
 import com.yan.glengine.assets.YANAssetManager;
 import com.yan.glengine.nodes.YANIRenderableNode;
+import com.yan.glengine.nodes.YANTextNode;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.programs.YANColorShaderProgram;
+import com.yan.glengine.programs.YANTextShaderProgram;
 import com.yan.glengine.programs.YANTextureShaderProgram;
 import com.yan.glengine.screens.YANIScreen;
 import com.yan.glengine.tasks.YANTaskManager;
@@ -26,7 +28,8 @@ public class YANGLRenderer {
     private YANVector2 mSurfaceSize;
 
     // shader programs
-    private YANTextureShaderProgram textureProgram;
+    private YANTextureShaderProgram mTextureShaderProgram;
+    private YANTextShaderProgram mTextShaderProgram;
     private YANColorShaderProgram colorProgram;
     private long mPreviousFrameTime;
     private Context mCtx;
@@ -100,17 +103,37 @@ public class YANGLRenderer {
         for (YANIRenderableNode iNode : mCurrentScreen.getNodeList()) {
             YANMatrixHelper.positionObjectInScene(iNode);
 
+            //rendering texture node
             if (iNode instanceof YANTexturedNode) {
-                textureProgram.useProgram();
-                textureProgram.setUniforms(
+                mTextureShaderProgram.useProgram();
+                mTextureShaderProgram.setUniforms(
                         YANMatrixHelper.modelViewProjectionMatrix,
-                        YANAssetManager.getInstance().getLoadedTextureOpenGLHandle(((YANTexturedNode) iNode).getTextureRegion().getAtlas().getAtlasImageFileName()),
+                        YANAssetManager.getInstance().getLoadedTextureOpenGLHandle(((YANTexturedNode) iNode).getTextureRegion().getAtlas().getAtlasImageFilePath()),
                         iNode.getOpacity());
-            } else {
+
+                //bind data
+                iNode.bindData(mTextureShaderProgram);
+            }
+
+            //rendering text node
+            else if (iNode instanceof YANTextNode) {
+                mTextShaderProgram.useProgram();
+                String texturePath = ((YANTextNode) iNode).getFont().getTextureFile();
+                mTextShaderProgram.setUniforms(
+                        YANMatrixHelper.modelViewProjectionMatrix,
+                        YANAssetManager.getInstance().getLoadedTextureOpenGLHandle(texturePath),
+                        iNode.getOpacity());
+
+                //bind data
+                iNode.bindData(mTextShaderProgram);
+            }
+
+            //don't know how to render a node
+            else {
                 throw new RuntimeException("Don't know how to render node of type " + iNode.getClass().getSimpleName());
             }
 
-            iNode.bindData(textureProgram);
+            //draw the node
             iNode.draw();
         }
     }
@@ -121,13 +144,21 @@ public class YANGLRenderer {
         GLES20.glClearColor(mClearColor.getR(), mClearColor.getG(), mClearColor.getB(), mClearColor.getA());
 
         //TODO : when batching will be implemented , consider enable and disable this
+
+        //enable blending
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+
+        //enable face culling
+        GLES20.glFrontFace(GLES20.GL_CCW);
+        GLES20.glEnable(GLES20.GL_CULL_FACE);
+        GLES20.glCullFace(GLES20.GL_BACK);
     }
 
     private void loadShaderPrograms() {
-        textureProgram = new YANTextureShaderProgram(mCtx);
+        mTextureShaderProgram = new YANTextureShaderProgram(mCtx);
         colorProgram = new YANColorShaderProgram(mCtx);
+        mTextShaderProgram = new YANTextShaderProgram(mCtx);
     }
 
     public void setActiveScreen(YANIScreen screen) {

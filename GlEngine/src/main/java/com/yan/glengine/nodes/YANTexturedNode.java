@@ -4,31 +4,31 @@
  */
 package com.yan.glengine.nodes;
 
-import com.yan.glengine.assets.atlas.YANTextureRegion;
+import com.yan.glengine.assets.atlas.YANAtlasTextureRegion;
 import com.yan.glengine.programs.YANTextureShaderProgram;
 
 public class YANTexturedNode extends YANBaseNode<YANTextureShaderProgram> {
 
     private static final int VALUES_PER_VERTEX = POSITION_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT;
     private static final int VERTICES_COUNT = 6;
-    private YANTextureRegion mTextureRegion;
+    private YANAtlasTextureRegion mTextureRegion;
 
     //vertex data is a cached float array with a fixed size.
     //that array size is not subject to change , it will always have only position and
     //texture coordinates data.
     private float[] mVertexData;
 
-    public YANTexturedNode(YANTextureRegion textureRegion) {
+    public YANTexturedNode(YANAtlasTextureRegion textureRegion) {
         super();
         mTextureRegion = textureRegion;
         mVertexData = new float[VALUES_PER_VERTEX * VERTICES_COUNT];
     }
 
-    public YANTextureRegion getTextureRegion() {
+    public YANAtlasTextureRegion getTextureRegion() {
         return mTextureRegion;
     }
 
-    public void setTextureRegion(YANTextureRegion textureRegion) {
+    public void setTextureRegion(YANAtlasTextureRegion textureRegion) {
         mTextureRegion = textureRegion;
         recalculateDimensions();
     }

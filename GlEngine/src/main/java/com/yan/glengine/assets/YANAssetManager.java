@@ -4,6 +4,7 @@ package com.yan.glengine.assets;
 import com.yan.glengine.EngineWrapper;
 import com.yan.glengine.assets.atlas.YANTextureAtlasLoader;
 import com.yan.glengine.assets.atlas.YANTextureAtlas;
+import com.yan.glengine.assets.font.YANFont;
 import com.yan.glengine.assets.font.YANFontLoader;
 import com.yan.glengine.util.YANTextureHelper;
 
@@ -38,9 +39,16 @@ public class YANAssetManager {
      */
     private Map<String, YANTextureAtlas> mAtlasesMap;
 
+    /**
+     * Used to map  between font names and actual loaded fonts
+     */
+    private Map<String, YANFont> mFontsMap;
+
+
     private YANAssetManager() {
         mAtlasesMap = new HashMap<>();
         mTextureHandlesMap = new HashMap<>();
+        mFontsMap = new HashMap<>();
         mTextureAtlasLoader = new YANTextureAtlasLoader();
         mFontLoader = new YANFontLoader();
     }
@@ -51,6 +59,10 @@ public class YANAssetManager {
      */
     public YANTextureAtlas getLoadedAtlas(String atlasName) {
         return mAtlasesMap.get(atlasName);
+    }
+
+    public YANFont getLoadedFont(String fontName) {
+        return mFontsMap.get(fontName);
     }
 
     /**
@@ -74,8 +86,12 @@ public class YANAssetManager {
     }
 
     private void loadFont(YANAssetDescriptor asset) {
-        //TODO
-        mFontLoader.loadAsset(asset);
+        YANFont font = mFontLoader.loadAsset(asset);
+
+        if (font == null)
+            return;
+
+        mFontsMap.put(asset.getAssetName(), font);
     }
 
     /**
@@ -85,6 +101,9 @@ public class YANAssetManager {
      */
     private void loadTextureAtlas(YANAssetDescriptor atlasAsset) {
         YANTextureAtlas atlas = mTextureAtlasLoader.loadAsset(atlasAsset);
+        if (atlas == null)
+            return;
+
         mAtlasesMap.put(atlasAsset.getAssetName(), atlas);
     }
 
@@ -124,6 +143,10 @@ public class YANAssetManager {
      * @param texturePath full path to a texture located at assets folder including extension
      */
     public int getLoadedTextureOpenGLHandle(String texturePath) {
+        if (!mTextureHandlesMap.containsKey(texturePath)) {
+            throw new RuntimeException("Texture " + texturePath + " is not loaded into openGL");
+        }
+
         return mTextureHandlesMap.get(texturePath);
     }
 

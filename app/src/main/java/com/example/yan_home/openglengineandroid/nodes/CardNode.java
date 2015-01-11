@@ -3,7 +3,7 @@ package com.example.yan_home.openglengineandroid.nodes;
 import android.support.annotation.NonNull;
 
 import com.example.yan_home.openglengineandroid.entities.cards.Card;
-import com.yan.glengine.assets.atlas.YANTextureRegion;
+import com.yan.glengine.assets.atlas.YANAtlasTextureRegion;
 import com.yan.glengine.nodes.YANTexturedNode;
 
 /**
@@ -11,11 +11,11 @@ import com.yan.glengine.nodes.YANTexturedNode;
  */
 public class CardNode extends YANTexturedNode {
 
-    private final YANTextureRegion mFrontTextureRegion;
-    private final YANTextureRegion mBackTextureRegion;
+    private final YANAtlasTextureRegion mFrontTextureRegion;
+    private final YANAtlasTextureRegion mBackTextureRegion;
     private Card mCard;
 
-    public CardNode(@NonNull YANTextureRegion frontTextureRegion, @NonNull YANTextureRegion backTextureRegion, @NonNull Card card) {
+    public CardNode(@NonNull YANAtlasTextureRegion frontTextureRegion, @NonNull YANAtlasTextureRegion backTextureRegion, @NonNull Card card) {
         super(frontTextureRegion);
         mFrontTextureRegion = frontTextureRegion;
         mBackTextureRegion = backTextureRegion;

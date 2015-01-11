@@ -26,14 +26,21 @@ public class YANFontLoader implements YANAssetLoader<YANFont> {
         int base = extractLineBase(lines[1]);
         int scaleWidth = extractScaleWidth(lines[1]);
         int scaleHeight = extractScaleHeight(lines[1]);
-        String textureFile = extractTextureFileName(lines[2]);
+        String textureFile = assetDescriptor.getPathToAsset() + extractTextureFileName(lines[2]);
 
         //extract char data
         List<YANFontChar> charList = extractCharList(lines);
         List<YANFontKerning> kerningList = extractKerningList(lines);
 
         //create font
-        return new YANFont(face, lineHeight, base, scaleWidth, scaleHeight, textureFile, charList, kerningList);
+        YANFont font = new YANFont(face, lineHeight, base, scaleWidth, scaleHeight, textureFile, charList, kerningList);
+
+        //assign back reference to the font object
+        for (YANFontChar fontChar : font.getCharsList()) {
+            fontChar.setFont(font);
+        }
+
+        return font;
     }
 
     private List<YANFontKerning> extractKerningList(String[] lines) {
@@ -54,7 +61,7 @@ public class YANFontLoader implements YANAssetLoader<YANFont> {
         int firstCharId = Integer.parseInt((entries[1].split("="))[1]);
         int secondCharId = Integer.parseInt((entries[2].split("="))[1]);
         int amount = Integer.parseInt((entries[3].split("="))[1]);
-        return new YANFontKerning(firstCharId,secondCharId,amount);
+        return new YANFontKerning(firstCharId, secondCharId, amount);
     }
 
     private List<YANFontChar> extractCharList(String[] lines) {
@@ -90,7 +97,8 @@ public class YANFontLoader implements YANAssetLoader<YANFont> {
     private String extractTextureFileName(String line) {
         String[] entries = line.split("\\s+");
         String[] splicedEntry = entries[2].split("=");
-        return splicedEntry[1];
+        String tringWithQuotes = splicedEntry[1];
+        return tringWithQuotes.replace("\"","");
     }
 
     private int extractScaleHeight(String line) {

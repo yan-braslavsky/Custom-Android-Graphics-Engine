@@ -8,21 +8,21 @@ import java.util.Map;
 public class YANTextureAtlas {
 
     private final String mAtlasImageFileName;
-    private Map<String, YANTextureRegion> mTextureRegions;
+    private Map<String, YANAtlasTextureRegion> mTextureRegions;
 
     public YANTextureAtlas(String atlasImageFileName) {
         mAtlasImageFileName = atlasImageFileName;
     }
 
-    public YANTextureRegion getTextureRegion(String name) {
+    public YANAtlasTextureRegion getTextureRegion(String name) {
         return mTextureRegions.get(name);
     }
 
-    public String getAtlasImageFileName() {
+    public String getAtlasImageFilePath() {
         return mAtlasImageFileName;
     }
 
-    public void setTextureRegions(Map<String, YANTextureRegion> textureRegions) {
+    public void setTextureRegions(Map<String, YANAtlasTextureRegion> textureRegions) {
         mTextureRegions = textureRegions;
     }
 }

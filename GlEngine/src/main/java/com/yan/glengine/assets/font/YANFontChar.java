@@ -1,5 +1,7 @@
 package com.yan.glengine.assets.font;
 
+import com.yan.glengine.assets.YANTextureRegion;
+
 /**
  * Created by Yan-Home on 1/10/2015.
  */
@@ -13,6 +15,8 @@ public class YANFontChar {
     private int mXOffset;
     private int mYOffseet;
     private int mXAdvance;
+    private YANTextureRegion mYANTextureRegion;
+    private YANFont mFont;
 
     public YANFontChar(int ID, int x, int y, int width, int height, int XOffset, int YOffseet, int XAdvance) {
         mID = ID;
@@ -23,6 +27,15 @@ public class YANFontChar {
         mXOffset = XOffset;
         mYOffseet = YOffseet;
         mXAdvance = XAdvance;
+    }
+
+    private void calculateTextureRegion() {
+        float u0 = (float) mX / (float) mFont.getScaleWidth();
+        float u1 = ((float) mX + (float) mWidth) / (float) mFont.getScaleWidth();
+        float v0 = (float) mY / (float) mFont.getScaleHeight();
+        float v1 = (((float) mY + (float) mHeight) / (float) mFont.getScaleHeight());
+
+        mYANTextureRegion = new YANTextureRegion(u0, u1, v0, v1);
     }
 
     public int getID() {
@@ -55,5 +68,18 @@ public class YANFontChar {
 
     public int getXAdvance() {
         return mXAdvance;
+    }
+
+    public YANTextureRegion getYANTextureRegion() {
+        return mYANTextureRegion;
+    }
+
+    public void setFont(YANFont font) {
+        mFont = font;
+        calculateTextureRegion();
+    }
+
+    public YANFont getFont() {
+        return mFont;
     }
 }
