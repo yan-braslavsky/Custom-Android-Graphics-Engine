@@ -4,8 +4,14 @@
  */
 package com.yan.glengine.nodes;
 
+import android.opengl.GLES20;
+
 import com.yan.glengine.assets.atlas.YANAtlasTextureRegion;
 import com.yan.glengine.programs.YANTextureShaderProgram;
+
+import static android.opengl.GLES20.GL_TRIANGLE_FAN;
+import static android.opengl.GLES20.glDisable;
+import static android.opengl.GLES20.glDrawArrays;
 
 public class YANTexturedNode extends YANBaseNode<YANTextureShaderProgram> {
 
@@ -47,6 +53,13 @@ public class YANTexturedNode extends YANBaseNode<YANTextureShaderProgram> {
                 TEXTURE_COORDINATES_COMPONENT_COUNT,
                 STRIDE);
     }
+
+    @Override
+    protected void onRender() {
+        glDrawArrays(GL_TRIANGLE_FAN, 0,mVertexData.length / VALUES_PER_VERTEX);
+    }
+
+
 
     @Override
     protected float[] createVertexData() {

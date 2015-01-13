@@ -1,5 +1,7 @@
 package com.yan.glengine.nodes;
 
+import android.opengl.GLES20;
+
 import com.yan.glengine.data.YANVertexArray;
 import com.yan.glengine.input.YANNodeTouchListener;
 import com.yan.glengine.programs.ShaderProgram;
@@ -8,8 +10,7 @@ import com.yan.glengine.util.geometry.YANReadOnlyVector2;
 import com.yan.glengine.util.geometry.YANRectangle;
 import com.yan.glengine.util.geometry.YANVector2;
 
-import static android.opengl.GLES20.GL_TRIANGLE_FAN;
-import static android.opengl.GLES20.glDrawArrays;
+import static android.opengl.GLES20.glDisable;
 
 /**
  * Created by Yan-Home on 10/3/2014.
@@ -20,6 +21,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
 
     protected static final int POSITION_COMPONENT_COUNT = 2;
     protected static final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
+    protected static final int VALUES_PER_VERTEX = POSITION_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT;
     protected static final int BYTES_PER_FLOAT = 4;
     protected static final int STRIDE = (POSITION_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT) * BYTES_PER_FLOAT;
     protected YANVertexArray vertexArray;
@@ -27,7 +29,8 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     private YANVector2 mSize;
     private YANNodeTouchListener mNodeTouchListener;
     private YANVector2 mAnchorPoint;
-    private float mRotation;
+    private float mRotationZ;
+    private float mRotationY;
     private float mOpacity;
     private int mSortingLayer;
 
@@ -35,7 +38,8 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
         mSize = new YANVector2(0, 0);
         mPosition = new YANVector2();
         mAnchorPoint = new YANVector2();
-        mRotation = 0;
+        mRotationZ = 0;
+        mRotationY = 0;
         mOpacity = 1f;
     }
 
@@ -76,7 +80,42 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
 
     @Override
     public void render(YANGLRenderer renderer) {
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+
+        //call to manipulate possible GL states
+        onBeforeRendering(renderer);
+
+        //execute the rendering
+        onRender();
+
+        //call to manipulate possible GL states
+        onAfterRendering(renderer);
+    }
+
+    /**
+     * Here actual rendering command is executed glDrawArrays or glDrawElements
+     */
+    protected abstract void onRender();
+
+    /**
+     * This method called right before glDrawArrays is executed.
+     * This is a good place to change relevant GL states.
+     * @param renderer
+     */
+    protected void onAfterRendering(YANGLRenderer renderer) {
+        //enable culling again
+        if (getRotationY() != 0)
+            glDisable(GLES20.GL_CULL_FACE);
+    }
+
+    /**
+     * This method called right after glDrawArrays is executed.
+     * This is a good place to change relevant GL states.
+     * @param renderer
+     */
+    protected void onBeforeRendering(YANGLRenderer renderer) {
+        //disable culling if needed
+        if (getRotationY() != 0)
+            glDisable(GLES20.GL_CULL_FACE);
     }
 
     protected void recalculateDimensions() {
@@ -113,13 +152,23 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     }
 
     @Override
-    public float getRotation() {
-        return mRotation;
+    public float getRotationZ() {
+        return mRotationZ;
     }
 
     @Override
-    public void setRotation(float rotation) {
-        mRotation = rotation;
+    public void setRotationY(float rotationY) {
+        mRotationY = rotationY;
+    }
+
+    @Override
+    public float getRotationY() {
+        return mRotationY;
+    }
+
+    @Override
+    public void setRotationZ(float rotationZ) {
+        mRotationZ = rotationZ;
     }
 
     @Override

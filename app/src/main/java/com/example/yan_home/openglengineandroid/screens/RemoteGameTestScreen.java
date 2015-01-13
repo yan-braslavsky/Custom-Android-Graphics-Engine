@@ -280,7 +280,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         for (Card card : cardsInStockPile) {
             CardNode cardTexturedNode = mCardNodes.get(card);
             cardTexturedNode.setPosition(x, y);
-            cardTexturedNode.setRotation(90);
+            cardTexturedNode.setRotationZ(90);
         }
 
         //init pile position

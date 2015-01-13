@@ -11,9 +11,7 @@ import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.util.geometry.YANRectangle;
 import com.yan.glengine.util.geometry.YANVector2;
 
-import static android.opengl.GLES20.GL_TRIANGLE_FAN;
 import static android.opengl.GLES20.glDisable;
-import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glEnable;
 import static android.opengl.GLES20.glScissor;
 
@@ -28,6 +26,7 @@ public class YANTexturedScissorNode extends YANTexturedNode {
      * relative to node size with a range of 0.0 to 1.0
      */
     YANRectangle mScissoringRectangle;
+    private boolean mWillScissor;
 
     public YANTexturedScissorNode(YANAtlasTextureRegion textureRegion) {
         super(textureRegion);
@@ -36,18 +35,13 @@ public class YANTexturedScissorNode extends YANTexturedNode {
         mScissoringRectangle = new YANRectangle(new YANVector2(0, 0), new YANVector2(1f, 1f));
     }
 
+
     @Override
-    public void render(YANGLRenderer renderer) {
+    protected void onBeforeRendering(YANGLRenderer renderer) {
+        super.onBeforeRendering(renderer);
 
         //TODO : consider matrices for the following calculations !
-
-        //optimization , enable scissoring only if scissoring area is defined
-        boolean isGoingToScissor = !(mScissoringRectangle.getLeftTop().getX() == 0
-                && mScissoringRectangle.getLeftTop().getY() == 0
-                && mScissoringRectangle.getRightBottom().getX() == 1f
-                && mScissoringRectangle.getRightBottom().getY() == 1f);
-
-        if (isGoingToScissor) {
+        if (mWillScissor) {
             //we are going to use a scissoring information
             glEnable(GLES20.GL_SCISSOR_TEST);
 
@@ -86,14 +80,17 @@ public class YANTexturedScissorNode extends YANTexturedNode {
 
             glScissor(x, y, width, height);
         }
+    }
 
-        //render the actual scissored node
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+    @Override
+    protected void onAfterRendering(YANGLRenderer renderer) {
+        super.onAfterRendering(renderer);
 
-        if (isGoingToScissor) {
+        if (mWillScissor) {
             glDisable(GLES20.GL_SCISSOR_TEST);
         }
     }
+
 
     /**
      * Defines a rectangular area of the node that will be visible , all the rest will be scissored.
@@ -118,6 +115,13 @@ public class YANTexturedScissorNode extends YANTexturedNode {
 
         mScissoringRectangle.getLeftTop().setXY(xStart, yStart);
         mScissoringRectangle.getRightBottom().setXY(xEnd, yEnd);
+
+
+        //optimization , enable scissoring only if scissoring area is defined
+        mWillScissor = !(mScissoringRectangle.getLeftTop().getX() == 0
+                && mScissoringRectangle.getLeftTop().getY() == 0
+                && mScissoringRectangle.getRightBottom().getX() == 1f
+                && mScissoringRectangle.getRightBottom().getY() == 1f);
     }
 
 }

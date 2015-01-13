@@ -4,7 +4,6 @@ import com.yan.glengine.assets.YANTextureRegion;
 import com.yan.glengine.assets.font.YANFont;
 import com.yan.glengine.assets.font.YANFontChar;
 import com.yan.glengine.programs.YANTextShaderProgram;
-import com.yan.glengine.renderer.YANGLRenderer;
 
 import static android.opengl.GLES20.GL_TRIANGLES;
 import static android.opengl.GLES20.glDrawArrays;
@@ -14,7 +13,6 @@ import static android.opengl.GLES20.glDrawArrays;
  */
 public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
 
-    private static final int VALUES_PER_VERTEX = POSITION_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT;
     private static final int VERTICES_COUNT_FOR_ONE_CHAR = 6;
 
     /**
@@ -81,7 +79,7 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
 
             //now we are filling a data array to store rendering information for the character
             loadDataForTextureRegion(currChar.getWidth() / 2, currChar.getHeight() / 2, currChar.getYANTextureRegion(), arrOffset,
-                    cursorPositionX  + currChar.getXOffset() + kerning, 0);
+                    cursorPositionX + currChar.getXOffset() + kerning, 0);
 
             //move cursor by advance value
             cursorPositionX += currChar.getXAdvance() + kerning;
@@ -170,7 +168,8 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
     }
 
     @Override
-    public void render(YANGLRenderer renderer) {
+    protected void onRender() {
+        //do the draw
         glDrawArrays(GL_TRIANGLES, 0, mVertexData.length / VALUES_PER_VERTEX);
     }
 

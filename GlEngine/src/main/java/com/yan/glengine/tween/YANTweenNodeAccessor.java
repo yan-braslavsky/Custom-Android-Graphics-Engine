@@ -39,7 +39,7 @@ public class YANTweenNodeAccessor implements TweenAccessor<YANIRenderableNode> {
                 return 2;
 
             case ROTATION_CW:
-                returnValues[0] = target.getRotation();
+                returnValues[0] = target.getRotationZ();
                 return 1;
 
             case OPACITY:
@@ -77,7 +77,7 @@ public class YANTweenNodeAccessor implements TweenAccessor<YANIRenderableNode> {
                 break;
 
             case ROTATION_CW:
-                target.setRotation(newValues[0]);
+                target.setRotationZ(newValues[0]);
                 break;
             case OPACITY:
                 target.setOpacity(newValues[0]);

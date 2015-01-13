@@ -1,6 +1,6 @@
 package com.example.yan_home.openglengineandroid;
 
-import com.example.yan_home.openglengineandroid.screens.ScissoringTestScreen;
+import com.example.yan_home.openglengineandroid.screens.RotationsTestScreen;
 import com.yan.glengine.EngineActivity;
 import com.yan.glengine.assets.YANAssetDescriptor;
 import com.yan.glengine.renderer.YANGLRenderer;
@@ -22,7 +22,9 @@ public class MainActivity extends EngineActivity {
     @Override
     protected YANIScreen onCreateStartScreen(YANGLRenderer renderer) {
 //        return new ThreePointLayoutingTestScreen(renderer);
-        return new ScissoringTestScreen(renderer);
+//        return new FontTestScreen(renderer);
+        return new RotationsTestScreen(renderer);
+//        return new ScissoringTestScreen(renderer);
     }
 
 }

@@ -148,7 +148,7 @@ public class ThreePointLayoutingTestScreen extends BaseGameScreen {
 
             //set slot values to node
             node.setPosition(slot.getPosition().getX(), slot.getPosition().getY());
-            node.setRotation(slot.getRotation());
+            node.setRotationZ(slot.getRotation());
             node.setSortingLayer(slot.getSortingLayer());
         }
     }

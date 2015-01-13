@@ -62,7 +62,7 @@ public class YANGLRenderer {
         YANAssetManager.getInstance().reloadAllLoadedTextures();
 
         //set orthographic projection
-        Matrix.orthoM(YANMatrixHelper.projectionMatrix, 0, 0, width, height, 0, 1, 100);
+        Matrix.orthoM(YANMatrixHelper.projectionMatrix, 0, 0, width, height, 0, 50, 1000);
 
         //fill view matrix
         Matrix.setLookAtM(YANMatrixHelper.viewMatrix, 0, 0f, 0.0f, 2.0f, 0f, 0f, 0f, 0f, 1f, 0f);
@@ -147,11 +147,11 @@ public class YANGLRenderer {
 
         //TODO : when batching will be implemented , consider enable and disable this
 
-        //enable blending
+        //enable blending by default for all nodes
         glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 
-        //enable face culling
+        //enable face culling by default for all nodes
         GLES20.glFrontFace(GLES20.GL_CCW);
         glEnable(GLES20.GL_CULL_FACE);
         GLES20.glCullFace(GLES20.GL_BACK);

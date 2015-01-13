@@ -11,7 +11,7 @@ import com.yan.glengine.util.geometry.YANVector2;
  * <p/>
  * Node is a basic renderable element of the engine.
  */
-public interface YANIRenderableNode<T extends ShaderProgram>  {
+public interface YANIRenderableNode<T extends ShaderProgram> {
 
     void bindData(T shaderProgram);
 
@@ -24,8 +24,7 @@ public interface YANIRenderableNode<T extends ShaderProgram>  {
     void setPosition(float x, float y);
 
 
-
-    void setSize(float width,float height);
+    void setSize(float width, float height);
 
     YANRectangle getBoundingRectangle();
 
@@ -35,17 +34,35 @@ public interface YANIRenderableNode<T extends ShaderProgram>  {
 
     YANVector2 getAnchorPoint();
 
-    float getRotation();
+    /**
+     * Rotation around Z axis.
+     * Defined in degrees.
+     */
+    float getRotationZ();
 
     /**
-     * Defined in degrees
+     * Rotation around Z axis.
+     * Defined in degrees.
      */
-    void setRotation(float rotation);
+    void setRotationZ(float rotation);
+
+    /**
+     * Rotation around Y axis.
+     * Defined in degrees.
+     */
+    float getRotationY();
+
+    /**
+     * Rotation around Y axis.
+     * Defined in degrees.
+     */
+    void setRotationY(float rotation);
 
     float getOpacity();
 
     void setOpacity(float opacity);
 
-     void setSortingLayer(int sortingLayer);
+    void setSortingLayer(int sortingLayer);
+
     int getSortingLayer();
 }

@@ -26,14 +26,23 @@ public class YANMatrixHelper {
 
     public static void positionObjectInScene(YANIRenderableNode iNode) {
 
-        float x = iNode.getPosition().getX() + (iNode.getSize().getX() / 2) - (iNode.getAnchorPoint().getX() * (iNode.getSize().getX() ));
+        float x = iNode.getPosition().getX() + (iNode.getSize().getX() / 2) - (iNode.getAnchorPoint().getX() * (iNode.getSize().getX()));
         float y = (iNode.getPosition().getY() + (iNode.getSize().getY() / 2) - (iNode.getAnchorPoint().getY() * (iNode.getSize().getY())));
 
-        Matrix.setIdentityM(YANMatrixHelper.modelMatrix, 0);
-        Matrix.translateM(YANMatrixHelper.modelMatrix, 0, x, y, 0);
+        //on z plane we translate everything to the back in order to avoid clipping of rotated objects around Y axis
+        float z = -500;
 
-        if(iNode.getRotation() != 0){
-            Matrix.rotateM(YANMatrixHelper.modelMatrix,0,iNode.getRotation(),0,0,1);
+        Matrix.setIdentityM(YANMatrixHelper.modelMatrix, 0);
+        Matrix.translateM(YANMatrixHelper.modelMatrix, 0, x, y, z);
+
+        //Rotation around Y axis
+        if (iNode.getRotationY() != 0) {
+            Matrix.rotateM(YANMatrixHelper.modelMatrix, 0, iNode.getRotationY(), 0, 1, 0);
+        }
+
+        //Rotation around Z axis
+        if (iNode.getRotationZ() != 0) {
+            Matrix.rotateM(YANMatrixHelper.modelMatrix, 0, iNode.getRotationZ(), 0, 0, 1);
         }
 
         Matrix.multiplyMM(YANMatrixHelper.modelViewProjectionMatrix, 0, YANMatrixHelper.viewProjectionMatrix, 0,
