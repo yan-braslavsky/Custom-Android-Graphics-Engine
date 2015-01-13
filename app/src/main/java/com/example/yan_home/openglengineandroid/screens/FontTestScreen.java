@@ -38,7 +38,7 @@ public class FontTestScreen extends YANNodeScreen {
     @Override
     protected void onAddNodesToScene() {
         YANTextNode textNode = new YANTextNode(mFont);
-        textNode.setText("TailTale");
+        textNode.setText("Amsterdam");
         textNode.setSize(50, 50);
         addNode(textNode);
     }

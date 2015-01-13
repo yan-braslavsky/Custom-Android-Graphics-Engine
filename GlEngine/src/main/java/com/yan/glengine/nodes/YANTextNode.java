@@ -5,7 +5,7 @@ import com.yan.glengine.assets.font.YANFont;
 import com.yan.glengine.assets.font.YANFontChar;
 import com.yan.glengine.programs.YANTextShaderProgram;
 
-import static android.opengl.GLES20.GL_TRIANGLE_STRIP;
+import static android.opengl.GLES20.GL_TRIANGLES;
 import static android.opengl.GLES20.glDrawArrays;
 
 /**
@@ -98,43 +98,42 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
         // Order of coordinates: X, Y, U, V
         // Triangle Strip
 
-        //first vertex (top left)
+        // vertex (top left)
         mVertexData[arrOffset + 0] = offsetX - halfWidth;
         mVertexData[arrOffset + 1] = offsetY + halfHeight;
         mVertexData[arrOffset + 2] = sampleTextureRegion.getU0();
         mVertexData[arrOffset + 3] = sampleTextureRegion.getV1();
 
-        //second vertex (bottom left)
-        mVertexData[arrOffset + 4] = offsetX - halfWidth;
+        // vertex (bottom right)
+        mVertexData[arrOffset + 4] = offsetX + halfWidth;
         mVertexData[arrOffset + 5] = offsetY - halfHeight;
-        mVertexData[arrOffset + 6] = sampleTextureRegion.getU0();
+        mVertexData[arrOffset + 6] = sampleTextureRegion.getU1();
         mVertexData[arrOffset + 7] = sampleTextureRegion.getV0();
 
-        //third vertex (bottom right)
-        mVertexData[arrOffset + 8] = offsetX + halfWidth;
+        // vertex (bottom left)
+        mVertexData[arrOffset + 8] = offsetX - halfWidth;
         mVertexData[arrOffset + 9] = offsetY - halfHeight;
-        mVertexData[arrOffset + 10] = sampleTextureRegion.getU1();
+        mVertexData[arrOffset + 10] = sampleTextureRegion.getU0();
         mVertexData[arrOffset + 11] = sampleTextureRegion.getV0();
 
-
-        //fourth vertex (top left)
+        // vertex (top left)
         mVertexData[arrOffset + 12] = offsetX - halfWidth;
         mVertexData[arrOffset + 13] = offsetY + halfHeight;
         mVertexData[arrOffset + 14] = sampleTextureRegion.getU0();
         mVertexData[arrOffset + 15] = sampleTextureRegion.getV1();
 
-
-        //fifth vertex (bottom right)
+        // vertex (top right)
         mVertexData[arrOffset + 16] = offsetX + halfWidth;
-        mVertexData[arrOffset + 17] = offsetY - halfHeight;
+        mVertexData[arrOffset + 17] = offsetY + halfHeight;
         mVertexData[arrOffset + 18] = sampleTextureRegion.getU1();
-        mVertexData[arrOffset + 19] = sampleTextureRegion.getV0();
+        mVertexData[arrOffset + 19] = sampleTextureRegion.getV1();
 
-        //sixth vertex (top right)
+        // vertex (bottom right)
         mVertexData[arrOffset + 20] = offsetX + halfWidth;
-        mVertexData[arrOffset + 21] = offsetY + halfHeight;
+        mVertexData[arrOffset + 21] = offsetY - halfHeight;
         mVertexData[arrOffset + 22] = sampleTextureRegion.getU1();
-        mVertexData[arrOffset + 23] = sampleTextureRegion.getV1();
+        mVertexData[arrOffset + 23] = sampleTextureRegion.getV0();
+
     }
 
     @Override
@@ -171,7 +170,7 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
 
     @Override
     public void draw() {
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, mVertexData.length / VALUES_PER_VERTEX);
+        glDrawArrays(GL_TRIANGLES, 0, mVertexData.length / VALUES_PER_VERTEX);
     }
 
 }

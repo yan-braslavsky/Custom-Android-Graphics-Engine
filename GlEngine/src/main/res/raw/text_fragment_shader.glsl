@@ -12,4 +12,5 @@ void main()
     }else {
          gl_FragColor.a = 0;
     }
+
 }
