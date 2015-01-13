@@ -3,6 +3,7 @@ package com.yan.glengine.nodes;
 import com.yan.glengine.data.YANVertexArray;
 import com.yan.glengine.input.YANNodeTouchListener;
 import com.yan.glengine.programs.ShaderProgram;
+import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.util.geometry.YANReadOnlyVector2;
 import com.yan.glengine.util.geometry.YANRectangle;
 import com.yan.glengine.util.geometry.YANVector2;
@@ -74,7 +75,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
 
 
     @Override
-    public void draw() {
+    public void render(YANGLRenderer renderer) {
         glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
     }
 

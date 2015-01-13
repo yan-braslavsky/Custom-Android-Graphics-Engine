@@ -1,6 +1,7 @@
 package com.yan.glengine.nodes;
 
 import com.yan.glengine.programs.ShaderProgram;
+import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.util.geometry.YANReadOnlyVector2;
 import com.yan.glengine.util.geometry.YANRectangle;
 import com.yan.glengine.util.geometry.YANVector2;
@@ -14,7 +15,7 @@ public interface YANIRenderableNode<T extends ShaderProgram>  {
 
     void bindData(T shaderProgram);
 
-    void draw();
+    void render(YANGLRenderer renderer);
 
     YANReadOnlyVector2 getPosition();
 

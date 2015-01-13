@@ -17,6 +17,8 @@ import com.yan.glengine.util.YANMatrixHelper;
 import com.yan.glengine.util.colors.YANColor;
 import com.yan.glengine.util.geometry.YANVector2;
 
+import static android.opengl.GLES20.glEnable;
+
 /**
  * Created by Yan-Home on 10/3/2014.
  * <p/>
@@ -91,7 +93,7 @@ public class YANGLRenderer {
         Matrix.multiplyMM(YANMatrixHelper.viewProjectionMatrix, 0, YANMatrixHelper.projectionMatrix, 0, YANMatrixHelper.viewMatrix, 0);
         Matrix.invertM(YANMatrixHelper.invertedViewProjectionMatrix, 0, YANMatrixHelper.viewProjectionMatrix, 0);
 
-        //draw each node
+        //render each node
         if (mCurrentScreen != null) {
             drawNodes();
         }
@@ -133,8 +135,8 @@ public class YANGLRenderer {
                 throw new RuntimeException("Don't know how to render node of type " + iNode.getClass().getSimpleName());
             }
 
-            //draw the node
-            iNode.draw();
+            //render the node
+            iNode.render(this);
         }
     }
 
@@ -146,12 +148,12 @@ public class YANGLRenderer {
         //TODO : when batching will be implemented , consider enable and disable this
 
         //enable blending
-        GLES20.glEnable(GLES20.GL_BLEND);
+        glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 
         //enable face culling
         GLES20.glFrontFace(GLES20.GL_CCW);
-        GLES20.glEnable(GLES20.GL_CULL_FACE);
+        glEnable(GLES20.GL_CULL_FACE);
         GLES20.glCullFace(GLES20.GL_BACK);
 
     }

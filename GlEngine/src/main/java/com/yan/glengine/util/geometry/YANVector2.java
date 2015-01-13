@@ -18,7 +18,7 @@ public class YANVector2 implements YANReadOnlyVector2 {
     }
 
     public YANVector2(YANReadOnlyVector2 vector2) {
-        this(vector2.getX(),vector2.getY());
+        this(vector2.getX(), vector2.getY());
     }
 
     @Override
@@ -36,6 +36,11 @@ public class YANVector2 implements YANReadOnlyVector2 {
     }
 
     public void setY(float y) {
+        mY = y;
+    }
+
+    public void setXY(float x, float y) {
+        mX = x;
         mY = y;
     }
 

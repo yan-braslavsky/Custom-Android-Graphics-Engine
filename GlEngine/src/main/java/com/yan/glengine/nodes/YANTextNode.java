@@ -4,6 +4,7 @@ import com.yan.glengine.assets.YANTextureRegion;
 import com.yan.glengine.assets.font.YANFont;
 import com.yan.glengine.assets.font.YANFontChar;
 import com.yan.glengine.programs.YANTextShaderProgram;
+import com.yan.glengine.renderer.YANGLRenderer;
 
 import static android.opengl.GLES20.GL_TRIANGLES;
 import static android.opengl.GLES20.glDrawArrays;
@@ -22,7 +23,7 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
     private String mText;
 
     /**
-     * Font that is used to draw text
+     * Font that is used to render text
      */
     private YANFont mFont;
 
@@ -41,7 +42,7 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
     protected float[] createVertexData() {
 
         // here we are creating a mesh with indices and texture coordinates for the entire text
-        // that way we can draw it in one draw call.
+        // that way we can render it in one render call.
         // According to rendering guide http://www.angelcode.com/products/bmfont/doc/render_text.html
 
         //we must render the amount of characters according to a length of the text
@@ -169,7 +170,7 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
     }
 
     @Override
-    public void draw() {
+    public void render(YANGLRenderer renderer) {
         glDrawArrays(GL_TRIANGLES, 0, mVertexData.length / VALUES_PER_VERTEX);
     }
 
