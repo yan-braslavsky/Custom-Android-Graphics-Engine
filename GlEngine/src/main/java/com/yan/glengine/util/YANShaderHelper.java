@@ -32,7 +32,7 @@ import static android.opengl.GLES20.glValidateProgram;
 public class YANShaderHelper {
     private static final String TAG = "ShaderHelper";
 
-    private static final boolean IS_LOGGING_ON = false;
+    private static final boolean IS_LOGGING_ON = true;
 
     /**
      * Loads and compiles a vertex shader, returning the OpenGL object ID.
@@ -87,6 +87,7 @@ public class YANShaderHelper {
 
             if (IS_LOGGING_ON) {
                 Log.w(TAG, "Compilation of shader failed.");
+                throw new RuntimeException("Compilation of shader failed.");
             }
 
             return 0;

@@ -24,7 +24,8 @@ public class FontTestScreen extends YANNodeScreen {
     @Override
     public void onSetActive() {
         super.onSetActive();
-        getRenderer().setRendererBackgroundColor(YANColor.createFromHexColor(0x9F9E36));
+//        getRenderer().setRendererBackgroundColor(YANColor.createFromHexColor(0x9F9E36));
+        getRenderer().setRendererBackgroundColor(YANColor.createFromHexColor(0x000000));
         YANAssetManager.getInstance().loadTexture(mFont.getTextureFile());
     }
 
@@ -37,8 +38,8 @@ public class FontTestScreen extends YANNodeScreen {
     @Override
     protected void onAddNodesToScene() {
         YANTextNode textNode = new YANTextNode(mFont);
-        textNode.setText("Hello");
-        textNode.setSize(250, 250);
+        textNode.setText("TailTale");
+        textNode.setSize(50, 50);
         addNode(textNode);
     }
 

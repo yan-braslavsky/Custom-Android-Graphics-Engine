@@ -6,7 +6,9 @@ import com.yan.glengine.assets.YANAssetLoader;
 import com.yan.glengine.util.YANTextResourceReader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yan-Home on 1/10/2015.
@@ -30,13 +32,19 @@ public class YANFontLoader implements YANAssetLoader<YANFont> {
 
         //extract char data
         List<YANFontChar> charList = extractCharList(lines);
+        Map<Integer,YANFontChar> charMap = new HashMap<>();
+
+        for (YANFontChar aChar : charList) {
+            charMap.put(aChar.getID(),aChar);
+        }
+
         List<YANFontKerning> kerningList = extractKerningList(lines);
 
         //create font
-        YANFont font = new YANFont(face, lineHeight, base, scaleWidth, scaleHeight, textureFile, charList, kerningList);
+        YANFont font = new YANFont(face, lineHeight, base, scaleWidth, scaleHeight, textureFile, charMap, kerningList);
 
         //assign back reference to the font object
-        for (YANFontChar fontChar : font.getCharsList()) {
+        for (YANFontChar fontChar : font.getCharsMap().values()) {
             fontChar.setFont(font);
         }
 
