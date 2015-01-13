@@ -106,7 +106,7 @@ public class YANFont {
         return mScaleHeight;
     }
 
-    public String getTextureFile() {
+    public String getGlyphImageFilePath() {
         return mTextureFile;
     }
 

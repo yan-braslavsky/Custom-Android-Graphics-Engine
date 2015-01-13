@@ -118,7 +118,7 @@ public class YANGLRenderer {
             //rendering text node
             else if (iNode instanceof YANTextNode) {
                 mTextShaderProgram.useProgram();
-                String texturePath = ((YANTextNode) iNode).getFont().getTextureFile();
+                String texturePath = ((YANTextNode) iNode).getFont().getGlyphImageFilePath();
                 mTextShaderProgram.setUniforms(
                         YANMatrixHelper.modelViewProjectionMatrix,
                         YANAssetManager.getInstance().getLoadedTextureOpenGLHandle(texturePath),
