@@ -1,6 +1,6 @@
 package com.example.yan_home.openglengineandroid;
 
-import com.example.yan_home.openglengineandroid.screens.ScissoringTestScreen;
+import com.example.yan_home.openglengineandroid.screens.RemoteGameTestScreen;
 import com.yan.glengine.EngineActivity;
 import com.yan.glengine.assets.YANAssetDescriptor;
 import com.yan.glengine.renderer.YANGLRenderer;
@@ -24,7 +24,8 @@ public class MainActivity extends EngineActivity {
 //        return new ThreePointLayoutingTestScreen(renderer);
 //        return new FontTestScreen(renderer);
 //        return new RotationsTestScreen(renderer);
-        return new ScissoringTestScreen(renderer);
+//        return new ScissoringTestScreen(renderer);
+        return new RemoteGameTestScreen(renderer);
     }
 
 }

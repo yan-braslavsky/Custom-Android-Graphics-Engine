@@ -10,6 +10,7 @@ import com.example.yan_home.openglengineandroid.layouting.impl.CardsLayouterSlot
 import com.example.yan_home.openglengineandroid.layouting.impl.PlayerCardsLayouter;
 import com.example.yan_home.openglengineandroid.layouting.threepoint.ThreePointFanLayouter;
 import com.example.yan_home.openglengineandroid.nodes.CardNode;
+import com.example.yan_home.openglengineandroid.protocol.data.CardData;
 import com.example.yan_home.openglengineandroid.protocol.messages.BlankProtocolMessage;
 import com.example.yan_home.openglengineandroid.protocol.messages.CardMovedProtocolMessage;
 import com.example.yan_home.openglengineandroid.protocol.messages.GameSetupProtocolMessage;
@@ -48,6 +49,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     //pile indices (it is hard coded to have 3 players)
     public static final int STOCK_PILE_INDEX = 0;
     public static final int DISCARD_PILE_INDEX = 1;
+    public static final float CARD_SCALE_AMOUNT_OPPONENT = 0.6f;
 
     //default values may change
     public static int CURRENT_PLAYER_PILE_INDEX = -1;
@@ -202,39 +204,10 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     protected void onLayoutNodes() {
         super.onLayoutNodes();
 
-//        //stock pile
-//        layoutPile(STOCK_PILE_INDEX, (getSceneSize().getX() - mCardWidth) / 2, 0);
-//
-//        //discard pile (off the screen)
-//        layoutPile(DISCARD_PILE_INDEX, -getSceneSize().getX(), getSceneSize().getY() / 2);
-//
-//        //player one pile (bottom middle)
-//        layoutPile(CURRENT_PLAYER_PILE_INDEX, (getSceneSize().getX() - mCardWidth) / 2, getSceneSize().getY() - mCardHeight);
-//
-//        //player two pile (top right)
-//        layoutPile(PLAYER_TO_THE_RIGHT_PILE_INDEX, (getSceneSize().getX() - mCardWidth), 0);
-//
-//        //player three pile (top left)
-//        layoutPile(PLAYER_TO_THE_LEFT_PILE_INDEX, 0, 0);
-//
-//
-//        float leftBorderX = getSceneSize().getX() * 0.3f;
-//        float rightBorderX = getSceneSize().getX() * 0.7f;
-//
-//        float leftBorderY = getSceneSize().getY() * 0.3f;
-//        float rightBorderY = getSceneSize().getY() * 0.5f;
-//
-//        //init "field piles" positions
-//        for (int i = (PLAYER_TO_THE_LEFT_PILE_INDEX + 1); i < CARDS_COUNT / 2; i++) {
-//            float x = YANMathUtils.randomInRange(leftBorderX, rightBorderX);
-//            float y = YANMathUtils.randomInRange(leftBorderY, rightBorderY);
-//            mPileIndexToPositionMap.put(i, new YANVector2(x, y));
-//        }
-
         //layout avatars
         float offsetX = getSceneSize().getX() * 0.01f;
 
-        //first player
+        //setup avatar for player at left top
         YANTexturedNode avatar = mAvatarPlaceHoldersArray.get(0);
         avatar.setAnchorPoint(1f, 1f);
         avatar.setSortingLayer(HIGHEST_SORTING_LAYER + 1);
@@ -243,14 +216,14 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         //used to layout fans
         float offsetFromAvatarEdge = avatar.getSize().getX() / 16;
 
-        //second player
+        //setup avatar for player at right top
         float topOffset = getSceneSize().getY() * 0.07f;
         avatar = mAvatarPlaceHoldersArray.get(1);
         avatar.setAnchorPoint(1f, 0f);
         avatar.setSortingLayer(HIGHEST_SORTING_LAYER + 1);
         avatar.setPosition(getSceneSize().getX() - offsetX, topOffset);
 
-        //setup 3 points for player 2
+        //setup 3 points for player at right top
         float fanDistance = getSceneSize().getX() * 0.05f;
 
         YANVector2 origin = new YANVector2(avatar.getPosition().getX() - avatar.getSize().getX(), avatar.getPosition().getY());
@@ -258,15 +231,14 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         YANVector2 rightBasis = new YANVector2(origin.getX() - fanDistance, origin.getY());
         mThreePointFanLayouterPlayerTwo.setThreePoints(origin, leftBasis, rightBasis);
 
-        //third player
+        //third player avatar
         avatar = mAvatarPlaceHoldersArray.get(2);
         avatar.setAnchorPoint(0f, 0f);
         avatar.setSortingLayer(HIGHEST_SORTING_LAYER + 1);
         avatar.setPosition(offsetX, topOffset);
 
-        //setup 3 points for player 3
-
-        origin = new YANVector2(avatar.getPosition().getX() + offsetFromAvatarEdge, avatar.getPosition().getY());
+        //setup 3 points for player at left top
+        origin = new YANVector2(avatar.getPosition().getX() /*+ avatar.getSize().getX()*/, avatar.getPosition().getY());
         leftBasis = new YANVector2(origin.getX() + fanDistance, origin.getY());
         rightBasis = new YANVector2(origin.getX(), origin.getY() + fanDistance);
         mThreePointFanLayouterPlayerThree.setThreePoints(origin, leftBasis, rightBasis);
@@ -275,16 +247,21 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         mThreePointFanLayouterPlayerThree.setDirection(ThreePointFanLayouter.LayoutDirection.RTL);
     }
 
-    private void layoutPile(int pileIndex, float x, float y) {
+    private void layoutPile(int pileIndex, float x, float y, int rotationZ, float sizeScale) {
         ArrayList<Card> cardsInStockPile = mPileIndexToCardListMap.get(pileIndex);
         for (Card card : cardsInStockPile) {
             CardNode cardTexturedNode = mCardNodes.get(card);
-            cardTexturedNode.setPosition(x, y);
-            cardTexturedNode.setRotationZ(90);
+            layoutCard(x, y, rotationZ, sizeScale, cardTexturedNode);
         }
 
         //init pile position
         mPileIndexToPositionMap.put(pileIndex, new YANVector2(x, y));
+    }
+
+    private void layoutCard(float x, float y, int rotationZ, float sizeScale, CardNode cardTexturedNode) {
+        cardTexturedNode.setPosition(x, y);
+        cardTexturedNode.setRotationZ(rotationZ);
+        cardTexturedNode.setSize(mCardWidth * sizeScale, mCardHeight * sizeScale);
     }
 
 
@@ -411,25 +388,42 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         mPileIndexToCardListMap.put(PLAYER_TO_THE_RIGHT_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
         mPileIndexToCardListMap.put(PLAYER_TO_THE_LEFT_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
 
+        //extract trump card
+        CardData cardData = gameSetupProtocolMessage.getMessageData().getTrumpCard();
+        Card trumpCard = new Card(cardData.getRank(), cardData.getSuit());
+
+        //find trump card node
+        CardNode trumpCardNode = mCardNodes.get(trumpCard);
+
+        //stock pile layout parameters
+        float stockPileXPosition = (getSceneSize().getX() - mCardWidth) / 2;
+        float stockPileYPosition = 0;
+        float stockPileScaleSize = 0.7f;
+
         //init "field piles" ( can be no more than 2 cards)
         for (int i = (PLAYER_TO_THE_LEFT_PILE_INDEX + 1); i < CARDS_COUNT / 2; i++) {
             mPileIndexToCardListMap.put(i, new ArrayList<Card>(2));
         }
 
         //stock pile
-        layoutPile(STOCK_PILE_INDEX, (getSceneSize().getX() - mCardWidth) / 2, 0);
+        layoutPile(STOCK_PILE_INDEX, stockPileXPosition, stockPileYPosition, 100, stockPileScaleSize);
+
+        //layout trump card separately
+        layoutCard(stockPileXPosition, stockPileYPosition + mCardHeight / 4, 5, stockPileScaleSize, trumpCardNode);
+        trumpCardNode.setSortingLayer(0);
+        trumpCardNode.useFrontTextureRegion();
 
         //discard pile (off the screen)
-        layoutPile(DISCARD_PILE_INDEX, -getSceneSize().getX(), getSceneSize().getY() / 2);
+        layoutPile(DISCARD_PILE_INDEX, -getSceneSize().getX(), getSceneSize().getY() / 2, 90, 1f);
 
         //player one pile (bottom middle)
-        layoutPile(CURRENT_PLAYER_PILE_INDEX, (getSceneSize().getX() - mCardWidth) / 2, getSceneSize().getY() - mCardHeight);
+        layoutPile(CURRENT_PLAYER_PILE_INDEX, (getSceneSize().getX() - mCardWidth) / 2, getSceneSize().getY() - mCardHeight, 90, 1f);
 
         //player two pile (top right)
-        layoutPile(PLAYER_TO_THE_RIGHT_PILE_INDEX, (getSceneSize().getX() - mCardWidth), 0);
+        layoutPile(PLAYER_TO_THE_RIGHT_PILE_INDEX, (getSceneSize().getX() - mCardWidth), 0, 90, 1f);
 
         //player three pile (top left)
-        layoutPile(PLAYER_TO_THE_LEFT_PILE_INDEX, 0, 0);
+        layoutPile(PLAYER_TO_THE_LEFT_PILE_INDEX, 0, 0, 90, 1f);
 
         float leftBorderX = getSceneSize().getX() * 0.3f;
         float rightBorderX = getSceneSize().getX() * 0.7f;
@@ -500,7 +494,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
                 node.setSortingLayer(slot.getSortingLayer());
                 //make the animation
                 mCardsTweenAnimator.animateCardToValues(node, slot.getPosition().getX(), slot.getPosition().getY(), slot.getRotation(), null);
-                mCardsTweenAnimator.animateSize(node, mCardWidth * 0.7f, mCardHeight * 0.7f, 0.5f);
+                mCardsTweenAnimator.animateSize(node, mCardWidth * CARD_SCALE_AMOUNT_OPPONENT, mCardHeight * CARD_SCALE_AMOUNT_OPPONENT, 0.5f);
             }
         }
 
@@ -527,7 +521,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
                 node.setSortingLayer(slot.getSortingLayer());
                 //make the animation
                 mCardsTweenAnimator.animateCardToValues(node, slot.getPosition().getX(), slot.getPosition().getY(), slot.getRotation(), null);
-                mCardsTweenAnimator.animateSize(node, mCardWidth * 0.7f, mCardHeight * 0.7f, 0.5f);
+                mCardsTweenAnimator.animateSize(node, mCardWidth * CARD_SCALE_AMOUNT_OPPONENT, mCardHeight * CARD_SCALE_AMOUNT_OPPONENT, 0.5f);
             }
         } else {
             //set the sorting layer higher

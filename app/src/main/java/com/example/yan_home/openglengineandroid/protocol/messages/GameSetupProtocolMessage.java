@@ -1,7 +1,9 @@
 package com.example.yan_home.openglengineandroid.protocol.messages;
 
 import com.example.yan_home.openglengineandroid.protocol.BaseProtocolMessage;
+import com.example.yan_home.openglengineandroid.protocol.data.CardData;
 import com.google.gson.annotations.SerializedName;
+
 
 /**
  * Created by Yan-Home on 12/24/2014.
@@ -13,10 +15,10 @@ public class GameSetupProtocolMessage extends BaseProtocolMessage<GameSetupProto
     /**
      * @param playerPileIndex index of a pile that belongs to relieving player
      */
-    public GameSetupProtocolMessage(int playerPileIndex) {
+    public GameSetupProtocolMessage(int playerPileIndex, String trumpCardRank, String trumpCardSuit) {
         super();
         setMessageName(MESSAGE_NAME);
-        setMessageData(new ProtocolMessageData(playerPileIndex));
+        setMessageData(new ProtocolMessageData(playerPileIndex, new CardData(trumpCardRank, trumpCardSuit)));
     }
 
     public static class ProtocolMessageData {
@@ -26,12 +28,20 @@ public class GameSetupProtocolMessage extends BaseProtocolMessage<GameSetupProto
         @SerializedName("myPileIndex")
         int mMyPileIndex;
 
-        public ProtocolMessageData(int myPileIndex) {
+        @SerializedName("trumpCard")
+        CardData mTrumpCard;
+
+        public ProtocolMessageData(int myPileIndex, CardData trumpCard) {
             mMyPileIndex = myPileIndex;
+            mTrumpCard = trumpCard;
         }
 
         public int getMyPileIndex() {
             return mMyPileIndex;
+        }
+
+        public CardData getTrumpCard() {
+            return mTrumpCard;
         }
     }
 }
