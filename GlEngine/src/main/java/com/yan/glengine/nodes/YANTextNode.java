@@ -34,6 +34,9 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
 
     public YANTextNode(YANFont font) {
         mFont = font;
+
+        //text should never be empty !
+        mText = " ";
     }
 
     @Override
@@ -155,6 +158,11 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
     public void setText(String text) {
         mText = text;
 
+        if (text == null || text.length() == 0) {
+            //text should never be empty !
+            mText = " ";
+        }
+
         //every time text changes , data must be recalculated
         recalculateDimensions();
     }
@@ -173,4 +181,7 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
         glDrawArrays(GL_TRIANGLES, 0, mVertexData.length / VALUES_PER_VERTEX);
     }
 
+    public String getText() {
+        return mText;
+    }
 }

@@ -1,6 +1,6 @@
 package com.example.yan_home.openglengineandroid;
 
-import com.example.yan_home.openglengineandroid.screens.RemoteGameTestScreen;
+import com.example.yan_home.openglengineandroid.screens.FontTestScreen;
 import com.yan.glengine.EngineActivity;
 import com.yan.glengine.assets.YANAssetDescriptor;
 import com.yan.glengine.renderer.YANGLRenderer;
@@ -15,17 +15,14 @@ public class MainActivity extends EngineActivity {
     protected ArrayList<YANAssetDescriptor> onCreateAssets() {
         ArrayList<YANAssetDescriptor> assets = new ArrayList<>();
         assets.add(new YANAssetDescriptor(YANAssetDescriptor.YANAssetType.TEXTURE_ATLAS, "texture_atlases" + File.separator, "ui_atlas", "json"));
+        assets.add(new YANAssetDescriptor(YANAssetDescriptor.YANAssetType.TEXTURE_ATLAS, "texture_atlases" + File.separator, "cards_atlas", "json"));
         assets.add(new YANAssetDescriptor(YANAssetDescriptor.YANAssetType.FONT, "fonts" + File.separator, "standard_font", "fnt"));
         return assets;
     }
 
     @Override
     protected YANIScreen onCreateStartScreen(YANGLRenderer renderer) {
-//        return new ThreePointLayoutingTestScreen(renderer);
-//        return new FontTestScreen(renderer);
-//        return new RotationsTestScreen(renderer);
-//        return new ScissoringTestScreen(renderer);
-        return new RemoteGameTestScreen(renderer);
+        return new FontTestScreen(renderer);
     }
 
 }

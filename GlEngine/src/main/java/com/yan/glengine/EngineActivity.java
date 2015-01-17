@@ -82,8 +82,6 @@ public abstract class EngineActivity extends Activity {
 
         glSurfaceView = new GLSurfaceView(this);
 
-        hideSystemUI();
-
         // Check if the system supports OpenGL ES 2.0.
         ActivityManager activityManager =
                 (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -189,6 +187,8 @@ public abstract class EngineActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        hideSystemUI();
 
         if (glSurfaceView != null) {
             glSurfaceView.onResume();
