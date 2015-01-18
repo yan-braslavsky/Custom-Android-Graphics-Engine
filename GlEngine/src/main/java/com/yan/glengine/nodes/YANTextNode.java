@@ -42,6 +42,9 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
     @Override
     protected float[] createVertexData() {
 
+        //TODO : consider this implementation for featured text rendering
+        //https://github.com/ShaRose/GuiAPI/blob/master/twl/src/de/matthiasmann/twl/renderer/lwjgl/BitmapFont.java
+
         // here we are creating a mesh with indices and texture coordinates for the entire text
         // that way we can render it in one render call.
         // According to rendering guide http://www.angelcode.com/products/bmfont/doc/render_text.html
@@ -49,9 +52,7 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
         //we must render the amount of characters according to a length of the text
         mVertexData = new float[VALUES_PER_VERTEX * VERTICES_COUNT_FOR_ONE_CHAR * mText.length()];
 
-        //TODO : need to consider a size somehow ?
-        float halfWidth = getSize().getX() / 2f;
-        float halfHeight = getSize().getY() / 2f;
+        //TODO : need to consider a size of the node somehow ?
 
         //we use this value to calculate the offset in data float array
         int numElementsForOneCharRendering = VALUES_PER_VERTEX * VERTICES_COUNT_FOR_ONE_CHAR;
@@ -80,12 +81,15 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
                 throw new RuntimeException("Character " + chr + " is not found !");
             }
 
+            //move cursor by advance value
+            cursorPositionX += kerning;
+
             //now we are filling a data array to store rendering information for the character
-            loadDataForTextureRegion(currChar.getWidth() / 2, currChar.getHeight() / 2, currChar.getYANTextureRegion(), arrOffset,
-                    cursorPositionX + currChar.getXOffset() + kerning, 0);
+            loadDataForTextureRegion(currChar.getWidth(), currChar.getHeight(), currChar.getYANTextureRegion(), arrOffset,
+                    cursorPositionX + currChar.getXOffset(), 0);
 
             //move cursor by advance value
-            cursorPositionX += currChar.getXAdvance() + kerning;
+            cursorPositionX += currChar.getXAdvance();
 
             //update float array offset
             arrOffset += numElementsForOneCharRendering;
@@ -96,46 +100,45 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
         return mVertexData;
     }
 
-    private void loadDataForTextureRegion(float halfWidth, float halfHeight, YANTextureRegion sampleTextureRegion, int arrOffset, int offsetX, int offsetY) {
+    private void loadDataForTextureRegion(float width, float height, YANTextureRegion sampleTextureRegion, int arrOffset, int offsetX, int offsetY) {
         // Order of coordinates: X, Y, U, V
         // Triangle Strip
 
         // vertex (top left)
-        mVertexData[arrOffset + 0] = offsetX - halfWidth;
-        mVertexData[arrOffset + 1] = offsetY + halfHeight;
+        mVertexData[arrOffset + 0] = offsetX;
+        mVertexData[arrOffset + 1] = offsetY + height;
         mVertexData[arrOffset + 2] = sampleTextureRegion.getU0();
         mVertexData[arrOffset + 3] = sampleTextureRegion.getV1();
 
         // vertex (bottom right)
-        mVertexData[arrOffset + 4] = offsetX + halfWidth;
-        mVertexData[arrOffset + 5] = offsetY - halfHeight;
+        mVertexData[arrOffset + 4] = offsetX + width;
+        mVertexData[arrOffset + 5] = offsetY;
         mVertexData[arrOffset + 6] = sampleTextureRegion.getU1();
         mVertexData[arrOffset + 7] = sampleTextureRegion.getV0();
 
         // vertex (bottom left)
-        mVertexData[arrOffset + 8] = offsetX - halfWidth;
-        mVertexData[arrOffset + 9] = offsetY - halfHeight;
+        mVertexData[arrOffset + 8] = offsetX;
+        mVertexData[arrOffset + 9] = offsetY;
         mVertexData[arrOffset + 10] = sampleTextureRegion.getU0();
         mVertexData[arrOffset + 11] = sampleTextureRegion.getV0();
 
         // vertex (top left)
-        mVertexData[arrOffset + 12] = offsetX - halfWidth;
-        mVertexData[arrOffset + 13] = offsetY + halfHeight;
+        mVertexData[arrOffset + 12] = offsetX;
+        mVertexData[arrOffset + 13] = offsetY + height;
         mVertexData[arrOffset + 14] = sampleTextureRegion.getU0();
         mVertexData[arrOffset + 15] = sampleTextureRegion.getV1();
 
         // vertex (top right)
-        mVertexData[arrOffset + 16] = offsetX + halfWidth;
-        mVertexData[arrOffset + 17] = offsetY + halfHeight;
+        mVertexData[arrOffset + 16] = offsetX + width;
+        mVertexData[arrOffset + 17] = offsetY + height;
         mVertexData[arrOffset + 18] = sampleTextureRegion.getU1();
         mVertexData[arrOffset + 19] = sampleTextureRegion.getV1();
 
         // vertex (bottom right)
-        mVertexData[arrOffset + 20] = offsetX + halfWidth;
-        mVertexData[arrOffset + 21] = offsetY - halfHeight;
+        mVertexData[arrOffset + 20] = offsetX + width;
+        mVertexData[arrOffset + 21] = offsetY;
         mVertexData[arrOffset + 22] = sampleTextureRegion.getU1();
         mVertexData[arrOffset + 23] = sampleTextureRegion.getV0();
-
     }
 
     @Override
