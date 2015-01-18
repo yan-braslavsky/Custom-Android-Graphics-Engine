@@ -18,10 +18,12 @@ public abstract class BaseGameScreen extends YANNodeScreen {
     protected YANTextureAtlas mUiAtlas;
     protected YANTexturedNode mFence;
     private YANTexturedNode mGlade;
+    protected YANTextureAtlas mCardsAtlas;
 
     public BaseGameScreen(YANGLRenderer renderer) {
         super(renderer);
         mUiAtlas = YANAssetManager.getInstance().getLoadedAtlas("ui_atlas");
+        mCardsAtlas = YANAssetManager.getInstance().getLoadedAtlas("cards_atlas");
     }
 
     @Override
@@ -77,6 +79,7 @@ public abstract class BaseGameScreen extends YANNodeScreen {
 
         //for efficiency reasons we are not loading texture into openGL until we are need it
         YANAssetManager.getInstance().loadTexture(mUiAtlas.getAtlasImageFilePath());
+        YANAssetManager.getInstance().loadTexture(mCardsAtlas.getAtlasImageFilePath());
     }
 
     @Override
@@ -85,5 +88,6 @@ public abstract class BaseGameScreen extends YANNodeScreen {
 
         //for efficiency reasons we are deleting loaded texture into openGL
         YANAssetManager.getInstance().unloadTexture(mUiAtlas.getAtlasImageFilePath());
+        YANAssetManager.getInstance().unloadTexture(mCardsAtlas.getAtlasImageFilePath());
     }
 }

@@ -21,6 +21,7 @@ import com.example.yan_home.openglengineandroid.durak.protocol.messages.Response
 import com.example.yan_home.openglengineandroid.durak.tweening.CardsTweenAnimator;
 import com.google.gson.Gson;
 import com.yan.glengine.nodes.YANTexturedNode;
+import com.yan.glengine.nodes.YANTexturedScissorNode;
 import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.util.geometry.YANVector2;
 import com.yan.glengine.util.math.YANMathUtils;
@@ -36,7 +37,7 @@ import java.util.Map;
 public class RemoteGameTestScreen extends BaseGameScreen {
 
     //connection details
-    public static final String SERVER_ADDRESS = "192.168.1.100";
+    public static final String SERVER_ADDRESS = "192.168.1.102";
     public static final int SERVER_PORT = 7000;
 
     private static final int CARDS_COUNT = 36;
@@ -72,6 +73,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     private CardsTweenAnimator mCardsTweenAnimator;
     private YANTexturedNode mBackOfCardNode;
 
+
     private int mTopCardOnFieldSortingLayer = HIGHEST_SORTING_LAYER;
 
     /**
@@ -98,12 +100,16 @@ public class RemoteGameTestScreen extends BaseGameScreen {
 
 
     private ArrayList<YANTexturedNode> mAvatarPlaceHoldersArray;
+    private ArrayList<YANTexturedNode> mCockPlaceHoldersArray;
     private boolean mCardForAttackRequested;
     private boolean mRequestedRetaliation;
+
+    private YANTexturedScissorNode mScissorCockNode;
 
     public RemoteGameTestScreen(YANGLRenderer renderer) {
         super(renderer);
         mCardNodes = new HashMap<>(CARDS_COUNT);
+
 
         mPileIndexToCardListMap = new HashMap<>(CARDS_COUNT / 2);
         mPileIndexToPositionMap = new HashMap<>(CARDS_COUNT / 2);
@@ -112,6 +118,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
 
         //array holds avatars for each player
         mAvatarPlaceHoldersArray = new ArrayList<>();
+        mCockPlaceHoldersArray = new ArrayList<>();
 
         //init 3 points layouter to create a fan of opponents hands
         mThreePointFanLayouterPlayerTwo = new ThreePointFanLayouter(2);
@@ -197,6 +204,14 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         for (YANTexturedNode avatar : mAvatarPlaceHoldersArray) {
             addNode(avatar);
         }
+
+        for (YANTexturedNode cock : mCockPlaceHoldersArray) {
+            addNode(cock);
+        }
+
+        //add Scissoring cock node
+        addNode(mScissorCockNode);
+
     }
 
 
@@ -212,9 +227,9 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         avatar.setAnchorPoint(1f, 1f);
         avatar.setSortingLayer(HIGHEST_SORTING_LAYER + 1);
         avatar.setPosition(getSceneSize().getX() - offsetX, getSceneSize().getY() - offsetX);
-
-        //used to layout fans
-        float offsetFromAvatarEdge = avatar.getSize().getX() / 16;
+        mCockPlaceHoldersArray.get(0).setSortingLayer(avatar.getSortingLayer());
+        mCockPlaceHoldersArray.get(0).setPosition(avatar.getPosition().getX() - avatar.getSize().getX() / 2 - mCockPlaceHoldersArray.get(0).getSize().getX() / 2,
+                avatar.getPosition().getY() - avatar.getSize().getY() - mCockPlaceHoldersArray.get(0).getSize().getY());
 
         //setup avatar for player at right top
         float topOffset = getSceneSize().getY() * 0.07f;
@@ -222,6 +237,9 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         avatar.setAnchorPoint(1f, 0f);
         avatar.setSortingLayer(HIGHEST_SORTING_LAYER + 1);
         avatar.setPosition(getSceneSize().getX() - offsetX, topOffset);
+        mCockPlaceHoldersArray.get(1).setSortingLayer(avatar.getSortingLayer());
+        mCockPlaceHoldersArray.get(1).setPosition(avatar.getPosition().getX() - avatar.getSize().getX() / 2 - mCockPlaceHoldersArray.get(1).getSize().getX() / 2,
+                avatar.getPosition().getY() - mCockPlaceHoldersArray.get(1).getSize().getY());
 
         //setup 3 points for player at right top
         float fanDistance = getSceneSize().getX() * 0.05f;
@@ -236,6 +254,8 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         avatar.setAnchorPoint(0f, 0f);
         avatar.setSortingLayer(HIGHEST_SORTING_LAYER + 1);
         avatar.setPosition(offsetX, topOffset);
+        mCockPlaceHoldersArray.get(2).setSortingLayer(avatar.getSortingLayer());
+        mCockPlaceHoldersArray.get(2).setPosition(avatar.getPosition().getX() + mCockPlaceHoldersArray.get(2).getSize().getX() / 2, avatar.getPosition().getY() - mCockPlaceHoldersArray.get(2).getSize().getY());
 
         //setup 3 points for player at left top
         origin = new YANVector2(avatar.getPosition().getX() /*+ avatar.getSize().getX()*/, avatar.getPosition().getY());
@@ -245,6 +265,9 @@ public class RemoteGameTestScreen extends BaseGameScreen {
 
         //swap direction
         mThreePointFanLayouterPlayerThree.setDirection(ThreePointFanLayouter.LayoutDirection.RTL);
+
+        //filled in cock by default is in the bottom player
+        mScissorCockNode.setPosition(mCockPlaceHoldersArray.get(0).getPosition().getX(), mCockPlaceHoldersArray.get(0).getPosition().getY());
     }
 
     private void layoutPile(int pileIndex, float x, float y, int rotationZ, float sizeScale) {
@@ -299,6 +322,18 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         for (YANTexturedNode node : mAvatarPlaceHoldersArray) {
             node.setSize(newWidth, newHeight);
         }
+
+        //set cock sizes
+        YANTexturedNode cock = mCockPlaceHoldersArray.get(0);
+        aspectRatio = cock.getTextureRegion().getWidth() / cock.getTextureRegion().getHeight();
+        newWidth = getSceneSize().getX() * 0.1f;
+        newHeight = newWidth / aspectRatio;
+        for (YANTexturedNode node : mCockPlaceHoldersArray) {
+            node.setSize(newWidth, newHeight);
+        }
+
+        mScissorCockNode.setSize(newWidth, newHeight);
+
     }
 
     @Override
@@ -310,16 +345,27 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         //add 3 avatars for 3 players
         for (int i = 0; i < 3; i++) {
             mAvatarPlaceHoldersArray.add(new YANTexturedNode(mUiAtlas.getTextureRegion("stump.png")));
+            mAvatarPlaceHoldersArray.get(i).setSortingLayer(HIGHEST_SORTING_LAYER);
+            mCockPlaceHoldersArray.add(new YANTexturedNode(mUiAtlas.getTextureRegion("grey_cock.png")));
+            mCockPlaceHoldersArray.get(i).setSortingLayer(HIGHEST_SORTING_LAYER);
         }
+
+        //top left cock is looking the other way
+        mCockPlaceHoldersArray.get(2).setRotationY(180);
+
+        //scissor cock node that will be used to present the fill in for cocks
+        mScissorCockNode = new YANTexturedScissorNode(mUiAtlas.getTextureRegion("yellow_cock.png"));
+        mScissorCockNode.setSortingLayer(HIGHEST_SORTING_LAYER * 2);
+
     }
 
     private void initCardsMap() {
-        mBackOfCardNode = new YANTexturedNode(mUiAtlas.getTextureRegion("cards_back.png"));
+        mBackOfCardNode = new YANTexturedNode(mCardsAtlas.getTextureRegion("cards_back.png"));
         ArrayList<Card> cardEntities = CardsHelper.create36Deck();
 
         for (Card card : cardEntities) {
             String name = "cards_" + card.getSuit() + "_" + card.getRank() + ".png";
-            CardNode cardNode = new CardNode(mUiAtlas.getTextureRegion(name), mBackOfCardNode.getTextureRegion(), card);
+            CardNode cardNode = new CardNode(mCardsAtlas.getTextureRegion(name), mBackOfCardNode.getTextureRegion(), card);
             mCardNodes.put(card, cardNode);
 
             //hide the card

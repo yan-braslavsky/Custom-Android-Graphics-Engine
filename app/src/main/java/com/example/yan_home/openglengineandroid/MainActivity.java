@@ -1,6 +1,6 @@
 package com.example.yan_home.openglengineandroid;
 
-import com.example.yan_home.openglengineandroid.screens.FontTestScreen;
+import com.example.yan_home.openglengineandroid.durak.screens.RemoteGameTestScreen;
 import com.yan.glengine.EngineActivity;
 import com.yan.glengine.assets.YANAssetDescriptor;
 import com.yan.glengine.renderer.YANGLRenderer;
@@ -22,7 +22,8 @@ public class MainActivity extends EngineActivity {
 
     @Override
     protected YANIScreen onCreateStartScreen(YANGLRenderer renderer) {
-        return new FontTestScreen(renderer);
+//        return new FontTestScreen(renderer);
+        return new RemoteGameTestScreen(renderer);
     }
 
 }
