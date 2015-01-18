@@ -1,6 +1,7 @@
 package com.example.yan_home.openglengineandroid.screens;
 
 import com.yan.glengine.assets.YANAssetManager;
+import com.yan.glengine.assets.font.YANFont;
 import com.yan.glengine.nodes.YANTextNode;
 import com.yan.glengine.renderer.YANGLRenderer;
 import com.yan.glengine.screens.YANIScreen;
@@ -16,6 +17,7 @@ public class FontTestScreen extends BaseTestScreen {
 
     float animationChangeAccumulator;
     boolean isDecreasing;
+    private YANFont mFont;
 
     public FontTestScreen(YANGLRenderer renderer) {
         super(renderer);
@@ -24,10 +26,26 @@ public class FontTestScreen extends BaseTestScreen {
     @Override
     protected void onCreateNodes() {
         super.onCreateNodes();
-        mTextNode = new YANTextNode(YANAssetManager.getInstance().getLoadedFont("standard_font"));
-        mAnimatedTextNode = new YANTextNode(YANAssetManager.getInstance().getLoadedFont("standard_font"));
+        mFont = YANAssetManager.getInstance().getLoadedFont("tale_font");
+
+        mTextNode = new YANTextNode(mFont);
+        mAnimatedTextNode = new YANTextNode(mFont);
         mTextNode.setText("Hello World !");
         mAnimatedTextNode.setText(ANIMATION_STRING);
+    }
+
+    @Override
+    public void onSetActive() {
+        super.onSetActive();
+
+        YANAssetManager.getInstance().loadTexture(mFont.getGlyphImageFilePath());
+    }
+
+    @Override
+    public void onSetNotActive() {
+        super.onSetNotActive();
+
+        YANAssetManager.getInstance().unloadTexture(mFont.getGlyphImageFilePath());
     }
 
     @Override
