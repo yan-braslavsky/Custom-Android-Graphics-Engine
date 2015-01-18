@@ -5,6 +5,7 @@ import com.yan.glengine.assets.atlas.YANTextureAtlas;
 import com.yan.glengine.nodes.YANButtonNode;
 import com.yan.glengine.nodes.YANTextNode;
 import com.yan.glengine.renderer.YANGLRenderer;
+import com.yan.glengine.screens.YANIScreen;
 import com.yan.glengine.screens.YANNodeScreen;
 import com.yan.glengine.util.YANFPSLogger;
 import com.yan.glengine.util.colors.YANColor;
@@ -17,9 +18,9 @@ import com.yan.glengine.util.colors.YANColor;
  */
 public abstract class BaseTestScreen extends YANNodeScreen {
 
-    private static final int OVERLAY_SORTING_LAYER = 1000;
+    protected static final int OVERLAY_SORTING_LAYER = 1000;
 
-    private YANTextureAtlas mUiAtlas;
+    protected YANTextureAtlas mUiAtlas;
 
     //Used to log FPS data on screen
     YANTextNode mFpsTextNode;
@@ -28,6 +29,10 @@ public abstract class BaseTestScreen extends YANNodeScreen {
     //arrows to switch between screens
     YANButtonNode mRightButton;
     YANButtonNode mLeftButton;
+
+    //Used to navvigate between screens
+    protected YANIScreen mPreviousScreen;
+    protected YANIScreen mNextScreen;
 
     public BaseTestScreen(YANGLRenderer renderer) {
         super(renderer);
@@ -54,7 +59,11 @@ public abstract class BaseTestScreen extends YANNodeScreen {
         YANAssetManager.getInstance().loadTexture(YANAssetManager.getInstance().getLoadedAtlas("ui_atlas").getAtlasImageFilePath());
         //load font atlas into a memory
         YANAssetManager.getInstance().loadTexture(YANAssetManager.getInstance().getLoadedFont("standard_font").getGlyphImageFilePath());
+
+        mNextScreen = onSetNextScreen();
+        mPreviousScreen = onSetPreviousScreen();
     }
+
 
     @Override
     public void onSetNotActive() {
@@ -127,8 +136,20 @@ public abstract class BaseTestScreen extends YANNodeScreen {
         });
     }
 
-    protected abstract void goToPreviousScreen();
+    private void goToPreviousScreen() {
+        if (mPreviousScreen == null)
+            return;
+        getRenderer().setActiveScreen(mPreviousScreen);
+    }
 
-    protected abstract void goToNextScreen();
+    private void goToNextScreen() {
+        if (mNextScreen == null)
+            return;
+        getRenderer().setActiveScreen(mNextScreen);
+    }
+
+    protected abstract YANIScreen onSetNextScreen();
+
+    protected abstract YANIScreen onSetPreviousScreen();
 
 }

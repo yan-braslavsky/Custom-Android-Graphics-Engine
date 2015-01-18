@@ -12,7 +12,7 @@ public class YANTweenNodeAccessor implements TweenAccessor<YANIRenderableNode> {
     public static final int POSITION_X = 1;
     public static final int POSITION_Y = 2;
     public static final int POSITION_XY = 3;
-    public static final int ROTATION_CW = 4;
+    public static final int ROTATION_Z_CW = 4;
     public static final int OPACITY = 5;
     public static final int SIZE_X = 6;
     public static final int SIZE_Y = 7;
@@ -38,7 +38,7 @@ public class YANTweenNodeAccessor implements TweenAccessor<YANIRenderableNode> {
                 returnValues[1] = target.getSize().getY();
                 return 2;
 
-            case ROTATION_CW:
+            case ROTATION_Z_CW:
                 returnValues[0] = target.getRotationZ();
                 return 1;
 
@@ -76,7 +76,7 @@ public class YANTweenNodeAccessor implements TweenAccessor<YANIRenderableNode> {
                 target.setSize(newValues[0], newValues[1]);
                 break;
 
-            case ROTATION_CW:
+            case ROTATION_Z_CW:
                 target.setRotationZ(newValues[0]);
                 break;
             case OPACITY:

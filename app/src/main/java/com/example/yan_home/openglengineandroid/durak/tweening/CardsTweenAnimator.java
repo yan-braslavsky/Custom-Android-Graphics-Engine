@@ -27,7 +27,7 @@ public class CardsTweenAnimator {
                 .beginParallel()
                 .push(Tween.to(card, YANTweenNodeAccessor.POSITION_X, 0.5f).target(slot.getPosition().getX()))
                 .push(Tween.to(card, YANTweenNodeAccessor.POSITION_Y, 0.5f).target(slot.getPosition().getY()))
-                .push(Tween.to(card, YANTweenNodeAccessor.ROTATION_CW, 0.5f).target(slot.getRotation()))
+                .push(Tween.to(card, YANTweenNodeAccessor.ROTATION_Z_CW, 0.5f).target(slot.getRotation()))
                 .start(mTweenManager);
     }
 
@@ -38,7 +38,7 @@ public class CardsTweenAnimator {
                 .setCallback(
                         animationEndCallback)
                 .push(Tween.to(card, YANTweenNodeAccessor.POSITION_Y, 0.5f).target(targetYPosition))
-                .push(Tween.to(card, YANTweenNodeAccessor.ROTATION_CW, 0.5f).target(targetRotation))
+                .push(Tween.to(card, YANTweenNodeAccessor.ROTATION_Z_CW, 0.5f).target(targetRotation))
                 .start(mTweenManager);
     }
 
@@ -49,7 +49,7 @@ public class CardsTweenAnimator {
                 .setCallback(
                         animationEndCallback)
                 .push(Tween.to(card, YANTweenNodeAccessor.POSITION_Y, 0.5f).target(targetYPosition))
-                .push(Tween.to(card, YANTweenNodeAccessor.ROTATION_CW, 0.5f).target(targetRotation))
+                .push(Tween.to(card, YANTweenNodeAccessor.ROTATION_Z_CW, 0.5f).target(targetRotation))
                 .push(Tween.to(card, YANTweenNodeAccessor.SIZE_X, 0.5f).target(targetWidthPosition))
                 .push(Tween.to(card, YANTweenNodeAccessor.SIZE_Y, 0.5f).target(targetHeightPosition))
                 .start(mTweenManager);

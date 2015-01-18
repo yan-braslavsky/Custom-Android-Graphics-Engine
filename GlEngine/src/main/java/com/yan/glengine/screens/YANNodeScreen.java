@@ -48,6 +48,12 @@ public abstract class YANNodeScreen implements YANIScreen {
         getNodeList().add(node);
     }
 
+    private void sortNodesBySortingLayer() {
+        //TODO : think about more efficient solution
+        //reorder children by sorting layer
+        Collections.sort(getNodeList(), mSortingLayerComparator);
+    }
+
     protected void removeNode(YANIRenderableNode node) {
         node.onDetachedFromScreen();
         getNodeList().remove(node);
@@ -82,8 +88,10 @@ public abstract class YANNodeScreen implements YANIScreen {
 
     @Override
     public void onUpdate(float deltaTimeSeconds) {
-        //reorder children by sorting layer
-        Collections.sort(getNodeList(), mSortingLayerComparator);
+
+        //TODO : think about more efficient solution
+        //Sorting nodes every frame is expensive
+        sortNodesBySortingLayer();
     }
 
     @Override

@@ -1,68 +1,69 @@
 package com.example.yan_home.openglengineandroid.screens;
 
-import com.yan.glengine.assets.YANAssetManager;
-import com.yan.glengine.assets.atlas.YANTextureAtlas;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.renderer.YANGLRenderer;
-import com.yan.glengine.screens.YANNodeScreen;
-import com.yan.glengine.util.colors.YANColor;
+import com.yan.glengine.screens.YANIScreen;
 
 /**
  * Created by Yan-Home on 1/11/2015.
  */
-public class RotationsTestScreen extends YANNodeScreen {
+public class RotationsTestScreen extends BaseTestScreen {
 
-    private YANTextureAtlas mUIAtlas;
-    private YANTexturedNode mGreyCock;
+    private YANTexturedNode mGreyCock1;
+    private YANTexturedNode mGreyCock2;
 
     private float mRotationY = 0;
     private float mRotationYSpeed = 2f;
 
     public RotationsTestScreen(YANGLRenderer renderer) {
         super(renderer);
-
-        //get reference to loaded font
-        mUIAtlas = YANAssetManager.getInstance().getLoadedAtlas("ui_atlas");
     }
 
-    @Override
-    public void onSetActive() {
-        super.onSetActive();
-        getRenderer().setRendererBackgroundColor(YANColor.createFromHexColor(0x9F9E36));
-        YANAssetManager.getInstance().loadTexture(mUIAtlas.getAtlasImageFilePath());
-    }
-
-    @Override
-    public void onSetNotActive() {
-        super.onSetNotActive();
-        YANAssetManager.getInstance().unloadTexture(mUIAtlas.getAtlasImageFilePath());
-    }
 
     @Override
     protected void onAddNodesToScene() {
-        addNode(mGreyCock);
+        super.onAddNodesToScene();
+        addNode(mGreyCock1);
+        addNode(mGreyCock2);
     }
 
     @Override
     protected void onLayoutNodes() {
-        mGreyCock.setPosition(getSceneSize().getX() / 2, getSceneSize().getX() / 2);
+        super.onLayoutNodes();
+        mGreyCock1.setPosition(getSceneSize().getX() / 2, getSceneSize().getX() / 2);
+        mGreyCock2.setPosition(getSceneSize().getX() / 3, getSceneSize().getX() / 2);
     }
 
     @Override
     protected void onChangeNodesSize() {
-        mGreyCock.setSize(100, 100);
+        super.onChangeNodesSize();
+        mGreyCock1.setSize(100, 100);
+        mGreyCock2.setSize(100, 100);
     }
 
     @Override
     protected void onCreateNodes() {
-        mGreyCock = new YANTexturedNode(mUIAtlas.getTextureRegion("grey_cock.png"));
+        super.onCreateNodes();
+        mGreyCock1 = new YANTexturedNode(mUiAtlas.getTextureRegion("grey_cock.png"));
+        mGreyCock2 = new YANTexturedNode(mUiAtlas.getTextureRegion("grey_cock.png"));
+    }
+
+    @Override
+    protected YANIScreen onSetNextScreen() {
+        return new TweeningTestScreen(getRenderer());
+    }
+
+    @Override
+    protected YANIScreen onSetPreviousScreen() {
+        return new ScissoringTestScreen(getRenderer());
     }
 
     @Override
     public void onUpdate(float deltaTimeSeconds) {
         super.onUpdate(deltaTimeSeconds);
 
-        mGreyCock.setRotationY(mRotationY);
+        mGreyCock1.setRotationY(mRotationY);
+        mGreyCock2.setRotationZ(mRotationY);
         mRotationY += mRotationYSpeed;
 
         if (mRotationY > 360) {

@@ -76,6 +76,7 @@ public class YANGLRenderer {
     public void onDrawFrame() {
 
         float deltaTimeSeconds = ((float) (System.currentTimeMillis() - mPreviousFrameTime)) / 1000f;
+        mPreviousFrameTime = System.currentTimeMillis();
 
         //onUpdate tasks
         YANTaskManager.getInstance().update(deltaTimeSeconds);
@@ -97,8 +98,6 @@ public class YANGLRenderer {
         if (mCurrentScreen != null) {
             drawNodes();
         }
-
-        mPreviousFrameTime = System.currentTimeMillis();
     }
 
     private void drawNodes() {

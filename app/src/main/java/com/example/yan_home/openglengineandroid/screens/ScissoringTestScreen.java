@@ -1,19 +1,15 @@
 package com.example.yan_home.openglengineandroid.screens;
 
-import com.yan.glengine.assets.YANAssetManager;
-import com.yan.glengine.assets.atlas.YANTextureAtlas;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.nodes.YANTexturedScissorNode;
 import com.yan.glengine.renderer.YANGLRenderer;
-import com.yan.glengine.screens.YANNodeScreen;
-import com.yan.glengine.util.colors.YANColor;
+import com.yan.glengine.screens.YANIScreen;
 
 /**
  * Created by Yan-Home on 1/11/2015.
  */
-public class ScissoringTestScreen extends YANNodeScreen {
+public class ScissoringTestScreen extends BaseTestScreen {
 
-    private YANTextureAtlas mUIAtlas;
     private YANTexturedScissorNode mScissoredCockNode;
     private YANTexturedNode mGreyCock;
 
@@ -22,28 +18,12 @@ public class ScissoringTestScreen extends YANNodeScreen {
 
     public ScissoringTestScreen(YANGLRenderer renderer) {
         super(renderer);
-
-        //get reference to loaded font
-        mUIAtlas = YANAssetManager.getInstance().getLoadedAtlas("ui_atlas");
     }
 
-    @Override
-    public void onSetActive() {
-        super.onSetActive();
-        getRenderer().setRendererBackgroundColor(YANColor.createFromHexColor(0x9F9E36));
-        YANAssetManager.getInstance().loadTexture(mUIAtlas.getAtlasImageFilePath());
-    }
-
-    @Override
-    public void onSetNotActive() {
-        super.onSetNotActive();
-        YANAssetManager.getInstance().unloadTexture(mUIAtlas.getAtlasImageFilePath());
-    }
 
     @Override
     protected void onAddNodesToScene() {
-        mScissoredCockNode = new YANTexturedScissorNode(mUIAtlas.getTextureRegion("yellow_cock.png"));
-        mGreyCock = new YANTexturedNode(mUIAtlas.getTextureRegion("grey_cock.png"));
+        super.onAddNodesToScene();
 
         //scissored node will occlude the other
         addNode(mGreyCock);
@@ -52,21 +32,34 @@ public class ScissoringTestScreen extends YANNodeScreen {
 
     @Override
     protected void onLayoutNodes() {
-        //TODO
+        super.onLayoutNodes();
         mScissoredCockNode.setPosition(getSceneSize().getX() / 2, getSceneSize().getX() / 2);
         mGreyCock.setPosition(getSceneSize().getX() / 2, getSceneSize().getX() / 2);
     }
 
     @Override
     protected void onChangeNodesSize() {
-        //TODO
+        super.onChangeNodesSize();
         mScissoredCockNode.setSize(100, 100);
         mGreyCock.setSize(100, 100);
     }
 
     @Override
     protected void onCreateNodes() {
-        //TODO
+        super.onCreateNodes();
+        mScissoredCockNode = new YANTexturedScissorNode(mUiAtlas.getTextureRegion("yellow_cock.png"));
+        mGreyCock = new YANTexturedNode(mUiAtlas.getTextureRegion("grey_cock.png"));
+    }
+
+
+    @Override
+    protected YANIScreen onSetNextScreen() {
+        return new RotationsTestScreen(getRenderer());
+    }
+
+    @Override
+    protected YANIScreen onSetPreviousScreen() {
+        return new FontTestScreen(getRenderer());
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.example.yan_home.openglengineandroid.screens;
 import com.yan.glengine.assets.YANAssetManager;
 import com.yan.glengine.nodes.YANTextNode;
 import com.yan.glengine.renderer.YANGLRenderer;
+import com.yan.glengine.screens.YANIScreen;
 
 /**
  * Created by Yan-Home on 1/11/2015.
@@ -27,6 +28,16 @@ public class FontTestScreen extends BaseTestScreen {
         mAnimatedTextNode = new YANTextNode(YANAssetManager.getInstance().getLoadedFont("standard_font"));
         mTextNode.setText("Hello World !");
         mAnimatedTextNode.setText(ANIMATION_STRING);
+    }
+
+    @Override
+    protected YANIScreen onSetNextScreen() {
+        return new ScissoringTestScreen(getRenderer());
+    }
+
+    @Override
+    protected YANIScreen onSetPreviousScreen() {
+        return null;
     }
 
     @Override
@@ -66,13 +77,5 @@ public class FontTestScreen extends BaseTestScreen {
         addNode(mAnimatedTextNode);
     }
 
-    @Override
-    protected void goToPreviousScreen() {
-        //TODO : go to next test Screen
-    }
 
-    @Override
-    protected void goToNextScreen() {
-        //TODO : go to previous test Screen
-    }
 }
