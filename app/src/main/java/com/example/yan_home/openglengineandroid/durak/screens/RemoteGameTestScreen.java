@@ -14,6 +14,7 @@ import com.example.yan_home.openglengineandroid.durak.protocol.data.CardData;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.BlankProtocolMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.CardMovedProtocolMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.GameSetupProtocolMessage;
+import com.example.yan_home.openglengineandroid.durak.protocol.messages.PlayerTakesActionMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.RequestCardForAttackMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.RequestRetaliatePilesMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.ResponseCardForAttackMessage;
@@ -23,6 +24,7 @@ import com.google.gson.Gson;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.nodes.YANTexturedScissorNode;
 import com.yan.glengine.renderer.YANGLRenderer;
+import com.yan.glengine.util.geometry.YANReadOnlyVector2;
 import com.yan.glengine.util.geometry.YANVector2;
 import com.yan.glengine.util.math.YANMathUtils;
 
@@ -105,11 +107,11 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     private boolean mRequestedRetaliation;
 
     private YANTexturedScissorNode mScissorCockNode;
+    private float mScissoringCockVisibleStartY;
 
     public RemoteGameTestScreen(YANGLRenderer renderer) {
         super(renderer);
         mCardNodes = new HashMap<>(CARDS_COUNT);
-
 
         mPileIndexToCardListMap = new HashMap<>(CARDS_COUNT / 2);
         mPileIndexToPositionMap = new HashMap<>(CARDS_COUNT / 2);
@@ -266,8 +268,8 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         //swap direction
         mThreePointFanLayouterPlayerThree.setDirection(ThreePointFanLayouter.LayoutDirection.RTL);
 
-        //filled in cock by default is in the bottom player
-        mScissorCockNode.setPosition(mCockPlaceHoldersArray.get(0).getPosition().getX(), mCockPlaceHoldersArray.get(0).getPosition().getY());
+        //filled in cock by default is out of the screen
+        mScissorCockNode.setPosition(-getSceneSize().getX(), 0);
     }
 
     private void layoutPile(int pileIndex, float x, float y, int rotationZ, float sizeScale) {
@@ -355,7 +357,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
 
         //scissor cock node that will be used to present the fill in for cocks
         mScissorCockNode = new YANTexturedScissorNode(mUiAtlas.getTextureRegion("yellow_cock.png"));
-        mScissorCockNode.setSortingLayer(HIGHEST_SORTING_LAYER * 2);
+        mScissorCockNode.setSortingLayer(HIGHEST_SORTING_LAYER + 1);
 
     }
 
@@ -377,15 +379,6 @@ public class RemoteGameTestScreen extends BaseGameScreen {
 
         //init rest of a piles
         mPileIndexToCardListMap.put(DISCARD_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
-//        mPileIndexToCardListMap.put(CURRENT_PLAYER_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
-//        mPileIndexToCardListMap.put(PLAYER_TO_THE_RIGHT_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
-//        mPileIndexToCardListMap.put(PLAYER_TO_THE_LEFT_PILE_INDEX, new ArrayList<Card>(CARDS_COUNT));
-//
-//        //init "field piles" ( can be no more than 2 cards)
-//        for (int i = (PLAYER_TO_THE_LEFT_PILE_INDEX + 1); i < CARDS_COUNT / 2; i++) {
-//            mPileIndexToCardListMap.put(i, new ArrayList<Card>(2));
-//        }
-
     }
 
     @Override
@@ -395,6 +388,12 @@ public class RemoteGameTestScreen extends BaseGameScreen {
         //read messages from remote socket server
         readMessageFromServer();
         mCardsTweenAnimator.update(deltaTimeSeconds * 1);
+
+        //animate scissoring cock
+        mScissorCockNode.setVisibleArea(0, mScissoringCockVisibleStartY, 1, 1);
+        mScissoringCockVisibleStartY += 0.001;
+        if (mScissoringCockVisibleStartY > 1.0)
+            mScissoringCockVisibleStartY = 0.0f;
     }
 
     private void readMessageFromServer() {
@@ -419,7 +418,39 @@ public class RemoteGameTestScreen extends BaseGameScreen {
             handleRequestRetaliatePilesMessage(mGson.fromJson(msg, RequestRetaliatePilesMessage.class));
         } else if (message.getMessageName().equals(GameSetupProtocolMessage.MESSAGE_NAME)) {
             handleGameSetupMessage(mGson.fromJson(msg, GameSetupProtocolMessage.class));
+        } else if (message.getMessageName().equals(PlayerTakesActionMessage.MESSAGE_NAME)) {
+            handlePlayerTakesActionMessage(mGson.fromJson(msg, PlayerTakesActionMessage.class));
         }
+
+
+    }
+
+    private void handlePlayerTakesActionMessage(PlayerTakesActionMessage playerTakesActionMessage) {
+        int actionPlayerIndex = playerTakesActionMessage.getMessageData().getPlayerIndex();
+
+        //since we don't have reference to players indexes in the game
+        //we translating the player index to pile index
+        int actionPlayerPileIndex = (actionPlayerIndex + 2) % 5;
+
+        YANReadOnlyVector2 newCockPosition = null;
+        int rotationAngle = 0;
+
+        if (actionPlayerPileIndex == CURRENT_PLAYER_PILE_INDEX) {
+            newCockPosition = mCockPlaceHoldersArray.get(0).getPosition();
+            rotationAngle = 0;
+        } else if (actionPlayerPileIndex == PLAYER_TO_THE_RIGHT_PILE_INDEX) {
+            newCockPosition = mCockPlaceHoldersArray.get(1).getPosition();
+            rotationAngle = 0;
+        } else if (actionPlayerPileIndex == PLAYER_TO_THE_LEFT_PILE_INDEX) {
+            newCockPosition = mCockPlaceHoldersArray.get(2).getPosition();
+            rotationAngle = 180;
+        }
+
+        mScissorCockNode.setPosition(newCockPosition.getX(), newCockPosition.getY());
+        mScissorCockNode.setRotationY(rotationAngle);
+
+        //start animating the cock down
+        mScissoringCockVisibleStartY = 1;
     }
 
     private void handleGameSetupMessage(GameSetupProtocolMessage gameSetupProtocolMessage) {
