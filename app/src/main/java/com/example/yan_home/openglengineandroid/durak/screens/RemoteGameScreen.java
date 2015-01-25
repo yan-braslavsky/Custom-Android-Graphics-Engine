@@ -1,6 +1,7 @@
 package com.example.yan_home.openglengineandroid.durak.screens;
 
-import com.example.yan_home.openglengineandroid.durak.communication.socket.SocketConnectionManager;
+import com.example.yan_home.openglengineandroid.durak.communication.game_server.GameServerCommunicator;
+import com.example.yan_home.openglengineandroid.durak.communication.game_server.IGameServerConnector;
 import com.example.yan_home.openglengineandroid.durak.entities.cards.Card;
 import com.example.yan_home.openglengineandroid.durak.entities.cards.CardsHelper;
 import com.example.yan_home.openglengineandroid.durak.input.cards.CardsTouchProcessor;
@@ -10,8 +11,8 @@ import com.example.yan_home.openglengineandroid.durak.layouting.impl.CardsLayout
 import com.example.yan_home.openglengineandroid.durak.layouting.impl.PlayerCardsLayouter;
 import com.example.yan_home.openglengineandroid.durak.layouting.threepoint.ThreePointFanLayouter;
 import com.example.yan_home.openglengineandroid.durak.nodes.CardNode;
+import com.example.yan_home.openglengineandroid.durak.protocol.BaseProtocolMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.data.CardData;
-import com.example.yan_home.openglengineandroid.durak.protocol.messages.BlankProtocolMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.CardMovedProtocolMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.GameSetupProtocolMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.PlayerTakesActionMessage;
@@ -21,7 +22,6 @@ import com.example.yan_home.openglengineandroid.durak.protocol.messages.Response
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.ResponseRetaliatePilesMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.RetaliationInvalidProtocolMessage;
 import com.example.yan_home.openglengineandroid.durak.tweening.CardsTweenAnimator;
-import com.google.gson.Gson;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.nodes.YANTexturedScissorNode;
 import com.yan.glengine.renderer.YANGLRenderer;
@@ -37,11 +37,7 @@ import java.util.Map;
 /**
  * Created by Yan-Home on 10/3/2014.
  */
-public class RemoteGameTestScreen extends BaseGameScreen {
-
-    //connection details
-    public static final String SERVER_ADDRESS = "192.168.1.101";
-    public static final int SERVER_PORT = 7000;
+public class RemoteGameScreen extends BaseGameScreen {
 
     private static final int CARDS_COUNT = 36;
     private static final int MAX_CARDS_IN_LINE = 8;
@@ -93,9 +89,6 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     private float mCardWidth;
     private float mCardHeight;
 
-    //cached Gson
-    private Gson mGson;
-
     //cached player texture nodes of cards
     private ArrayList<CardNode> mPlayerOneCardNodes;
     private ArrayList<CardNode> mPlayerTwoTextureNodeCards;
@@ -110,14 +103,41 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     private YANTexturedScissorNode mScissorCockNode;
     private float mScissoringCockVisibleStartY;
 
-    public RemoteGameTestScreen(YANGLRenderer renderer) {
+    private IGameServerConnector mGameServerConnector;
+
+    public RemoteGameScreen(YANGLRenderer renderer) {
         super(renderer);
+
+        //TODO : inject game server connector
+        mGameServerConnector = new GameServerCommunicator();
+        mGameServerConnector.setListener(new IGameServerConnector.IGameServerCommunicatorListener() {
+            @Override
+            public void handleServerMessage(BaseProtocolMessage serverMessage) {
+
+                //TODO : this is not an efficient way to handle messages
+                if (serverMessage.getMessageName().equals(CardMovedProtocolMessage.MESSAGE_NAME)) {
+                    handleCardMoveMessage((CardMovedProtocolMessage) serverMessage);
+                } else if (serverMessage.getMessageName().equals(RequestCardForAttackMessage.MESSAGE_NAME)) {
+                    handleRequestCardForAttackMessage((RequestCardForAttackMessage) serverMessage);
+                } else if (serverMessage.getMessageName().equals(RequestRetaliatePilesMessage.MESSAGE_NAME)) {
+                    handleRequestRetaliatePilesMessage((RequestRetaliatePilesMessage) serverMessage);
+                } else if (serverMessage.getMessageName().equals(GameSetupProtocolMessage.MESSAGE_NAME)) {
+                    handleGameSetupMessage((GameSetupProtocolMessage) serverMessage);
+                } else if (serverMessage.getMessageName().equals(PlayerTakesActionMessage.MESSAGE_NAME)) {
+                    handlePlayerTakesActionMessage((PlayerTakesActionMessage) serverMessage);
+                } else if (serverMessage.getMessageName().equals(RetaliationInvalidProtocolMessage.MESSAGE_NAME)) {
+                    handleInvalidRetaliationMessage((RetaliationInvalidProtocolMessage) serverMessage);
+                }
+            }
+        });
+
+
         mCardNodes = new HashMap<>(CARDS_COUNT);
 
         mPileIndexToCardListMap = new HashMap<>(CARDS_COUNT / 2);
         mPileIndexToPositionMap = new HashMap<>(CARDS_COUNT / 2);
         mCardsTweenAnimator = new CardsTweenAnimator();
-        mGson = new Gson();
+
 
         //array holds avatars for each player
         mAvatarPlaceHoldersArray = new ArrayList<>();
@@ -148,7 +168,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
                     mRequestedRetaliation = false;
 
                     ResponseRetaliatePilesMessage responseRetaliatePilesMessage = new ResponseRetaliatePilesMessage(new ArrayList<List<Card>>());
-                    SocketConnectionManager.getInstance().sendMessageToRemoteServer(responseRetaliatePilesMessage.toJsonString());
+                    mGameServerConnector.sentMessageToServer(responseRetaliatePilesMessage);
                 }
 
             }
@@ -159,7 +179,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
                     mCardForAttackRequested = false;
 
                     ResponseCardForAttackMessage responseCardForAttackMessage = new ResponseCardForAttackMessage(cardNode.getCard());
-                    SocketConnectionManager.getInstance().sendMessageToRemoteServer(responseCardForAttackMessage.toJsonString());
+                    mGameServerConnector.sentMessageToServer(responseCardForAttackMessage);
 
                 } else if (mRequestedRetaliation) {
                     mRequestedRetaliation = false;
@@ -172,7 +192,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
                     innerList.add(cardOnFiled);
                     list.add(innerList);
                     ResponseRetaliatePilesMessage responseRetaliatePilesMessage = new ResponseRetaliatePilesMessage(list);
-                    SocketConnectionManager.getInstance().sendMessageToRemoteServer(responseRetaliatePilesMessage.toJsonString());
+                    mGameServerConnector.sentMessageToServer(responseRetaliatePilesMessage);
                 } else {
                     layoutPlayerOneCards();
                 }
@@ -185,14 +205,14 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     public void onSetActive() {
         super.onSetActive();
         mCardsTouchProcessor.register();
-        SocketConnectionManager.getInstance().connectToRemoteServer(SERVER_ADDRESS, SERVER_PORT);
+        mGameServerConnector.connect();
     }
 
     @Override
     public void onSetNotActive() {
         super.onSetNotActive();
         mCardsTouchProcessor.unRegister();
-        SocketConnectionManager.getInstance().disconnectFromRemoteServer();
+        mGameServerConnector.disconnect();
     }
 
     @Override
@@ -386,8 +406,7 @@ public class RemoteGameTestScreen extends BaseGameScreen {
     public void onUpdate(float deltaTimeSeconds) {
         super.onUpdate(deltaTimeSeconds);
 
-        //read messages from remote socket server
-        readMessageFromServer();
+        mGameServerConnector.update();
         mCardsTweenAnimator.update(deltaTimeSeconds * 1);
 
         //animate scissoring cock
@@ -397,36 +416,6 @@ public class RemoteGameTestScreen extends BaseGameScreen {
             mScissoringCockVisibleStartY = 0.0f;
     }
 
-    private void readMessageFromServer() {
-        if (SocketConnectionManager.getInstance().isConnected()) {
-            String msg = SocketConnectionManager.getInstance().readMessageFromRemoteServer();
-            if (msg != null) {
-                handleServerMessage(msg);
-            }
-        }
-    }
-
-    private void handleServerMessage(String msg) {
-
-        BlankProtocolMessage message = mGson.fromJson(msg, BlankProtocolMessage.class);
-
-        //TODO : this is not an efficient way to handle messages
-        if (message.getMessageName().equals(CardMovedProtocolMessage.MESSAGE_NAME)) {
-            handleCardMoveMessage(mGson.fromJson(msg, CardMovedProtocolMessage.class));
-        } else if (message.getMessageName().equals(RequestCardForAttackMessage.MESSAGE_NAME)) {
-            handleRequestCardForAttackMessage(mGson.fromJson(msg, RequestCardForAttackMessage.class));
-        } else if (message.getMessageName().equals(RequestRetaliatePilesMessage.MESSAGE_NAME)) {
-            handleRequestRetaliatePilesMessage(mGson.fromJson(msg, RequestRetaliatePilesMessage.class));
-        } else if (message.getMessageName().equals(GameSetupProtocolMessage.MESSAGE_NAME)) {
-            handleGameSetupMessage(mGson.fromJson(msg, GameSetupProtocolMessage.class));
-        } else if (message.getMessageName().equals(PlayerTakesActionMessage.MESSAGE_NAME)) {
-            handlePlayerTakesActionMessage(mGson.fromJson(msg, PlayerTakesActionMessage.class));
-        } else if (message.getMessageName().equals(RetaliationInvalidProtocolMessage.MESSAGE_NAME)) {
-            handleInvalidRetaliationMessage(mGson.fromJson(msg, RetaliationInvalidProtocolMessage.class));
-        }
-
-
-    }
 
     private void handleInvalidRetaliationMessage(RetaliationInvalidProtocolMessage retaliationInvalidProtocolMessage) {
         //TODO : as long as we have only one pile we can just relayout player one piles.Later we will have to
