@@ -5,8 +5,9 @@ import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.nodes.YANTexturedScissorNode;
 import com.yan.glengine.util.geometry.YANReadOnlyVector2;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Yan-Home on 1/25/2015.
@@ -18,87 +19,88 @@ public class HudNodesManager implements IHudNodesManager {
      */
     private static final int HUD_SORTING_LAYER = 50;
 
-    private YANTexturedScissorNode mScissorCockNode;
-    private ArrayList<YANTexturedNode> mAvatarPlaceHoldersArray;
-    private ArrayList<YANTexturedNode> mCockPlaceHoldersArray;
-
-    private int mNumberOfPlayers;
+    /**
+     * All nodes that exist in the hud manager will be placed in this map
+     */
+    private Map<Integer, YANTexturedNode> mHudNodesMap;
     private float mScissoringCockVisibleStartY;
 
     public HudNodesManager() {
-
-        //array holds avatars for each player
-        mAvatarPlaceHoldersArray = new ArrayList<>();
-        mCockPlaceHoldersArray = new ArrayList<>();
-
-        //TODO : should be configurable
-        mNumberOfPlayers = 3;
+        mHudNodesMap = new HashMap<>();
     }
 
     @Override
     public void createHudNodes(YANTextureAtlas hudAtlas) {
 
-        //add avatar and cock for each players
-        mNumberOfPlayers = 3;
-        for (int i = 0; i < mNumberOfPlayers; i++) {
+        //create avatars
+        putToNodeMap(AVATAR_BOTTOM_RIGHT_INDEX, createAvatar(hudAtlas));
+        putToNodeMap(AVATAR_TOP_RIGHT_INDEX, createAvatar(hudAtlas));
+        putToNodeMap(AVATAR_TOP_LEFT_INDEX, createAvatar(hudAtlas));
 
-            //add an avatar for a player
-            mAvatarPlaceHoldersArray.add(new YANTexturedNode(hudAtlas.getTextureRegion("stump.png")));
-            mAvatarPlaceHoldersArray.get(i).setSortingLayer(HUD_SORTING_LAYER);
-
-            //add a cock for a player
-            mCockPlaceHoldersArray.add(new YANTexturedNode(hudAtlas.getTextureRegion("grey_cock.png")));
-            mCockPlaceHoldersArray.get(i).setSortingLayer(HUD_SORTING_LAYER);
-        }
+        //create cocks
+        putToNodeMap(COCK_BOTTOM_RIGHT_INDEX, createCock(hudAtlas));
+        putToNodeMap(COCK_TOP_RIGHT_INDEX, createCock(hudAtlas));
+        putToNodeMap(COCK_TOP_LEFT_INDEX, createCock(hudAtlas));
+        putToNodeMap(COCK_SCISSOR_INDEX, createScissorCock(hudAtlas));
 
         //top left cock is looking the other way
-        mCockPlaceHoldersArray.get(2).setRotationY(180);
+        getNode(COCK_TOP_LEFT_INDEX).setRotationY(180);
+    }
 
+    private <T extends YANTexturedNode> void putToNodeMap(@HudNode int nodeIndex, T node) {
+        mHudNodesMap.put(nodeIndex, node);
+    }
+
+    private <T extends YANTexturedNode> T getNode(@HudNode int nodeIndex) {
+        return (T) mHudNodesMap.get(nodeIndex);
+    }
+
+    private YANTexturedNode createScissorCock(YANTextureAtlas hudAtlas) {
         //scissor cock node that will be used to present the fill in for cocks
-        mScissorCockNode = new YANTexturedScissorNode(hudAtlas.getTextureRegion("yellow_cock.png"));
-        mScissorCockNode.setSortingLayer(HUD_SORTING_LAYER + 100);
+        YANTexturedScissorNode scissorCock = new YANTexturedScissorNode(hudAtlas.getTextureRegion("yellow_cock.png"));
+        scissorCock.setSortingLayer(HUD_SORTING_LAYER + 100);
+        return scissorCock;
+    }
+
+    private YANTexturedNode createCock(YANTextureAtlas hudAtlas) {
+        YANTexturedNode cock = new YANTexturedNode(hudAtlas.getTextureRegion("grey_cock.png"));
+        cock.setSortingLayer(HUD_SORTING_LAYER);
+        return cock;
+    }
+
+    private YANTexturedNode createAvatar(YANTextureAtlas hudAtlas) {
+        YANTexturedNode avatar = new YANTexturedNode(hudAtlas.getTextureRegion("stump.png"));
+        avatar.setSortingLayer(HUD_SORTING_LAYER);
+        return avatar;
     }
 
     @Override
     public void setHudNodesSizes(YANReadOnlyVector2 sceneSize) {
         //set avatars sizes
-        YANTexturedNode avatar = mAvatarPlaceHoldersArray.get(0);
+        YANTexturedNode avatar = getNode(AVATAR_BOTTOM_RIGHT_INDEX);
         float aspectRatio = avatar.getTextureRegion().getWidth() / avatar.getTextureRegion().getHeight();
         float newWidth = sceneSize.getX() * 0.2f;
         float newHeight = newWidth / aspectRatio;
-        for (YANTexturedNode node : mAvatarPlaceHoldersArray) {
-            node.setSize(newWidth, newHeight);
-        }
+
+        getNode(AVATAR_BOTTOM_RIGHT_INDEX).setSize(newWidth, newHeight);
+        getNode(AVATAR_TOP_RIGHT_INDEX).setSize(newWidth, newHeight);
+        getNode(AVATAR_TOP_LEFT_INDEX).setSize(newWidth, newHeight);
 
         //set cock sizes
-        YANTexturedNode cock = mCockPlaceHoldersArray.get(0);
+        YANTexturedNode cock = getNode(COCK_BOTTOM_RIGHT_INDEX);
         aspectRatio = cock.getTextureRegion().getWidth() / cock.getTextureRegion().getHeight();
         newWidth = sceneSize.getX() * 0.1f;
         newHeight = newWidth / aspectRatio;
-        for (YANTexturedNode node : mCockPlaceHoldersArray) {
-            node.setSize(newWidth, newHeight);
-        }
 
-        mScissorCockNode.setSize(newWidth, newHeight);
+        getNode(COCK_BOTTOM_RIGHT_INDEX).setSize(newWidth, newHeight);
+        getNode(COCK_TOP_RIGHT_INDEX).setSize(newWidth, newHeight);
+        getNode(COCK_TOP_LEFT_INDEX).setSize(newWidth, newHeight);
+        getNode(COCK_SCISSOR_INDEX).setSize(newWidth, newHeight);
     }
 
     @Override
-    public List<YANTexturedNode> getAllHudNodes() {
-
-        //TODO : change all nodes to sparse array or hash map
-
-        ArrayList<YANTexturedNode> list = new ArrayList<>();
-
-        list.add(mScissorCockNode);
-        for (YANTexturedNode node : mAvatarPlaceHoldersArray) {
-            list.add(node);
-        }
-
-        for (YANTexturedNode node : mCockPlaceHoldersArray) {
-            list.add(node);
-        }
-
-        return list;
+    public Collection<YANTexturedNode> getAllHudNodes() {
+        return mHudNodesMap.values();
     }
 
     @Override
@@ -107,75 +109,60 @@ public class HudNodesManager implements IHudNodesManager {
         float offsetX = sceneSize.getX() * 0.01f;
 
         //setup avatar for player at left top
-        YANTexturedNode avatar = mAvatarPlaceHoldersArray.get(0);
+        YANTexturedNode avatar = getNode(AVATAR_BOTTOM_RIGHT_INDEX);
         avatar.setAnchorPoint(1f, 1f);
         avatar.setSortingLayer(HUD_SORTING_LAYER + 1);
         avatar.setPosition(sceneSize.getX() - offsetX, sceneSize.getY() - offsetX);
-        mCockPlaceHoldersArray.get(0).setSortingLayer(avatar.getSortingLayer());
-        mCockPlaceHoldersArray.get(0).setPosition(avatar.getPosition().getX() - avatar.getSize().getX() / 2 - mCockPlaceHoldersArray.get(0).getSize().getX() / 2,
-                avatar.getPosition().getY() - avatar.getSize().getY() - mCockPlaceHoldersArray.get(0).getSize().getY());
+        getNode(COCK_BOTTOM_RIGHT_INDEX).setSortingLayer(avatar.getSortingLayer());
+        getNode(COCK_BOTTOM_RIGHT_INDEX).setPosition(avatar.getPosition().getX() - avatar.getSize().getX() / 2 - getNode(COCK_BOTTOM_RIGHT_INDEX).getSize().getX() / 2,
+                avatar.getPosition().getY() - avatar.getSize().getY() - getNode(COCK_BOTTOM_RIGHT_INDEX).getSize().getY());
 
         //setup avatar for player at right top
         float topOffset = sceneSize.getY() * 0.07f;
-        avatar = mAvatarPlaceHoldersArray.get(1);
+        avatar = getNode(AVATAR_TOP_RIGHT_INDEX);
         avatar.setAnchorPoint(1f, 0f);
         avatar.setSortingLayer(HUD_SORTING_LAYER + 1);
         avatar.setPosition(sceneSize.getX() - offsetX, topOffset);
-        mCockPlaceHoldersArray.get(1).setSortingLayer(avatar.getSortingLayer());
-        mCockPlaceHoldersArray.get(1).setPosition(avatar.getPosition().getX() - avatar.getSize().getX() / 2 - mCockPlaceHoldersArray.get(1).getSize().getX() / 2,
-                avatar.getPosition().getY() - mCockPlaceHoldersArray.get(1).getSize().getY());
+        getNode(COCK_TOP_RIGHT_INDEX).setSortingLayer(avatar.getSortingLayer());
+        getNode(COCK_TOP_RIGHT_INDEX).setPosition(avatar.getPosition().getX() - avatar.getSize().getX() / 2 - getNode(COCK_TOP_RIGHT_INDEX).getSize().getX() / 2,
+                avatar.getPosition().getY() - getNode(COCK_TOP_RIGHT_INDEX).getSize().getY());
 
 
         //third player avatar
-        avatar = mAvatarPlaceHoldersArray.get(2);
+        avatar = getNode(AVATAR_TOP_LEFT_INDEX);
         avatar.setAnchorPoint(0f, 0f);
         avatar.setSortingLayer(HUD_SORTING_LAYER + 1);
         avatar.setPosition(offsetX, topOffset);
-        mCockPlaceHoldersArray.get(2).setSortingLayer(avatar.getSortingLayer());
-        mCockPlaceHoldersArray.get(2).setPosition(avatar.getPosition().getX() + mCockPlaceHoldersArray.get(2).getSize().getX() / 2, avatar.getPosition().getY() - mCockPlaceHoldersArray.get(2).getSize().getY());
+        getNode(COCK_TOP_LEFT_INDEX).setSortingLayer(avatar.getSortingLayer());
+        getNode(COCK_TOP_LEFT_INDEX).setPosition(avatar.getPosition().getX() + getNode(COCK_TOP_LEFT_INDEX).getSize().getX() / 2, avatar.getPosition().getY() - getNode(COCK_TOP_LEFT_INDEX).getSize().getY());
 
         //filled in cock by default is out of the screen
-        mScissorCockNode.setPosition(-sceneSize.getX(), 0);
+        getNode(COCK_SCISSOR_INDEX).setPosition(-sceneSize.getX(), 0);
     }
 
     @Override
     public void update(float deltaTimeSeconds) {
         //animate scissoring cock
-        mScissorCockNode.setVisibleArea(0, mScissoringCockVisibleStartY, 1, 1);
+        YANTexturedScissorNode scissorCock = getNode(COCK_SCISSOR_INDEX);
+        scissorCock.setVisibleArea(0, mScissoringCockVisibleStartY, 1, 1);
         mScissoringCockVisibleStartY += 0.001;
         if (mScissoringCockVisibleStartY > 1.0)
             mScissoringCockVisibleStartY = 0.0f;
     }
 
     @Override
-    public void resetCockAnimation(CockPosition position) {
+    public void resetCockAnimation(@HudNode int index) {
 
         float rotationAngle = 0;
-        YANReadOnlyVector2 newCockPosition = null;
-
-        switch (position) {
-            case BOTTOM_RIGHT:
-                newCockPosition = mCockPlaceHoldersArray.get(0).getPosition();
-                break;
-            case TOP_RIGHT:
-                newCockPosition = mCockPlaceHoldersArray.get(1).getPosition();
-                break;
-            case TOP_LEFT:
-                newCockPosition = mCockPlaceHoldersArray.get(2).getPosition();
-                rotationAngle = 180;
-                break;
+        YANReadOnlyVector2 newCockPosition = getNode(index).getPosition();
+        getNode(COCK_SCISSOR_INDEX).setPosition(newCockPosition.getX(), newCockPosition.getY());
+        if (index == COCK_TOP_LEFT_INDEX) {
+            rotationAngle = 180;
         }
 
-        mScissorCockNode.setPosition(newCockPosition.getX(), newCockPosition.getY());
-        mScissorCockNode.setRotationY(rotationAngle);
+        getNode(COCK_SCISSOR_INDEX).setRotationY(rotationAngle);
 
         //start animating the cock down
         mScissoringCockVisibleStartY = 1;
     }
-
-    @Override
-    public void disableCockAnimation() {
-
-    }
-
 }

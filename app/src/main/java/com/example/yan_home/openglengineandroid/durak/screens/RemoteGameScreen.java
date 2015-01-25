@@ -354,13 +354,13 @@ public class RemoteGameScreen extends BaseGameScreen {
         //since we don't have reference to players indexes in the game
         //we translating the player index to pile index
         int actionPlayerPileIndex = (actionPlayerIndex + 2) % 5;
-        IHudNodesManager.CockPosition cockPosition = IHudNodesManager.CockPosition.TOP_LEFT;
+        @IHudNodesManager.HudNode int cockPosition = IHudNodesManager.COCK_BOTTOM_RIGHT_INDEX;
         if (actionPlayerPileIndex == CURRENT_PLAYER_PILE_INDEX) {
-            cockPosition = IHudNodesManager.CockPosition.BOTTOM_RIGHT;
+            cockPosition = IHudNodesManager.COCK_BOTTOM_RIGHT_INDEX;
         } else if (actionPlayerPileIndex == PLAYER_TO_THE_RIGHT_PILE_INDEX) {
-            cockPosition = IHudNodesManager.CockPosition.TOP_RIGHT;
+            cockPosition = IHudNodesManager.COCK_TOP_RIGHT_INDEX;
         } else if (actionPlayerPileIndex == PLAYER_TO_THE_LEFT_PILE_INDEX) {
-            cockPosition = IHudNodesManager.CockPosition.TOP_LEFT;
+            cockPosition = IHudNodesManager.COCK_TOP_LEFT_INDEX;
         }
         mHudNodesManager.resetCockAnimation(cockPosition);
     }
