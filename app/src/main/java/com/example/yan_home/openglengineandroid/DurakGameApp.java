@@ -6,7 +6,7 @@ import android.content.Context;
 /**
  * Created by Yan-Home on 10/3/2014.
  */
-public class GLEngineApp extends Application {
+public class DurakGameApp extends Application {
     /**
      * Here will be kept long lived reference to app context.
      */

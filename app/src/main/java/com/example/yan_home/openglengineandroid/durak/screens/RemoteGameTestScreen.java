@@ -19,6 +19,7 @@ import com.example.yan_home.openglengineandroid.durak.protocol.messages.RequestC
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.RequestRetaliatePilesMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.ResponseCardForAttackMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.ResponseRetaliatePilesMessage;
+import com.example.yan_home.openglengineandroid.durak.protocol.messages.RetaliationInvalidProtocolMessage;
 import com.example.yan_home.openglengineandroid.durak.tweening.CardsTweenAnimator;
 import com.google.gson.Gson;
 import com.yan.glengine.nodes.YANTexturedNode;
@@ -39,7 +40,7 @@ import java.util.Map;
 public class RemoteGameTestScreen extends BaseGameScreen {
 
     //connection details
-    public static final String SERVER_ADDRESS = "192.168.1.102";
+    public static final String SERVER_ADDRESS = "192.168.1.101";
     public static final int SERVER_PORT = 7000;
 
     private static final int CARDS_COUNT = 36;
@@ -420,9 +421,17 @@ public class RemoteGameTestScreen extends BaseGameScreen {
             handleGameSetupMessage(mGson.fromJson(msg, GameSetupProtocolMessage.class));
         } else if (message.getMessageName().equals(PlayerTakesActionMessage.MESSAGE_NAME)) {
             handlePlayerTakesActionMessage(mGson.fromJson(msg, PlayerTakesActionMessage.class));
+        } else if (message.getMessageName().equals(RetaliationInvalidProtocolMessage.MESSAGE_NAME)) {
+            handleInvalidRetaliationMessage(mGson.fromJson(msg, RetaliationInvalidProtocolMessage.class));
         }
 
 
+    }
+
+    private void handleInvalidRetaliationMessage(RetaliationInvalidProtocolMessage retaliationInvalidProtocolMessage) {
+        //TODO : as long as we have only one pile we can just relayout player one piles.Later we will have to
+        //search what should get back to player hand and what is not
+        layoutPlayerOneCards();
     }
 
     private void handlePlayerTakesActionMessage(PlayerTakesActionMessage playerTakesActionMessage) {

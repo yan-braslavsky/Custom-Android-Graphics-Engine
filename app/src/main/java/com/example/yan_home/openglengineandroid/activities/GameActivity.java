@@ -1,6 +1,6 @@
-package com.example.yan_home.openglengineandroid;
+package com.example.yan_home.openglengineandroid.activities;
 
-import com.example.yan_home.openglengineandroid.screens.FontTestScreen;
+import com.example.yan_home.openglengineandroid.durak.screens.RemoteGameTestScreen;
 import com.yan.glengine.EngineActivity;
 import com.yan.glengine.assets.YANAssetDescriptor;
 import com.yan.glengine.renderer.YANGLRenderer;
@@ -9,7 +9,7 @@ import com.yan.glengine.screens.YANIScreen;
 import java.io.File;
 import java.util.ArrayList;
 
-public class MainActivity extends EngineActivity {
+public class GameActivity extends EngineActivity {
 
     @Override
     protected ArrayList<YANAssetDescriptor> onCreateAssets() {
@@ -23,8 +23,8 @@ public class MainActivity extends EngineActivity {
 
     @Override
     protected YANIScreen onCreateStartScreen(YANGLRenderer renderer) {
-        return new FontTestScreen(renderer);
-//        return new RemoteGameTestScreen(renderer);
+//        return new FontTestScreen(renderer);
+        return new RemoteGameTestScreen(renderer);
     }
 
 }
