@@ -4,6 +4,8 @@ import com.example.yan_home.openglengineandroid.durak.communication.game_server.
 import com.example.yan_home.openglengineandroid.durak.communication.game_server.IGameServerConnector;
 import com.example.yan_home.openglengineandroid.durak.entities.cards.Card;
 import com.example.yan_home.openglengineandroid.durak.entities.cards.CardsHelper;
+import com.example.yan_home.openglengineandroid.durak.hud.HudNodesManager;
+import com.example.yan_home.openglengineandroid.durak.hud.IHudNodesManager;
 import com.example.yan_home.openglengineandroid.durak.input.cards.CardsTouchProcessor;
 import com.example.yan_home.openglengineandroid.durak.layouting.CardsLayoutSlot;
 import com.example.yan_home.openglengineandroid.durak.layouting.CardsLayouter;
@@ -23,9 +25,7 @@ import com.example.yan_home.openglengineandroid.durak.protocol.messages.Response
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.RetaliationInvalidProtocolMessage;
 import com.example.yan_home.openglengineandroid.durak.tweening.CardsTweenAnimator;
 import com.yan.glengine.nodes.YANTexturedNode;
-import com.yan.glengine.nodes.YANTexturedScissorNode;
 import com.yan.glengine.renderer.YANGLRenderer;
-import com.yan.glengine.util.geometry.YANReadOnlyVector2;
 import com.yan.glengine.util.geometry.YANVector2;
 import com.yan.glengine.util.math.YANMathUtils;
 
@@ -68,7 +68,6 @@ public class RemoteGameScreen extends BaseGameScreen {
      */
     private Map<Card, CardNode> mCardNodes;
 
-
     private CardsTweenAnimator mCardsTweenAnimator;
     private YANTexturedNode mBackOfCardNode;
 
@@ -91,22 +90,19 @@ public class RemoteGameScreen extends BaseGameScreen {
 
     //cached player texture nodes of cards
     private ArrayList<CardNode> mPlayerOneCardNodes;
-    private ArrayList<CardNode> mPlayerTwoTextureNodeCards;
-    private ArrayList<CardNode> mPlayerThreeTextureNodeCards;
+    private ArrayList<CardNode> mPlayerTwoCardNodes;
+    private ArrayList<CardNode> mPlayerThreeCardNodes;
 
-
-    private ArrayList<YANTexturedNode> mAvatarPlaceHoldersArray;
-    private ArrayList<YANTexturedNode> mCockPlaceHoldersArray;
     private boolean mCardForAttackRequested;
     private boolean mRequestedRetaliation;
-
-    private YANTexturedScissorNode mScissorCockNode;
-    private float mScissoringCockVisibleStartY;
-
     private IGameServerConnector mGameServerConnector;
+
+    private IHudNodesManager mHudNodesManager;
 
     public RemoteGameScreen(YANGLRenderer renderer) {
         super(renderer);
+
+        mHudNodesManager = new HudNodesManager();
 
         //TODO : inject game server connector
         mGameServerConnector = new GameServerCommunicator();
@@ -138,11 +134,6 @@ public class RemoteGameScreen extends BaseGameScreen {
         mPileIndexToPositionMap = new HashMap<>(CARDS_COUNT / 2);
         mCardsTweenAnimator = new CardsTweenAnimator();
 
-
-        //array holds avatars for each player
-        mAvatarPlaceHoldersArray = new ArrayList<>();
-        mCockPlaceHoldersArray = new ArrayList<>();
-
         //init 3 points layouter to create a fan of opponents hands
         mThreePointFanLayouterPlayerTwo = new ThreePointFanLayouter(2);
         mThreePointFanLayouterPlayerThree = new ThreePointFanLayouter(2);
@@ -152,8 +143,8 @@ public class RemoteGameScreen extends BaseGameScreen {
 
         //allocate temp array of texture cards
         mPlayerOneCardNodes = new ArrayList<>(36);
-        mPlayerTwoTextureNodeCards = new ArrayList<>(36);
-        mPlayerThreeTextureNodeCards = new ArrayList<>(36);
+        mPlayerTwoCardNodes = new ArrayList<>(36);
+        mPlayerThreeCardNodes = new ArrayList<>(36);
 
         //currently we are initializing with empty array , cards will be set every time player pile content changes
         mCardsTouchProcessor = new CardsTouchProcessor(mPlayerOneCardNodes, mCardsTweenAnimator);
@@ -224,16 +215,9 @@ public class RemoteGameScreen extends BaseGameScreen {
             addNode(cardNode);
         }
 
-        for (YANTexturedNode avatar : mAvatarPlaceHoldersArray) {
-            addNode(avatar);
+        for (YANTexturedNode hudNode : mHudNodesManager.getAllHudNodes()) {
+            addNode(hudNode);
         }
-
-        for (YANTexturedNode cock : mCockPlaceHoldersArray) {
-            addNode(cock);
-        }
-
-        //add Scissoring cock node
-        addNode(mScissorCockNode);
 
     }
 
@@ -242,55 +226,36 @@ public class RemoteGameScreen extends BaseGameScreen {
     protected void onLayoutNodes() {
         super.onLayoutNodes();
 
+        mHudNodesManager.layoutNodes(getSceneSize());
+
         //layout avatars
         float offsetX = getSceneSize().getX() * 0.01f;
-
-        //setup avatar for player at left top
-        YANTexturedNode avatar = mAvatarPlaceHoldersArray.get(0);
-        avatar.setAnchorPoint(1f, 1f);
-        avatar.setSortingLayer(HIGHEST_SORTING_LAYER + 1);
-        avatar.setPosition(getSceneSize().getX() - offsetX, getSceneSize().getY() - offsetX);
-        mCockPlaceHoldersArray.get(0).setSortingLayer(avatar.getSortingLayer());
-        mCockPlaceHoldersArray.get(0).setPosition(avatar.getPosition().getX() - avatar.getSize().getX() / 2 - mCockPlaceHoldersArray.get(0).getSize().getX() / 2,
-                avatar.getPosition().getY() - avatar.getSize().getY() - mCockPlaceHoldersArray.get(0).getSize().getY());
-
-        //setup avatar for player at right top
         float topOffset = getSceneSize().getY() * 0.07f;
-        avatar = mAvatarPlaceHoldersArray.get(1);
-        avatar.setAnchorPoint(1f, 0f);
-        avatar.setSortingLayer(HIGHEST_SORTING_LAYER + 1);
-        avatar.setPosition(getSceneSize().getX() - offsetX, topOffset);
-        mCockPlaceHoldersArray.get(1).setSortingLayer(avatar.getSortingLayer());
-        mCockPlaceHoldersArray.get(1).setPosition(avatar.getPosition().getX() - avatar.getSize().getX() / 2 - mCockPlaceHoldersArray.get(1).getSize().getX() / 2,
-                avatar.getPosition().getY() - mCockPlaceHoldersArray.get(1).getSize().getY());
+
+        float aspectRatio = mUiAtlas.getTextureRegion("stump.png").getWidth() / mUiAtlas.getTextureRegion("stump.png").getHeight();
+        float avatarWidth = getSceneSize().getX() * 0.2f;
+        float avatarHeight = avatarWidth / aspectRatio;
+        YANVector2 avatarSize = new YANVector2(avatarWidth, avatarHeight);
 
         //setup 3 points for player at right top
         float fanDistance = getSceneSize().getX() * 0.05f;
 
-        YANVector2 origin = new YANVector2(avatar.getPosition().getX() - avatar.getSize().getX(), avatar.getPosition().getY());
+        YANVector2 pos = new YANVector2(getSceneSize().getX() - offsetX, topOffset);
+        YANVector2 origin = new YANVector2(pos.getX() - avatarSize.getX(), pos.getY());
         YANVector2 leftBasis = new YANVector2(origin.getX(), origin.getY() + fanDistance);
         YANVector2 rightBasis = new YANVector2(origin.getX() - fanDistance, origin.getY());
         mThreePointFanLayouterPlayerTwo.setThreePoints(origin, leftBasis, rightBasis);
 
-        //third player avatar
-        avatar = mAvatarPlaceHoldersArray.get(2);
-        avatar.setAnchorPoint(0f, 0f);
-        avatar.setSortingLayer(HIGHEST_SORTING_LAYER + 1);
-        avatar.setPosition(offsetX, topOffset);
-        mCockPlaceHoldersArray.get(2).setSortingLayer(avatar.getSortingLayer());
-        mCockPlaceHoldersArray.get(2).setPosition(avatar.getPosition().getX() + mCockPlaceHoldersArray.get(2).getSize().getX() / 2, avatar.getPosition().getY() - mCockPlaceHoldersArray.get(2).getSize().getY());
+        pos.setXY(offsetX, topOffset);
 
         //setup 3 points for player at left top
-        origin = new YANVector2(avatar.getPosition().getX() /*+ avatar.getSize().getX()*/, avatar.getPosition().getY());
+        origin = new YANVector2(pos.getX() /*+ avatar.getSize().getX()*/, pos.getY());
         leftBasis = new YANVector2(origin.getX() + fanDistance, origin.getY());
         rightBasis = new YANVector2(origin.getX(), origin.getY() + fanDistance);
         mThreePointFanLayouterPlayerThree.setThreePoints(origin, leftBasis, rightBasis);
 
         //swap direction
         mThreePointFanLayouterPlayerThree.setDirection(ThreePointFanLayouter.LayoutDirection.RTL);
-
-        //filled in cock by default is out of the screen
-        mScissorCockNode.setPosition(-getSceneSize().getX(), 0);
     }
 
     private void layoutPile(int pileIndex, float x, float y, int rotationZ, float sizeScale) {
@@ -337,49 +302,15 @@ public class RemoteGameScreen extends BaseGameScreen {
                 //base y position
                 getSceneSize().getY() - mFence.getSize().getY() / 2);
 
-        //set avatars sizes
-        YANTexturedNode avatar = mAvatarPlaceHoldersArray.get(0);
-        aspectRatio = avatar.getTextureRegion().getWidth() / avatar.getTextureRegion().getHeight();
-        float newWidth = getSceneSize().getX() * 0.2f;
-        float newHeight = newWidth / aspectRatio;
-        for (YANTexturedNode node : mAvatarPlaceHoldersArray) {
-            node.setSize(newWidth, newHeight);
-        }
 
-        //set cock sizes
-        YANTexturedNode cock = mCockPlaceHoldersArray.get(0);
-        aspectRatio = cock.getTextureRegion().getWidth() / cock.getTextureRegion().getHeight();
-        newWidth = getSceneSize().getX() * 0.1f;
-        newHeight = newWidth / aspectRatio;
-        for (YANTexturedNode node : mCockPlaceHoldersArray) {
-            node.setSize(newWidth, newHeight);
-        }
-
-        mScissorCockNode.setSize(newWidth, newHeight);
-
+        mHudNodesManager.setHudNodesSizes(getSceneSize());
     }
 
     @Override
     protected void onCreateNodes() {
         super.onCreateNodes();
-
+        mHudNodesManager.createHudNodes(mUiAtlas);
         initCardsMap();
-
-        //add 3 avatars for 3 players
-        for (int i = 0; i < 3; i++) {
-            mAvatarPlaceHoldersArray.add(new YANTexturedNode(mUiAtlas.getTextureRegion("stump.png")));
-            mAvatarPlaceHoldersArray.get(i).setSortingLayer(HIGHEST_SORTING_LAYER);
-            mCockPlaceHoldersArray.add(new YANTexturedNode(mUiAtlas.getTextureRegion("grey_cock.png")));
-            mCockPlaceHoldersArray.get(i).setSortingLayer(HIGHEST_SORTING_LAYER);
-        }
-
-        //top left cock is looking the other way
-        mCockPlaceHoldersArray.get(2).setRotationY(180);
-
-        //scissor cock node that will be used to present the fill in for cocks
-        mScissorCockNode = new YANTexturedScissorNode(mUiAtlas.getTextureRegion("yellow_cock.png"));
-        mScissorCockNode.setSortingLayer(HIGHEST_SORTING_LAYER + 1);
-
     }
 
     private void initCardsMap() {
@@ -405,15 +336,9 @@ public class RemoteGameScreen extends BaseGameScreen {
     @Override
     public void onUpdate(float deltaTimeSeconds) {
         super.onUpdate(deltaTimeSeconds);
-
         mGameServerConnector.update();
         mCardsTweenAnimator.update(deltaTimeSeconds * 1);
-
-        //animate scissoring cock
-        mScissorCockNode.setVisibleArea(0, mScissoringCockVisibleStartY, 1, 1);
-        mScissoringCockVisibleStartY += 0.001;
-        if (mScissoringCockVisibleStartY > 1.0)
-            mScissoringCockVisibleStartY = 0.0f;
+        mHudNodesManager.update(deltaTimeSeconds);
     }
 
 
@@ -429,26 +354,15 @@ public class RemoteGameScreen extends BaseGameScreen {
         //since we don't have reference to players indexes in the game
         //we translating the player index to pile index
         int actionPlayerPileIndex = (actionPlayerIndex + 2) % 5;
-
-        YANReadOnlyVector2 newCockPosition = null;
-        int rotationAngle = 0;
-
+        IHudNodesManager.CockPosition cockPosition = IHudNodesManager.CockPosition.TOP_LEFT;
         if (actionPlayerPileIndex == CURRENT_PLAYER_PILE_INDEX) {
-            newCockPosition = mCockPlaceHoldersArray.get(0).getPosition();
-            rotationAngle = 0;
+            cockPosition = IHudNodesManager.CockPosition.BOTTOM_RIGHT;
         } else if (actionPlayerPileIndex == PLAYER_TO_THE_RIGHT_PILE_INDEX) {
-            newCockPosition = mCockPlaceHoldersArray.get(1).getPosition();
-            rotationAngle = 0;
+            cockPosition = IHudNodesManager.CockPosition.TOP_RIGHT;
         } else if (actionPlayerPileIndex == PLAYER_TO_THE_LEFT_PILE_INDEX) {
-            newCockPosition = mCockPlaceHoldersArray.get(2).getPosition();
-            rotationAngle = 180;
+            cockPosition = IHudNodesManager.CockPosition.TOP_LEFT;
         }
-
-        mScissorCockNode.setPosition(newCockPosition.getX(), newCockPosition.getY());
-        mScissorCockNode.setRotationY(rotationAngle);
-
-        //start animating the cock down
-        mScissoringCockVisibleStartY = 1;
+        mHudNodesManager.resetCockAnimation(cockPosition);
     }
 
     private void handleGameSetupMessage(GameSetupProtocolMessage gameSetupProtocolMessage) {
@@ -547,15 +461,15 @@ public class RemoteGameScreen extends BaseGameScreen {
         //player 2
         else if (toPile == PLAYER_TO_THE_RIGHT_PILE_INDEX || fromPile == PLAYER_TO_THE_RIGHT_PILE_INDEX) {
             if (toPile == PLAYER_TO_THE_RIGHT_PILE_INDEX) {
-                mPlayerTwoTextureNodeCards.add(mCardNodes.get(movedCard));
+                mPlayerTwoCardNodes.add(mCardNodes.get(movedCard));
             } else {
-                mPlayerTwoTextureNodeCards.remove(mCardNodes.get(movedCard));
+                mPlayerTwoCardNodes.remove(mCardNodes.get(movedCard));
             }
 
 
             //TODO : cache slots
-            List<CardsLayouterSlotImpl> slots = new ArrayList<>(mPlayerTwoTextureNodeCards.size());
-            for (int i = 0; i < mPlayerTwoTextureNodeCards.size(); i++) {
+            List<CardsLayouterSlotImpl> slots = new ArrayList<>(mPlayerTwoCardNodes.size());
+            for (int i = 0; i < mPlayerTwoCardNodes.size(); i++) {
                 slots.add(new CardsLayouterSlotImpl());
             }
 
@@ -565,7 +479,7 @@ public class RemoteGameScreen extends BaseGameScreen {
             //make the layouting
             for (int i = 0; i < slots.size(); i++) {
                 CardsLayouterSlotImpl slot = slots.get(i);
-                YANTexturedNode node = mPlayerTwoTextureNodeCards.get(i);
+                YANTexturedNode node = mPlayerTwoCardNodes.get(i);
                 node.setSortingLayer(slot.getSortingLayer());
                 //make the animation
                 mCardsTweenAnimator.animateCardToValues(node, slot.getPosition().getX(), slot.getPosition().getY(), slot.getRotation(), null);
@@ -576,13 +490,13 @@ public class RemoteGameScreen extends BaseGameScreen {
         //player 3
         else if (toPile == PLAYER_TO_THE_LEFT_PILE_INDEX || fromPile == PLAYER_TO_THE_LEFT_PILE_INDEX) {
             if (toPile == PLAYER_TO_THE_LEFT_PILE_INDEX) {
-                mPlayerThreeTextureNodeCards.add(mCardNodes.get(movedCard));
+                mPlayerThreeCardNodes.add(mCardNodes.get(movedCard));
             } else {
-                mPlayerThreeTextureNodeCards.remove(mCardNodes.get(movedCard));
+                mPlayerThreeCardNodes.remove(mCardNodes.get(movedCard));
             }
 
-            List<CardsLayouterSlotImpl> slots = new ArrayList<>(mPlayerThreeTextureNodeCards.size());
-            for (int i = 0; i < mPlayerThreeTextureNodeCards.size(); i++) {
+            List<CardsLayouterSlotImpl> slots = new ArrayList<>(mPlayerThreeCardNodes.size());
+            for (int i = 0; i < mPlayerThreeCardNodes.size(); i++) {
                 slots.add(new CardsLayouterSlotImpl());
             }
 
@@ -592,7 +506,7 @@ public class RemoteGameScreen extends BaseGameScreen {
             //make the layouting
             for (int i = 0; i < slots.size(); i++) {
                 CardsLayouterSlotImpl slot = slots.get(i);
-                YANTexturedNode node = mPlayerThreeTextureNodeCards.get(i);
+                YANTexturedNode node = mPlayerThreeCardNodes.get(i);
                 node.setSortingLayer(slot.getSortingLayer());
                 //make the animation
                 mCardsTweenAnimator.animateCardToValues(node, slot.getPosition().getX(), slot.getPosition().getY(), slot.getRotation(), null);
@@ -640,7 +554,6 @@ public class RemoteGameScreen extends BaseGameScreen {
 
         if (fromPile == CURRENT_PLAYER_PILE_INDEX || toPile == CURRENT_PLAYER_PILE_INDEX || toPile > PLAYER_TO_THE_LEFT_PILE_INDEX || toPile == DISCARD_PILE_INDEX) {
 
-
             //show the card
             cardNode.useFrontTextureRegion();
         } else {
@@ -660,8 +573,5 @@ public class RemoteGameScreen extends BaseGameScreen {
             int sortingLayer = (mPileIndexToCardListMap.get(fromPile).size() > 0) ? 2 : 1;
             cardNode.setSortingLayer(sortingLayer);
         }
-
-
     }
-
 }
