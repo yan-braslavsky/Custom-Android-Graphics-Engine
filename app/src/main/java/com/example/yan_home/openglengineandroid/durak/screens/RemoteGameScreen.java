@@ -60,8 +60,8 @@ public class RemoteGameScreen extends BaseGameScreen {
     private CardsLayouter mPlayerCardsLayouter;
     private CardsTouchProcessor mCardsTouchProcessor;
 
-    private ThreePointFanLayouter mThreePointFanLayouterPlayerTwo;
-    private ThreePointFanLayouter mThreePointFanLayouterPlayerThree;
+    private ThreePointFanLayouter mThreePointFanLayouterTopRightPlayer;
+    private ThreePointFanLayouter mThreePointFanLayouterTopLeft;
 
     /**
      * Actual Texture nodes that hold necessary card data
@@ -135,8 +135,8 @@ public class RemoteGameScreen extends BaseGameScreen {
         mCardsTweenAnimator = new CardsTweenAnimator();
 
         //init 3 points layouter to create a fan of opponents hands
-        mThreePointFanLayouterPlayerTwo = new ThreePointFanLayouter(2);
-        mThreePointFanLayouterPlayerThree = new ThreePointFanLayouter(2);
+        mThreePointFanLayouterTopRightPlayer = new ThreePointFanLayouter(2);
+        mThreePointFanLayouterTopLeft = new ThreePointFanLayouter(2);
 
         //init player cards layouter
         mPlayerCardsLayouter = new PlayerCardsLayouter(CARDS_COUNT);
@@ -244,7 +244,7 @@ public class RemoteGameScreen extends BaseGameScreen {
         YANVector2 origin = new YANVector2(pos.getX() - avatarSize.getX(), pos.getY());
         YANVector2 leftBasis = new YANVector2(origin.getX(), origin.getY() + fanDistance);
         YANVector2 rightBasis = new YANVector2(origin.getX() - fanDistance, origin.getY());
-        mThreePointFanLayouterPlayerTwo.setThreePoints(origin, leftBasis, rightBasis);
+        mThreePointFanLayouterTopRightPlayer.setThreePoints(origin, leftBasis, rightBasis);
 
         pos.setXY(offsetX, topOffset);
 
@@ -252,10 +252,10 @@ public class RemoteGameScreen extends BaseGameScreen {
         origin = new YANVector2(pos.getX() /*+ avatar.getSize().getX()*/, pos.getY());
         leftBasis = new YANVector2(origin.getX() + fanDistance, origin.getY());
         rightBasis = new YANVector2(origin.getX(), origin.getY() + fanDistance);
-        mThreePointFanLayouterPlayerThree.setThreePoints(origin, leftBasis, rightBasis);
+        mThreePointFanLayouterTopLeft.setThreePoints(origin, leftBasis, rightBasis);
 
         //swap direction
-        mThreePointFanLayouterPlayerThree.setDirection(ThreePointFanLayouter.LayoutDirection.RTL);
+        mThreePointFanLayouterTopLeft.setDirection(ThreePointFanLayouter.LayoutDirection.RTL);
     }
 
     private void layoutPile(int pileIndex, float x, float y, int rotationZ, float sizeScale) {
@@ -474,7 +474,7 @@ public class RemoteGameScreen extends BaseGameScreen {
             }
 
             //layout the slots
-            mThreePointFanLayouterPlayerTwo.layoutRowOfSlots(slots);
+            mThreePointFanLayouterTopRightPlayer.layoutRowOfSlots(slots);
 
             //make the layouting
             for (int i = 0; i < slots.size(); i++) {
@@ -501,7 +501,7 @@ public class RemoteGameScreen extends BaseGameScreen {
             }
 
             //layout the slots
-            mThreePointFanLayouterPlayerThree.layoutRowOfSlots(slots);
+            mThreePointFanLayouterTopLeft.layoutRowOfSlots(slots);
 
             //make the layouting
             for (int i = 0; i < slots.size(); i++) {

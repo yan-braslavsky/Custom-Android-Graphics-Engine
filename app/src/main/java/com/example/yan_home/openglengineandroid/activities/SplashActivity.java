@@ -7,12 +7,12 @@ import android.os.Handler;
 
 import com.example.yan_home.openglengineandroid.R;
 
-public class MainActivity extends Activity {
+public class SplashActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_splash);
 
         (new Handler()).postDelayed(new Runnable() {
             @Override
@@ -21,13 +21,13 @@ public class MainActivity extends Activity {
                 System.gc();
 
                 //TODO : load assets here
-                Intent myIntent = new Intent(MainActivity.this, GameActivity.class);
+                Intent myIntent = new Intent(SplashActivity.this, MainMenuActivity.class);
                 //Optional parameters
 //                myIntent.putExtra("key", value);
-                MainActivity.this.startActivity(myIntent);
+                SplashActivity.this.startActivity(myIntent);
 
                 //TODO : custom transition animation ?
-//                overridePendingTransition();
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
 
                 //we no longer need this activity
                 finish();
