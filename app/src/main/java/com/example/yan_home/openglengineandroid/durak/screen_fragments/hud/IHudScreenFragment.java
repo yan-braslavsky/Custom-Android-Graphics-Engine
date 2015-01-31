@@ -1,19 +1,16 @@
-package com.example.yan_home.openglengineandroid.durak.hud;
+package com.example.yan_home.openglengineandroid.durak.screen_fragments.hud;
 
 import android.support.annotation.IntDef;
 
-import com.yan.glengine.assets.atlas.YANTextureAtlas;
-import com.yan.glengine.nodes.YANTexturedNode;
-import com.yan.glengine.util.geometry.YANReadOnlyVector2;
+import com.example.yan_home.openglengineandroid.durak.screen_fragments.IScreenFragment;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.Collection;
 
 /**
  * Created by Yan-Home on 1/25/2015.
  */
-public interface IHudNodesManager {
+public interface IHudScreenFragment extends IScreenFragment {
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
@@ -35,17 +32,5 @@ public interface IHudNodesManager {
     public static final int COCK_TOP_RIGHT_INDEX = 4;
     public static final int COCK_TOP_LEFT_INDEX = 5;
     public static final int COCK_SCISSOR_INDEX = 6;
-
-
-    void createHudNodes(YANTextureAtlas hudAtlas);
-
-    void setHudNodesSizes(YANReadOnlyVector2 sceneSize);
-
-    Collection<YANTexturedNode> getAllHudNodes();
-
-    void layoutNodes(YANReadOnlyVector2 sceneSize);
-
-    void update(float deltaTimeSeconds);
-
     void resetCockAnimation(@HudNode int index);
 }

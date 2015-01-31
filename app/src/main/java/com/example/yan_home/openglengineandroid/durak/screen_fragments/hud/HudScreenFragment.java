@@ -1,4 +1,4 @@
-package com.example.yan_home.openglengineandroid.durak.hud;
+package com.example.yan_home.openglengineandroid.durak.screen_fragments.hud;
 
 import com.yan.glengine.assets.atlas.YANTextureAtlas;
 import com.yan.glengine.nodes.YANTexturedNode;
@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Created by Yan-Home on 1/25/2015.
  */
-public class HudNodesManager implements IHudNodesManager {
+public class HudScreenFragment implements IHudScreenFragment {
 
     /**
      * By default hud will be placed on hud sorting layer and above
@@ -25,12 +25,12 @@ public class HudNodesManager implements IHudNodesManager {
     private Map<Integer, YANTexturedNode> mHudNodesMap;
     private float mScissoringCockVisibleStartY;
 
-    public HudNodesManager() {
+    public HudScreenFragment() {
         mHudNodesMap = new HashMap<>();
     }
 
     @Override
-    public void createHudNodes(YANTextureAtlas hudAtlas) {
+    public void createNodes(YANTextureAtlas hudAtlas) {
 
         //create avatars
         putToNodeMap(AVATAR_BOTTOM_RIGHT_INDEX, createAvatar(hudAtlas));
@@ -75,7 +75,7 @@ public class HudNodesManager implements IHudNodesManager {
     }
 
     @Override
-    public void setHudNodesSizes(YANReadOnlyVector2 sceneSize) {
+    public void setNodesSizes(YANReadOnlyVector2 sceneSize) {
         //set avatars sizes
         YANTexturedNode avatar = getNode(AVATAR_BOTTOM_RIGHT_INDEX);
         float aspectRatio = avatar.getTextureRegion().getWidth() / avatar.getTextureRegion().getHeight();
@@ -99,7 +99,7 @@ public class HudNodesManager implements IHudNodesManager {
     }
 
     @Override
-    public Collection<YANTexturedNode> getAllHudNodes() {
+    public Collection<? extends YANTexturedNode> getFragmentNodes() {
         return mHudNodesMap.values();
     }
 
