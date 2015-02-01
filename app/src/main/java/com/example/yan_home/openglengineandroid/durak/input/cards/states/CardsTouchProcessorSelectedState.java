@@ -18,6 +18,7 @@ public class CardsTouchProcessorSelectedState extends CardsTouchProcessorState {
     public static final float SELECTED_CARD_SIZE_SCALE = 1.1f;
     public static final int RETURN_TO_DEFAULT_STATE_DELAY_SECONDS = 2;
     public static final float SELECTION_ANIMATION_DURATION = 0.1f;
+    public static final int HUD_SORTING_LAYER = 50;
 
     private CardNode mSelectedCard;
     private int originalSortingLayer;
@@ -41,7 +42,7 @@ public class CardsTouchProcessorSelectedState extends CardsTouchProcessorState {
         originalSortingLayer = mSelectedCard.getSortingLayer();
 
         //change sorting layer
-        mSelectedCard.setSortingLayer(100);
+        mSelectedCard.setSortingLayer(HUD_SORTING_LAYER - 1);
 
         //make card bigger
 //        float yOffset = mSelectedCard.getPosition().getY() * 0.1f;

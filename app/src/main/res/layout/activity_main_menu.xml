@@ -10,27 +10,31 @@
     <Button
         android:layout_width="300dp"
         android:layout_height="65dp"
-        android:text="New Button 1"
-        android:id="@+id/button1"
+        android:background="@drawable/quick_btn_list"
+        android:id="@+id/quick_btn"
         android:onClick="buttonClicked"
+        android:layout_margin="10dp"
         />
 
     <Button
         android:layout_width="300dp"
         android:layout_height="65dp"
-        android:text="New Button 1"
-        android:id="@+id/button2"/>
+        android:background="@drawable/online_btn_list"
+        android:layout_margin="10dp"
+        android:id="@+id/online_btn"/>
 
     <Button
         android:layout_width="300dp"
         android:layout_height="65dp"
-        android:text="New Button 1"
-        android:id="@+id/button3"/>
+        android:layout_margin="10dp"
+        android:background="@drawable/story_btn_list"
+        android:id="@+id/story_btn"/>
 
     <Button
         android:layout_width="300dp"
         android:layout_height="65dp"
-        android:text="New Button 1"
-        android:id="@+id/button4"/>
+        android:background="@drawable/challenge_btn_list"
+        android:layout_margin="10dp"
+        android:id="@+id/challenge_btn"/>
 
 </LinearLayout>

@@ -3,6 +3,8 @@ package com.example.yan_home.openglengineandroid.durak.screen_fragments.hud;
 import android.support.annotation.IntDef;
 
 import com.example.yan_home.openglengineandroid.durak.screen_fragments.IScreenFragment;
+import com.yan.glengine.nodes.YANButtonNode;
+import com.yan.glengine.nodes.YANTexturedNode;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,6 +13,20 @@ import java.lang.annotation.RetentionPolicy;
  * Created by Yan-Home on 1/25/2015.
  */
 public interface IHudScreenFragment extends IScreenFragment {
+
+    void setNodeNodeAttachmentChangeListener(INodeAttachmentChangeListener nodeVisibilityChangeListener);
+
+    public interface INodeAttachmentChangeListener {
+        void onNodeVisibilityChanged(YANTexturedNode node, boolean isAttached);
+    }
+
+    void setTakeButtonClickListener(YANButtonNode.YanButtonNodeClickListener listener);
+
+    void setBitoButtonClickListener(YANButtonNode.YanButtonNodeClickListener listener);
+
+    void setBitoButtonAttachedToScreen(boolean isVisible);
+
+    void setTakeButtonAttachedToScreen(boolean isVisible);
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
@@ -21,6 +37,8 @@ public interface IHudScreenFragment extends IScreenFragment {
             COCK_TOP_RIGHT_INDEX,
             COCK_TOP_LEFT_INDEX,
             COCK_SCISSOR_INDEX,
+            BITO_BUTTON_INDEX,
+            TAKE_BUTTON_INDEX,
     })
     public @interface HudNode {
     }
@@ -32,5 +50,8 @@ public interface IHudScreenFragment extends IScreenFragment {
     public static final int COCK_TOP_RIGHT_INDEX = 4;
     public static final int COCK_TOP_LEFT_INDEX = 5;
     public static final int COCK_SCISSOR_INDEX = 6;
+    public static final int BITO_BUTTON_INDEX = 7;
+    public static final int TAKE_BUTTON_INDEX = 8;
+
     void resetCockAnimation(@HudNode int index);
 }

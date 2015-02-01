@@ -1,6 +1,7 @@
 package com.example.yan_home.openglengineandroid.durak.screen_fragments.hud;
 
 import com.yan.glengine.assets.atlas.YANTextureAtlas;
+import com.yan.glengine.nodes.YANButtonNode;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.nodes.YANTexturedScissorNode;
 import com.yan.glengine.util.geometry.YANReadOnlyVector2;
@@ -25,6 +26,9 @@ public class HudScreenFragment implements IHudScreenFragment {
     private Map<Integer, YANTexturedNode> mHudNodesMap;
     private float mScissoringCockVisibleStartY;
 
+    private INodeAttachmentChangeListener mNodeVisibilityChangeListener;
+
+
     public HudScreenFragment() {
         mHudNodesMap = new HashMap<>();
     }
@@ -43,8 +47,20 @@ public class HudScreenFragment implements IHudScreenFragment {
         putToNodeMap(COCK_TOP_LEFT_INDEX, createCock(hudAtlas));
         putToNodeMap(COCK_SCISSOR_INDEX, createScissorCock(hudAtlas));
 
+        putToNodeMap(BITO_BUTTON_INDEX, createBitoButton(hudAtlas));
+        putToNodeMap(TAKE_BUTTON_INDEX, createTakeButton(hudAtlas));
+
+
         //top left cock is looking the other way
         getNode(COCK_TOP_LEFT_INDEX).setRotationY(180);
+    }
+
+    private YANButtonNode createTakeButton(YANTextureAtlas hudAtlas) {
+        return new YANButtonNode(hudAtlas.getTextureRegion("take.png"), hudAtlas.getTextureRegion("take.png"));
+    }
+
+    private YANButtonNode createBitoButton(YANTextureAtlas hudAtlas) {
+        return new YANButtonNode(hudAtlas.getTextureRegion("bito.png"), hudAtlas.getTextureRegion("bito.png"));
     }
 
     private <T extends YANTexturedNode> void putToNodeMap(@HudNode int nodeIndex, T node) {
@@ -82,6 +98,9 @@ public class HudScreenFragment implements IHudScreenFragment {
         float newWidth = sceneSize.getX() * 0.2f;
         float newHeight = newWidth / aspectRatio;
 
+        getNode(BITO_BUTTON_INDEX).setSize(newWidth, newHeight);
+        getNode(TAKE_BUTTON_INDEX).setSize(newWidth, newHeight);
+
         getNode(AVATAR_BOTTOM_RIGHT_INDEX).setSize(newWidth, newHeight);
         getNode(AVATAR_TOP_RIGHT_INDEX).setSize(newWidth, newHeight);
         getNode(AVATAR_TOP_LEFT_INDEX).setSize(newWidth, newHeight);
@@ -108,7 +127,7 @@ public class HudScreenFragment implements IHudScreenFragment {
         //layout avatars
         float offsetX = sceneSize.getX() * 0.01f;
 
-        //setup avatar for player at left top
+        //setup avatar for bottom player
         YANTexturedNode avatar = getNode(AVATAR_BOTTOM_RIGHT_INDEX);
         avatar.setAnchorPoint(1f, 1f);
         avatar.setSortingLayer(HUD_SORTING_LAYER + 1);
@@ -117,7 +136,16 @@ public class HudScreenFragment implements IHudScreenFragment {
         getNode(COCK_BOTTOM_RIGHT_INDEX).setPosition(avatar.getPosition().getX() - avatar.getSize().getX() / 2 - getNode(COCK_BOTTOM_RIGHT_INDEX).getSize().getX() / 2,
                 avatar.getPosition().getY() - avatar.getSize().getY() - getNode(COCK_BOTTOM_RIGHT_INDEX).getSize().getY());
 
-        //setup avatar for player at right top
+        //take action is at the same place as bottom avatar
+        getNode(TAKE_BUTTON_INDEX).setSortingLayer(avatar.getSortingLayer() + 1);
+        getNode(TAKE_BUTTON_INDEX).setPosition(avatar.getPosition().getX() - avatar.getSize().getX(), avatar.getPosition().getY()- avatar.getSize().getY());
+
+        //bito action is at the same place as bottom avatar
+        getNode(BITO_BUTTON_INDEX).setSortingLayer(avatar.getSortingLayer() + 1);
+        getNode(BITO_BUTTON_INDEX).setPosition(avatar.getPosition().getX() - avatar.getSize().getX(), avatar.getPosition().getY()- avatar.getSize().getY());
+
+
+        //setup avatar for top right player
         float topOffset = sceneSize.getY() * 0.07f;
         avatar = getNode(AVATAR_TOP_RIGHT_INDEX);
         avatar.setAnchorPoint(1f, 0f);
@@ -128,7 +156,7 @@ public class HudScreenFragment implements IHudScreenFragment {
                 avatar.getPosition().getY() - getNode(COCK_TOP_RIGHT_INDEX).getSize().getY());
 
 
-        //third player avatar
+        //setup avatar for top left player
         avatar = getNode(AVATAR_TOP_LEFT_INDEX);
         avatar.setAnchorPoint(0f, 0f);
         avatar.setSortingLayer(HUD_SORTING_LAYER + 1);
@@ -151,6 +179,26 @@ public class HudScreenFragment implements IHudScreenFragment {
     }
 
     @Override
+    public void setTakeButtonClickListener(YANButtonNode.YanButtonNodeClickListener listener) {
+        ((YANButtonNode) getNode(TAKE_BUTTON_INDEX)).setClickListener(listener);
+    }
+
+    @Override
+    public void setBitoButtonClickListener(YANButtonNode.YanButtonNodeClickListener listener) {
+        ((YANButtonNode) getNode(BITO_BUTTON_INDEX)).setClickListener(listener);
+    }
+
+    @Override
+    public void setBitoButtonAttachedToScreen(boolean isVisible) {
+        mNodeVisibilityChangeListener.onNodeVisibilityChanged(getNode(BITO_BUTTON_INDEX), isVisible);
+    }
+
+    @Override
+    public void setTakeButtonAttachedToScreen(boolean isVisible) {
+        mNodeVisibilityChangeListener.onNodeVisibilityChanged(getNode(TAKE_BUTTON_INDEX), isVisible);
+    }
+
+    @Override
     public void resetCockAnimation(@HudNode int index) {
 
         float rotationAngle = 0;
@@ -165,4 +213,10 @@ public class HudScreenFragment implements IHudScreenFragment {
         //start animating the cock down
         mScissoringCockVisibleStartY = 1;
     }
+
+    @Override
+    public void setNodeNodeAttachmentChangeListener(INodeAttachmentChangeListener nodeVisibilityChangeListener) {
+        mNodeVisibilityChangeListener = nodeVisibilityChangeListener;
+    }
+
 }

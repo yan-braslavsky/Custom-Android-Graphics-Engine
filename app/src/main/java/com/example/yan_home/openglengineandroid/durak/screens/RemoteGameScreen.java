@@ -25,8 +25,10 @@ import com.example.yan_home.openglengineandroid.durak.screen_fragments.cards.ICa
 import com.example.yan_home.openglengineandroid.durak.screen_fragments.hud.HudScreenFragment;
 import com.example.yan_home.openglengineandroid.durak.screen_fragments.hud.IHudScreenFragment;
 import com.example.yan_home.openglengineandroid.durak.tweening.CardsTweenAnimator;
+import com.yan.glengine.nodes.YANButtonNode;
 import com.yan.glengine.nodes.YANTexturedNode;
 import com.yan.glengine.renderer.YANGLRenderer;
+import com.yan.glengine.util.YANLogger;
 import com.yan.glengine.util.geometry.YANVector2;
 
 import java.util.ArrayList;
@@ -57,6 +59,16 @@ public class RemoteGameScreen extends BaseGameScreen {
         super(renderer);
 
         mHudNodesManager = new HudScreenFragment();
+        mHudNodesManager.setNodeNodeAttachmentChangeListener(new IHudScreenFragment.INodeAttachmentChangeListener() {
+            @Override
+            public void onNodeVisibilityChanged(YANTexturedNode node, boolean isVisible) {
+                if (isVisible) {
+                    addNode(node);
+                } else {
+                    removeNode(node);
+                }
+            }
+        });
 
 
         //TODO : inject game server connector
@@ -102,7 +114,6 @@ public class RemoteGameScreen extends BaseGameScreen {
 
             @Override
             public void onCardMovesToFieldPile() {
-
             }
         });
 
@@ -111,7 +122,7 @@ public class RemoteGameScreen extends BaseGameScreen {
         mThreePointFanLayouterTopLeft = new ThreePointFanLayouter(2);
 
         //init player cards layouter
-        mPlayerCardsLayouter = new PlayerCardsLayouter(mCardsScreenFragment.getTotalCardsAmount()/*CARDS_COUNT*/);
+        mPlayerCardsLayouter = new PlayerCardsLayouter(mCardsScreenFragment.getTotalCardsAmount());
 
         //currently we are initializing with empty array , cards will be set every time player pile content changes
         mCardsTouchProcessor = new CardsTouchProcessor(mCardsScreenFragment.getBottomPlayerCardNodes()/*mPlayerOneCardNodes*/, mCardsTweenAnimator);
@@ -120,15 +131,7 @@ public class RemoteGameScreen extends BaseGameScreen {
         mCardsTouchProcessor.setCardsTouchProcessorListener(new CardsTouchProcessor.CardsTouchProcessorListener() {
             @Override
             public void onSelectedCardTap(CardNode cardNode) {
-
-                //TODO : here we are taking a cardNode
-                if (mRequestedRetaliation) {
-                    mRequestedRetaliation = false;
-
-                    ResponseRetaliatePilesMessage responseRetaliatePilesMessage = new ResponseRetaliatePilesMessage(new ArrayList<List<Card>>());
-                    mGameServerConnector.sentMessageToServer(responseRetaliatePilesMessage);
-                }
-
+                layoutBottomPlayerCards();
             }
 
             @Override
@@ -140,7 +143,15 @@ public class RemoteGameScreen extends BaseGameScreen {
                     mGameServerConnector.sentMessageToServer(responseCardForAttackMessage);
 
                 } else if (mRequestedRetaliation) {
+
+                    //clamp to be released far from hand cards
+                    if (cardNode.getPosition().getY() > getSceneSize().getY() * 0.7) {
+                        layoutBottomPlayerCards();
+                        return;
+                    }
+
                     mRequestedRetaliation = false;
+                    mHudNodesManager.setTakeButtonAttachedToScreen(false);
 
                     //TODO : For now we are "assuming" there is only one field pile always
                     List<List<Card>> list = new ArrayList<>();
@@ -185,6 +196,9 @@ public class RemoteGameScreen extends BaseGameScreen {
         for (YANTexturedNode hudNode : mHudNodesManager.getFragmentNodes()) {
             addNode(hudNode);
         }
+
+        mHudNodesManager.setBitoButtonAttachedToScreen(false);
+        mHudNodesManager.setTakeButtonAttachedToScreen(false);
     }
 
 
@@ -235,7 +249,7 @@ public class RemoteGameScreen extends BaseGameScreen {
         mCardsTouchProcessor.setOriginalCardSize(/*mCardWidth*/mCardsScreenFragment.getCardNodeWidth(), mCardsScreenFragment.getCardNodeHeight());
 
         //init the player cards layouter
-        mPlayerCardsLayouter.init(mCardsScreenFragment.getCardNodeWidth()/*mCardWidth*/, mCardsScreenFragment.getCardNodeHeight() ,
+        mPlayerCardsLayouter.init(mCardsScreenFragment.getCardNodeWidth()/*mCardWidth*/, mCardsScreenFragment.getCardNodeHeight(),
                 //maximum available width
                 getSceneSize().getX(),
                 //base x position ( center )
@@ -251,6 +265,34 @@ public class RemoteGameScreen extends BaseGameScreen {
         super.onCreateNodes();
         mHudNodesManager.createNodes(mUiAtlas);
         mCardsScreenFragment.createNodes(mCardsAtlas);
+
+        mHudNodesManager.setTakeButtonClickListener(new YANButtonNode.YanButtonNodeClickListener() {
+            @Override
+            public void onButtonClick() {
+
+                YANLogger.log("Take Button Clicked");
+                //TODO : here we are taking a cardNode
+                //remove the flags
+                if (mRequestedRetaliation) {
+                    mRequestedRetaliation = false;
+
+                    ResponseRetaliatePilesMessage responseRetaliatePilesMessage = new ResponseRetaliatePilesMessage(new ArrayList<List<Card>>());
+                    mGameServerConnector.sentMessageToServer(responseRetaliatePilesMessage);
+
+                    mHudNodesManager.setTakeButtonAttachedToScreen(false);
+                }
+            }
+        });
+
+        mHudNodesManager.setBitoButtonClickListener(new YANButtonNode.YanButtonNodeClickListener() {
+            @Override
+            public void onButtonClick() {
+                //TODO : change the way retaliation is implemented
+                YANLogger.log("Bito Button Clicked");
+            }
+        });
+
+
     }
 
     @Override
@@ -305,6 +347,9 @@ public class RemoteGameScreen extends BaseGameScreen {
 
     private void handleRequestRetaliatePilesMessage(RequestRetaliatePilesMessage requestRetaliatePilesMessage) {
         mRequestedRetaliation = true;
+
+        //in that case we want the hud to present us with option to take the card
+        mHudNodesManager.setTakeButtonAttachedToScreen(true);
     }
 
     private void handleRequestCardForAttackMessage(RequestCardForAttackMessage requestCardForAttackMessage) {
@@ -312,7 +357,6 @@ public class RemoteGameScreen extends BaseGameScreen {
     }
 
     private void handleCardMoveMessage(CardMovedProtocolMessage cardMovedMessage) {
-
         //extract data
         Card movedCard = new Card(cardMovedMessage.getMessageData().getMovedCard().getRank(), cardMovedMessage.getMessageData().getMovedCard().getSuit());
         int fromPile = cardMovedMessage.getMessageData().getFromPileIndex();
@@ -320,7 +364,6 @@ public class RemoteGameScreen extends BaseGameScreen {
 
         //execute the move
         mCardsScreenFragment.moveCardFromPileToPile(movedCard, fromPile, toPile);
-
     }
 
     private void layoutTopLeftPlayerCards() {
