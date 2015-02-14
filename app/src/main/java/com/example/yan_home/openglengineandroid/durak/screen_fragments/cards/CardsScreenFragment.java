@@ -6,6 +6,7 @@ import com.example.yan_home.openglengineandroid.durak.nodes.CardNode;
 import com.example.yan_home.openglengineandroid.durak.tweening.CardsTweenAnimator;
 import com.yan.glengine.assets.atlas.YANTextureAtlas;
 import com.yan.glengine.nodes.YANTexturedNode;
+import com.yan.glengine.util.YANLogger;
 import com.yan.glengine.util.geometry.YANReadOnlyVector2;
 import com.yan.glengine.util.geometry.YANVector2;
 import com.yan.glengine.util.math.YANMathUtils;
@@ -140,16 +141,25 @@ public class CardsScreenFragment implements ICardsScreenFragment {
         //player three pile (top left)
         layoutPile(mTopLeftPlayerToTheLeftPileIndex, 0, 0, 90, 1f);
 
-        float leftBorderX = sceneSize.getX() * 0.3f;
-        float rightBorderX = sceneSize.getX() * 0.7f;
+        float leftBorderX = mCardWidth / 2;
+        float rightBorderX = sceneSize.getX() - mCardWidth;
         float leftBorderY = sceneSize.getY() * 0.3f;
         float rightBorderY = sceneSize.getY() * 0.5f;
 
+
+        float currentX = leftBorderX;
+        float currentY = leftBorderY;
+
         //init "field piles" positions
         for (int i = (mTopLeftPlayerToTheLeftPileIndex + 1); i < CARDS_COUNT / 2; i++) {
-            float x = YANMathUtils.randomInRange(leftBorderX, rightBorderX);
-            float y = YANMathUtils.randomInRange(leftBorderY, rightBorderY);
+            float x = currentX;//YANMathUtils.randomInRange(leftBorderX, rightBorderX);
+            float y = currentY;//YANMathUtils.randomInRange(leftBorderY, rightBorderY);
             mPileIndexToPositionMap.put(i, new YANVector2(x, y));
+            currentX += mCardWidth;
+            if (currentX > rightBorderX) {
+                currentX = leftBorderX;
+                currentY += mCardHeight;
+            }
         }
     }
 
@@ -205,7 +215,8 @@ public class CardsScreenFragment implements ICardsScreenFragment {
         //find destination position
         float destX = mPileIndexToPositionMap.get(toPile).getX();
         float destY = mPileIndexToPositionMap.get(toPile).getY();
-        float destRotation = YANMathUtils.randomInRange(-70, 70);
+        int rotationRange = 30;
+        float destRotation = YANMathUtils.randomInRange(-rotationRange, rotationRange);
 
         //make the animation
         mCardsTweenAnimator.animateCardToValues(cardNode, destX, destY, destRotation, null);

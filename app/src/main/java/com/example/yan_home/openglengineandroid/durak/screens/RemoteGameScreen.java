@@ -160,6 +160,8 @@ public class RemoteGameScreen extends BaseGameScreen {
                     innerList.add(cardNode.getCard());
                     innerList.add(cardOnFiled);
                     list.add(innerList);
+
+                    //TODO : We should send the message only when player is done retaliating all the piles
                     ResponseRetaliatePilesMessage responseRetaliatePilesMessage = new ResponseRetaliatePilesMessage(list);
                     mGameServerConnector.sentMessageToServer(responseRetaliatePilesMessage);
                 } else {
