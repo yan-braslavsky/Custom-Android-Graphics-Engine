@@ -12,6 +12,7 @@ import com.example.yan_home.openglengineandroid.durak.layouting.threepoint.Three
 import com.example.yan_home.openglengineandroid.durak.nodes.CardNode;
 import com.example.yan_home.openglengineandroid.durak.protocol.BaseProtocolMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.data.CardData;
+import com.example.yan_home.openglengineandroid.durak.protocol.data.RetaliationSetData;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.CardMovedProtocolMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.GameSetupProtocolMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.PlayerTakesActionMessage;
@@ -32,7 +33,9 @@ import com.yan.glengine.util.YANLogger;
 import com.yan.glengine.util.geometry.YANVector2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yan-Home on 10/3/2014.
@@ -54,10 +57,12 @@ public class RemoteGameScreen extends BaseGameScreen {
     private ICardsScreenFragment mCardsScreenFragment;
     private boolean mCardForAttackRequested;
     private boolean mRequestedRetaliation;
+    private HashMap<Card, Card> mCardsPendingRetaliationMap;
 
     public RemoteGameScreen(YANGLRenderer renderer) {
         super(renderer);
 
+        mCardsPendingRetaliationMap = new HashMap<>();
         mHudNodesManager = new HudScreenFragment();
         mHudNodesManager.setNodeNodeAttachmentChangeListener(new IHudScreenFragment.INodeAttachmentChangeListener() {
             @Override
@@ -131,7 +136,16 @@ public class RemoteGameScreen extends BaseGameScreen {
         mCardsTouchProcessor.setCardsTouchProcessorListener(new CardsTouchProcessor.CardsTouchProcessorListener() {
             @Override
             public void onSelectedCardTap(CardNode cardNode) {
-                layoutBottomPlayerCards();
+
+                if (mCardForAttackRequested) {
+                    mCardForAttackRequested = false;
+
+                    ResponseCardForAttackMessage responseCardForAttackMessage = new ResponseCardForAttackMessage(cardNode.getCard());
+                    mGameServerConnector.sentMessageToServer(responseCardForAttackMessage);
+
+                }
+
+//                layoutBottomPlayerCards();
             }
 
             @Override
@@ -144,26 +158,50 @@ public class RemoteGameScreen extends BaseGameScreen {
 
                 } else if (mRequestedRetaliation) {
 
-                    //clamp to be released far from hand cards
-                    if (cardNode.getPosition().getY() > getSceneSize().getY() * 0.7) {
+                    //collision detection with card user tries to retaliate
+                    CardNode underlyingCard = mCardsScreenFragment.findUnderlyingCard(cardNode);
+
+                    //user dragget the card to a wrong place
+                    if (underlyingCard == null) {
                         layoutBottomPlayerCards();
                         return;
+                    }
+
+                    //update underlying card with retaliation card
+                    mCardsPendingRetaliationMap.put(underlyingCard.getCard(), cardNode.getCard());
+
+                    //move the cardNode on top of the underlying card
+                    mCardsTweenAnimator.animateCardToXY(cardNode, underlyingCard.getPosition().getX(), underlyingCard.getPosition().getY(), 0.5f);
+
+                    //we are tagging both cards as covered in order do not test collision with them later
+                    underlyingCard.setTag(new CardNode.TemporaryCoveredTag());
+                    cardNode.setTag(new CardNode.TemporaryCoveredTag());
+
+                    //check if more retaliation cards left
+                    for (Card card : mCardsPendingRetaliationMap.values()) {
+                        if (card == null) {
+                            return;
+                        }
                     }
 
                     mRequestedRetaliation = false;
                     mHudNodesManager.setTakeButtonAttachedToScreen(false);
 
-                    //TODO : For now we are "assuming" there is only one field pile always
+                    //send all retaliated piles to server
                     List<List<Card>> list = new ArrayList<>();
-                    Card cardOnFiled = mCardsScreenFragment.getCardsInPileWithIndex(5).iterator().next();
-                    List<Card> innerList = new ArrayList<>();
-                    innerList.add(cardNode.getCard());
-                    innerList.add(cardOnFiled);
-                    list.add(innerList);
+                    for (Map.Entry<Card, Card> cardCardEntry : mCardsPendingRetaliationMap.entrySet()) {
+                        List<Card> innerList = new ArrayList<>();
+                        innerList.add(cardCardEntry.getValue());
+                        innerList.add(cardCardEntry.getKey());
+                        list.add(innerList);
+                    }
 
-                    //TODO : We should send the message only when player is done retaliating all the piles
                     ResponseRetaliatePilesMessage responseRetaliatePilesMessage = new ResponseRetaliatePilesMessage(list);
                     mGameServerConnector.sentMessageToServer(responseRetaliatePilesMessage);
+
+                    //now we should clear all the tags
+                    mCardsScreenFragment.removeTagsFromCards();
+
                 } else {
                     layoutBottomPlayerCards();
                 }
@@ -308,8 +346,26 @@ public class RemoteGameScreen extends BaseGameScreen {
 
 
     private void handleInvalidRetaliationMessage(RetaliationInvalidProtocolMessage retaliationInvalidProtocolMessage) {
-        //TODO : as long as we have only one pile we can just relayout player one piles.Later we will have to
-        //search what should get back to player hand and what is not
+
+        //remove from map all invalid retaliations
+        for (RetaliationSetData retaliationSetData : retaliationInvalidProtocolMessage.getMessageData().getInvalidRetaliationsList()) {
+            mCardsPendingRetaliationMap.remove(new Card(retaliationSetData.getCoveredCardData().getRank(), retaliationSetData.getCoveredCardData().getSuit()));
+        }
+
+        ArrayList<CardNode> nodesToRemoveFromPlayerHand = new ArrayList<>();
+        for (Card card : mCardsPendingRetaliationMap.values()) {
+            //all valid retaliation does not belong to player any more
+            for (CardNode cardNode : mCardsScreenFragment.getBottomPlayerCardNodes()) {
+                if (cardNode.getCard().equals(card)) {
+                    nodesToRemoveFromPlayerHand.add(cardNode);
+                }
+            }
+        }
+
+        for (CardNode cardNode : nodesToRemoveFromPlayerHand) {
+            mCardsScreenFragment.getBottomPlayerCardNodes().remove(cardNode);
+        }
+
         layoutBottomPlayerCards();
     }
 
@@ -349,6 +405,14 @@ public class RemoteGameScreen extends BaseGameScreen {
 
     private void handleRequestRetaliatePilesMessage(RequestRetaliatePilesMessage requestRetaliatePilesMessage) {
         mRequestedRetaliation = true;
+
+        mCardsPendingRetaliationMap.clear();
+
+        for (List<CardData> cardDataList : requestRetaliatePilesMessage.getMessageData().getPilesBeforeRetaliation()) {
+            for (CardData cardData : cardDataList) {
+                mCardsPendingRetaliationMap.put(new Card(cardData.getRank(), cardData.getSuit()), null);
+            }
+        }
 
         //in that case we want the hud to present us with option to take the card
         mHudNodesManager.setTakeButtonAttachedToScreen(true);

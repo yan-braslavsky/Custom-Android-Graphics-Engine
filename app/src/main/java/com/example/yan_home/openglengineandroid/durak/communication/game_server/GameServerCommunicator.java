@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class GameServerCommunicator implements IGameServerConnector {
 
-    private static final String SERVER_ADDRESS = "192.168.1.103";
+    private static final String SERVER_ADDRESS = "192.168.1.101";
     private static final int SERVER_PORT = 7000;
 
     private Gson mGson;

@@ -16,6 +16,17 @@ public interface ICardsScreenFragment extends IScreenFragment {
     int getTopRightPlayerPileIndex();
     int getTopLeftPlayerPileIndex();
 
+    /**
+     * Returns a card that is underlying under provided card or
+     * null if card not found.
+     */
+    CardNode findUnderlyingCard(CardNode cardNode);
+
+    /**
+     * Goes over all cards and removes tags from them
+     */
+    void removeTagsFromCards();
+
     public interface ICardMovementListener {
         void onCardMovesToBottomPlayerPile();
 

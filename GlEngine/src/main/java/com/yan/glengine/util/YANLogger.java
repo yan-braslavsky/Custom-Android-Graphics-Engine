@@ -12,4 +12,11 @@ public class YANLogger {
     public static final void log(String msg) {
         Log.i(LOG_TAG, msg);
     }
+
+    public static void error(String msg) {
+        Log.e(LOG_TAG, msg);
+    }
+    public static void warn(String msg) {
+        Log.w(LOG_TAG, msg);
+    }
 }

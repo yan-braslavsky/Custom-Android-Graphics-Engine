@@ -14,6 +14,14 @@ public class CardNode extends YANTexturedNode {
     private final YANAtlasTextureRegion mFrontTextureRegion;
     private final YANAtlasTextureRegion mBackTextureRegion;
     private Card mCard;
+    private Object mTag;
+
+    /**
+     * Used to indicate that current card is temporary covered by other card
+     */
+    public static class TemporaryCoveredTag {
+
+    }
 
     public CardNode(@NonNull YANAtlasTextureRegion frontTextureRegion, @NonNull YANAtlasTextureRegion backTextureRegion, @NonNull Card card) {
         super(frontTextureRegion);
@@ -42,6 +50,14 @@ public class CardNode extends YANTexturedNode {
 
     public void useBackTextureRegion() {
         setTextureRegion(mBackTextureRegion);
+    }
+
+    public Object getTag() {
+        return mTag;
+    }
+
+    public void setTag(Object tag) {
+        mTag = tag;
     }
 
 //    @Override

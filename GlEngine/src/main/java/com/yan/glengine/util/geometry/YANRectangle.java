@@ -53,4 +53,27 @@ public class YANRectangle {
         return true;
     }
 
+    public boolean contains(YANRectangle boundingRectangle) {
+
+        //this rectangle params
+        float thisX = leftTop.getX();
+        float thisY = leftTop.getY();
+        float thisWidth = rightBottom.getX() - leftTop.getX();
+        float thisHeight = rightBottom.getY() - leftTop.getY();
+
+        //other rectangle params
+        float otherX = boundingRectangle.getLeftTop().getX();
+        float otherY = boundingRectangle.getLeftTop().getY();
+        float otherWidth = boundingRectangle.getRightBottom().getX() - boundingRectangle.getLeftTop().getX();
+        float otherHeight = boundingRectangle.getRightBottom().getY() - boundingRectangle.getLeftTop().getY();
+
+        if (thisX < otherX + otherWidth &&
+                thisX + thisWidth > otherX &&
+                thisY < otherY + otherHeight &&
+                thisHeight + thisY > otherY) {
+            return true;
+        }
+
+        return false;
+    }
 }

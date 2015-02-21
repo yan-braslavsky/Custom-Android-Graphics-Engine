@@ -143,19 +143,22 @@ public class CardsScreenFragment implements ICardsScreenFragment {
 
         float leftBorderX = mCardWidth / 2;
         float rightBorderX = sceneSize.getX() - mCardWidth;
-        float leftBorderY = sceneSize.getY() * 0.3f;
-        float rightBorderY = sceneSize.getY() * 0.5f;
+        float topBorderY = sceneSize.getY() * 0.3f;
+        float bottomBorderY = sceneSize.getY() * 0.5f;
+
+        float xAdvance = mCardWidth * 1.5f;
+        float yAdvance = mCardHeight * 1.5f;
 
 
         float currentX = leftBorderX;
-        float currentY = leftBorderY;
+        float currentY = topBorderY;
 
         //init "field piles" positions
         for (int i = (mTopLeftPlayerToTheLeftPileIndex + 1); i < CARDS_COUNT / 2; i++) {
-            float x = currentX;//YANMathUtils.randomInRange(leftBorderX, rightBorderX);
-            float y = currentY;//YANMathUtils.randomInRange(leftBorderY, rightBorderY);
+            float x = currentX;
+            float y = currentY;
             mPileIndexToPositionMap.put(i, new YANVector2(x, y));
-            currentX += mCardWidth;
+            currentX += xAdvance;
             if (currentX > rightBorderX) {
                 currentX = leftBorderX;
                 currentY += mCardHeight;
@@ -193,6 +196,45 @@ public class CardsScreenFragment implements ICardsScreenFragment {
     @Override
     public int getTopLeftPlayerPileIndex() {
         return mTopLeftPlayerToTheLeftPileIndex;
+    }
+
+    @Override
+    public CardNode findUnderlyingCard(CardNode cardNode) {
+
+        //iterate all field piles
+        for (int i = (mTopLeftPlayerToTheLeftPileIndex + 1); i < CARDS_COUNT / 2; i++) {
+            Collection<Card> cards = mPileIndexToCardListMap.get(i);
+
+            //we don't want to choose piles that are already covered
+            if (cards.size() > 1)
+                continue;
+
+            for (Card card : cards) {
+
+                //we dont want to find temporary covered cards
+                if (mCardNodes.get(card).getTag() instanceof CardNode.TemporaryCoveredTag)
+                    continue;
+
+                if (isCollides(cardNode, mCardNodes.get(card))) {
+                    return mCardNodes.get(card);
+                }
+            }
+        }
+
+        YANLogger.warn("underlying Card not Found !");
+
+        return null;
+    }
+
+    @Override
+    public void removeTagsFromCards() {
+        for (CardNode cardNode : mCardNodes.values()) {
+            cardNode.setTag(null);
+        }
+    }
+
+    private boolean isCollides(CardNode cardNode, CardNode card) {
+        return cardNode.getBoundingRectangle().contains(card.getBoundingRectangle());
     }
 
     @Override
