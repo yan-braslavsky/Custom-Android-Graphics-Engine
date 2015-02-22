@@ -189,7 +189,7 @@ public class HudScreenFragment implements IHudScreenFragment {
     }
 
     @Override
-    public void setBitoButtonAttachedToScreen(boolean isVisible) {
+    public void setFinishButtonAttachedToScreen(boolean isVisible) {
         mNodeVisibilityChangeListener.onNodeVisibilityChanged(getNode(BITO_BUTTON_INDEX), isVisible);
     }
 

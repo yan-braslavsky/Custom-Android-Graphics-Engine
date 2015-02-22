@@ -24,7 +24,7 @@ public interface IHudScreenFragment extends IScreenFragment {
 
     void setBitoButtonClickListener(YANButtonNode.YanButtonNodeClickListener listener);
 
-    void setBitoButtonAttachedToScreen(boolean isVisible);
+    void setFinishButtonAttachedToScreen(boolean isVisible);
 
     void setTakeButtonAttachedToScreen(boolean isVisible);
 

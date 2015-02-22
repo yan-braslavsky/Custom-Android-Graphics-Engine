@@ -8,6 +8,7 @@ import com.example.yan_home.openglengineandroid.durak.protocol.messages.GameSetu
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.PlayerTakesActionMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.RequestCardForAttackMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.RequestRetaliatePilesMessage;
+import com.example.yan_home.openglengineandroid.durak.protocol.messages.RequestThrowInsMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.RetaliationInvalidProtocolMessage;
 import com.google.gson.Gson;
 
@@ -21,7 +22,7 @@ import java.util.Map;
  */
 public class GameServerCommunicator implements IGameServerConnector {
 
-    private static final String SERVER_ADDRESS = "192.168.1.101";
+    private static final String SERVER_ADDRESS = "192.168.1.103";
     private static final int SERVER_PORT = 7000;
 
     private Gson mGson;
@@ -45,6 +46,7 @@ public class GameServerCommunicator implements IGameServerConnector {
         mNamesToClassMap.put(GameSetupProtocolMessage.MESSAGE_NAME, GameSetupProtocolMessage.class);
         mNamesToClassMap.put(PlayerTakesActionMessage.MESSAGE_NAME, PlayerTakesActionMessage.class);
         mNamesToClassMap.put(RetaliationInvalidProtocolMessage.MESSAGE_NAME, RetaliationInvalidProtocolMessage.class);
+        mNamesToClassMap.put(RequestThrowInsMessage.MESSAGE_NAME, RequestThrowInsMessage.class);
         //TODO : add more protocol message classes as they will be added...
     }
 

@@ -18,8 +18,10 @@ import com.example.yan_home.openglengineandroid.durak.protocol.messages.GameSetu
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.PlayerTakesActionMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.RequestCardForAttackMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.RequestRetaliatePilesMessage;
+import com.example.yan_home.openglengineandroid.durak.protocol.messages.RequestThrowInsMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.ResponseCardForAttackMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.ResponseRetaliatePilesMessage;
+import com.example.yan_home.openglengineandroid.durak.protocol.messages.ResponseThrowInsMessage;
 import com.example.yan_home.openglengineandroid.durak.protocol.messages.RetaliationInvalidProtocolMessage;
 import com.example.yan_home.openglengineandroid.durak.screen_fragments.cards.CardsScreenFragment;
 import com.example.yan_home.openglengineandroid.durak.screen_fragments.cards.ICardsScreenFragment;
@@ -58,11 +60,17 @@ public class RemoteGameScreen extends BaseGameScreen {
     private boolean mCardForAttackRequested;
     private boolean mRequestedRetaliation;
     private HashMap<Card, Card> mCardsPendingRetaliationMap;
+    private boolean mRequestThrowIn;
+    private ArrayList<CardData> mThrowInPossibleCards;
+    private int mThrowInCardsAllowed;
+    private ArrayList<Card> mSelectedThrowInCards;
 
     public RemoteGameScreen(YANGLRenderer renderer) {
         super(renderer);
 
         mCardsPendingRetaliationMap = new HashMap<>();
+        mSelectedThrowInCards = new ArrayList<>();
+        mThrowInPossibleCards = new ArrayList<>();
         mHudNodesManager = new HudScreenFragment();
         mHudNodesManager.setNodeNodeAttachmentChangeListener(new IHudScreenFragment.INodeAttachmentChangeListener() {
             @Override
@@ -95,6 +103,8 @@ public class RemoteGameScreen extends BaseGameScreen {
                     handlePlayerTakesActionMessage((PlayerTakesActionMessage) serverMessage);
                 } else if (serverMessage.getMessageName().equals(RetaliationInvalidProtocolMessage.MESSAGE_NAME)) {
                     handleInvalidRetaliationMessage((RetaliationInvalidProtocolMessage) serverMessage);
+                } else if (serverMessage.getMessageName().equals(RequestThrowInsMessage.MESSAGE_NAME)) {
+                    handleRequestThrowInsMessageMessage((RequestThrowInsMessage) serverMessage);
                 }
             }
         });
@@ -144,8 +154,6 @@ public class RemoteGameScreen extends BaseGameScreen {
                     mGameServerConnector.sentMessageToServer(responseCardForAttackMessage);
 
                 }
-
-//                layoutBottomPlayerCards();
             }
 
             @Override
@@ -202,11 +210,41 @@ public class RemoteGameScreen extends BaseGameScreen {
                     //now we should clear all the tags
                     mCardsScreenFragment.removeTagsFromCards();
 
+                } else if (mRequestThrowIn) {
+                    for (CardData throwInPossibleCard : mThrowInPossibleCards) {
+                        if (cardNode.getCard().getRank().equals(throwInPossibleCard.getRank()) && cardNode.getCard().getSuit().equals(throwInPossibleCard.getSuit())) {
+                            //add selected card
+                            mSelectedThrowInCards.add(cardNode.getCard());
+                            mThrowInCardsAllowed--;
+
+                            if (mThrowInCardsAllowed == 0) {
+                                sendThrowInResponse();
+                            }
+                        }
+                    }
                 } else {
                     layoutBottomPlayerCards();
                 }
             }
         });
+    }
+
+    private void sendThrowInResponse() {
+        mRequestThrowIn = false;
+        mHudNodesManager.setFinishButtonAttachedToScreen(false);
+        ResponseThrowInsMessage responseRetaliatePilesMessage = new ResponseThrowInsMessage(mSelectedThrowInCards);
+        mGameServerConnector.sentMessageToServer(responseRetaliatePilesMessage);
+    }
+
+    private void handleRequestThrowInsMessageMessage(RequestThrowInsMessage requestThrowInsMessage) {
+        //we attaching finish button to screen
+        //player can finish with his throw ins any time by pressing the button
+        mHudNodesManager.setFinishButtonAttachedToScreen(true);
+        mRequestThrowIn = true;
+        mThrowInCardsAllowed = requestThrowInsMessage.getMessageData().getPossibleThrowInCards().size();
+        mSelectedThrowInCards.clear();
+        mThrowInPossibleCards.clear();
+        mThrowInPossibleCards.addAll(requestThrowInsMessage.getMessageData().getPossibleThrowInCards());
     }
 
 
@@ -237,7 +275,7 @@ public class RemoteGameScreen extends BaseGameScreen {
             addNode(hudNode);
         }
 
-        mHudNodesManager.setBitoButtonAttachedToScreen(false);
+        mHudNodesManager.setFinishButtonAttachedToScreen(false);
         mHudNodesManager.setTakeButtonAttachedToScreen(false);
     }
 
@@ -327,12 +365,11 @@ public class RemoteGameScreen extends BaseGameScreen {
         mHudNodesManager.setBitoButtonClickListener(new YANButtonNode.YanButtonNodeClickListener() {
             @Override
             public void onButtonClick() {
-                //TODO : change the way retaliation is implemented
-                YANLogger.log("Bito Button Clicked");
+                if (mRequestThrowIn) {
+                    sendThrowInResponse();
+                }
             }
         });
-
-
     }
 
     @Override
