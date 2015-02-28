@@ -56,6 +56,7 @@ public class CardsTweenAnimator {
     }
 
     public void animateCardToAlpha(YANTexturedNode card, float targetAlpha, float duration) {
+        mTweenManager.killTarget(card,YANTweenNodeAccessor.OPACITY);
         Timeline.createSequence()
                 .push(Tween.to(card, YANTweenNodeAccessor.OPACITY, duration).target(targetAlpha))
                 .start(mTweenManager);

@@ -4,6 +4,8 @@ import com.example.yan_home.openglengineandroid.durak.communication.game_server.
 import com.example.yan_home.openglengineandroid.durak.communication.game_server.LocalGameServerCommunicator;
 import com.example.yan_home.openglengineandroid.durak.entities.cards.Card;
 import com.example.yan_home.openglengineandroid.durak.input.cards.CardsTouchProcessor;
+import com.example.yan_home.openglengineandroid.durak.input.cards.states.CardsTouchProcessorDefaultState;
+import com.example.yan_home.openglengineandroid.durak.input.cards.states.CardsTouchProcessorMultipleChoiceState;
 import com.example.yan_home.openglengineandroid.durak.layouting.CardsLayoutSlot;
 import com.example.yan_home.openglengineandroid.durak.layouting.CardsLayouter;
 import com.example.yan_home.openglengineandroid.durak.layouting.impl.CardsLayouterSlotImpl;
@@ -64,6 +66,7 @@ public class PrototypeGameScreen extends BaseGameScreen {
     private ArrayList<CardData> mThrowInPossibleCards;
     private int mThrowInCardsAllowed;
     private ArrayList<Card> mSelectedThrowInCards;
+    private CardsTouchProcessorMultipleChoiceState mThrowInInputProcessorState;
 
     public PrototypeGameScreen(YANGLRenderer renderer) {
         super(renderer);
@@ -154,6 +157,22 @@ public class PrototypeGameScreen extends BaseGameScreen {
                     ResponseCardForAttackMessage responseCardForAttackMessage = new ResponseCardForAttackMessage(cardNode.getCard());
                     mGameServerConnector.sentMessageToServer(responseCardForAttackMessage);
 
+                } else if (mRequestThrowIn) {
+                    for (CardData throwInPossibleCard : mThrowInPossibleCards) {
+                        if (cardNode.getCard().getRank().equals(throwInPossibleCard.getRank()) && cardNode.getCard().getSuit().equals(throwInPossibleCard.getSuit())) {
+                            //add selected card
+                            mSelectedThrowInCards.add(cardNode.getCard());
+                            mThrowInCardsAllowed--;
+
+                            mThrowInInputProcessorState.markCardAsChoosen(cardNode);
+
+                            if (mThrowInCardsAllowed == 0) {
+                                sendThrowInResponse();
+                            }
+                        } else {
+                            layoutBottomPlayerCards();
+                        }
+                    }
                 }
             }
 
@@ -211,19 +230,24 @@ public class PrototypeGameScreen extends BaseGameScreen {
                     //now we should clear all the tags
                     mCardsScreenFragment.removeTagsFromCards();
 
-                } else if (mRequestThrowIn) {
-                    for (CardData throwInPossibleCard : mThrowInPossibleCards) {
-                        if (cardNode.getCard().getRank().equals(throwInPossibleCard.getRank()) && cardNode.getCard().getSuit().equals(throwInPossibleCard.getSuit())) {
-                            //add selected card
-                            mSelectedThrowInCards.add(cardNode.getCard());
-                            mThrowInCardsAllowed--;
+                }
+//                else if (mRequestThrowIn) {
+//                    for (CardData throwInPossibleCard : mThrowInPossibleCards) {
+//                        if (cardNode.getCard().getRank().equals(throwInPossibleCard.getRank()) && cardNode.getCard().getSuit().equals(throwInPossibleCard.getSuit())) {
+//                            //add selected card
+//                            mSelectedThrowInCards.add(cardNode.getCard());
+//                            mThrowInCardsAllowed--;
+//
+//                            if (mThrowInCardsAllowed == 0) {
+//                                sendThrowInResponse();
+//                            }
+//                        } else {
+//                            layoutBottomPlayerCards();
+//                        }
+//                    }
+//                }
 
-                            if (mThrowInCardsAllowed == 0) {
-                                sendThrowInResponse();
-                            }
-                        }
-                    }
-                } else {
+                else {
                     layoutBottomPlayerCards();
                 }
             }
@@ -231,7 +255,9 @@ public class PrototypeGameScreen extends BaseGameScreen {
     }
 
     private void sendThrowInResponse() {
+        mCardsTouchProcessor.setCardsTouchProcessorState(new CardsTouchProcessorDefaultState(mCardsTouchProcessor));
         mRequestThrowIn = false;
+        mThrowInInputProcessorState = null;
         mHudNodesManager.setFinishButtonAttachedToScreen(false);
         ResponseThrowInsMessage responseRetaliatePilesMessage = new ResponseThrowInsMessage(mSelectedThrowInCards);
         mGameServerConnector.sentMessageToServer(responseRetaliatePilesMessage);
@@ -243,6 +269,20 @@ public class PrototypeGameScreen extends BaseGameScreen {
         mHudNodesManager.setFinishButtonAttachedToScreen(true);
         mRequestThrowIn = true;
         mThrowInCardsAllowed = requestThrowInsMessage.getMessageData().getPossibleThrowInCards().size();
+
+        //TODO : Make more efficient !
+        ArrayList<CardNode> availableCards = new ArrayList<>();
+        for (CardData cardData : requestThrowInsMessage.getMessageData().getPossibleThrowInCards()) {
+            for (CardNode playerCardNode : mCardsScreenFragment.getBottomPlayerCardNodes()) {
+                if (cardData.getRank().equals(playerCardNode.getCard().getRank()) && cardData.getSuit().equals(playerCardNode.getCard().getSuit())) {
+                    availableCards.add(playerCardNode);
+                }
+            }
+        }
+
+        mThrowInInputProcessorState = new CardsTouchProcessorMultipleChoiceState(mCardsTouchProcessor, availableCards);
+        mCardsTouchProcessor.setCardsTouchProcessorState(mThrowInInputProcessorState);
+
         mSelectedThrowInCards.clear();
         mThrowInPossibleCards.clear();
         mThrowInPossibleCards.addAll(requestThrowInsMessage.getMessageData().getPossibleThrowInCards());
