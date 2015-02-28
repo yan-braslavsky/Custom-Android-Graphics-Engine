@@ -65,6 +65,43 @@ public class SocketConnectionManager {
         return true;
     }
 
+    /**
+     * Connects to remote socket server
+     *
+     * @return true if connection was established , false otherwise
+     */
+    public boolean connectToLocalServer() {
+
+        if (isConnected())
+            return false;
+
+        //TODO : this might be not an appropriate way to maintain connection
+        (new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mSocketClient = new LocalClient();
+                mConnected = true;
+
+                while (isConnected()) {
+                    String msg = mSocketClient.readMessage();
+                    if (msg != null) {
+                        synchronized (mMessageQueue) {
+                            YANLogger.log("[RECEIVED] " + msg);
+                            mMessageQueue.add(msg);
+                        }
+                    }
+                }
+            }
+        })).start();
+
+        return true;
+    }
+
+    public void disconnectFromLocalServer() {
+        mSocketClient.disconnect();
+        mConnected = false;
+    }
+
     public void disconnectFromRemoteServer() {
         mSocketClient.disconnect();
         mConnected = false;

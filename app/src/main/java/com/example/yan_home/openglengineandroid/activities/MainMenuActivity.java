@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.yan_home.openglengineandroid.R;
+import com.example.yan_home.openglengineandroid.durak.local_server.KickStarter;
 
 public class MainMenuActivity extends Activity {
 
@@ -19,6 +20,14 @@ public class MainMenuActivity extends Activity {
     }
 
     public void buttonClicked(View buttonClicked) {
+
+        //TODO : open server on different thread
+        (new Thread(new Runnable() {
+            @Override
+            public void run() {
+                (new KickStarter()).start();
+            }
+        })).start();
 
         Intent myIntent = new Intent(MainMenuActivity.this, GameActivity.class);
         //Optional parameters

@@ -1,7 +1,7 @@
 package com.example.yan_home.openglengineandroid.durak.screens;
 
-import com.example.yan_home.openglengineandroid.durak.communication.game_server.GameServerCommunicator;
 import com.example.yan_home.openglengineandroid.durak.communication.game_server.IGameServerConnector;
+import com.example.yan_home.openglengineandroid.durak.communication.game_server.LocalGameServerCommunicator;
 import com.example.yan_home.openglengineandroid.durak.entities.cards.Card;
 import com.example.yan_home.openglengineandroid.durak.input.cards.CardsTouchProcessor;
 import com.example.yan_home.openglengineandroid.durak.layouting.CardsLayoutSlot;
@@ -85,7 +85,8 @@ public class RemoteGameScreen extends BaseGameScreen {
 
 
         //TODO : inject game server connector
-        mGameServerConnector = new GameServerCommunicator();
+//        mGameServerConnector = new RemoteGameServerCommunicator();
+        mGameServerConnector = new LocalGameServerCommunicator();
         mGameServerConnector.setListener(new IGameServerConnector.IGameServerCommunicatorListener() {
             @Override
             public void handleServerMessage(BaseProtocolMessage serverMessage) {

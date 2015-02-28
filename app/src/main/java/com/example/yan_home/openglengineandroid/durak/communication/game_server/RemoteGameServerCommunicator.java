@@ -20,7 +20,7 @@ import java.util.Map;
  * <p/>
  * This class is responsible to handle communication between server and client in an easy manner.
  */
-public class GameServerCommunicator implements IGameServerConnector {
+public class RemoteGameServerCommunicator implements IGameServerConnector {
 
     private static final String SERVER_ADDRESS = "192.168.1.103";
     private static final int SERVER_PORT = 7000;
@@ -31,7 +31,7 @@ public class GameServerCommunicator implements IGameServerConnector {
     //used for easy access to class of the message by it's name
     private Map<String, Class<? extends BaseProtocolMessage>> mNamesToClassMap;
 
-    public GameServerCommunicator() {
+    public RemoteGameServerCommunicator() {
         mGson = new Gson();
         mNamesToClassMap = new HashMap<>();
 
