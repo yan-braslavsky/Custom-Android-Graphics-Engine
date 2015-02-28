@@ -42,7 +42,7 @@ import java.util.Map;
 /**
  * Created by Yan-Home on 10/3/2014.
  */
-public class RemoteGameScreen extends BaseGameScreen {
+public class PrototypeGameScreen extends BaseGameScreen {
 
     public static final float CARD_SCALE_AMOUNT_OPPONENT = 0.6f;
 
@@ -65,7 +65,7 @@ public class RemoteGameScreen extends BaseGameScreen {
     private int mThrowInCardsAllowed;
     private ArrayList<Card> mSelectedThrowInCards;
 
-    public RemoteGameScreen(YANGLRenderer renderer) {
+    public PrototypeGameScreen(YANGLRenderer renderer) {
         super(renderer);
 
         mCardsPendingRetaliationMap = new HashMap<>();

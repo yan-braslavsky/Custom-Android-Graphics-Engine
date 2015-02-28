@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".activities.GameActivity"
             android:label="@string/title_activity_game" >
         </activity>

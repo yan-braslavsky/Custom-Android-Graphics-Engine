@@ -141,14 +141,13 @@ public class CardsScreenFragment implements ICardsScreenFragment {
         //player three pile (top left)
         layoutPile(mTopLeftPlayerToTheLeftPileIndex, 0, 0, 90, 1f);
 
-        float leftBorderX = mCardWidth / 2;
-        float rightBorderX = sceneSize.getX() - mCardWidth;
+        float leftBorderX = mCardWidth *0.2f;
+        float rightBorderX = sceneSize.getX() - (mCardWidth * 0.8f);
         float topBorderY = sceneSize.getY() * 0.3f;
         float bottomBorderY = sceneSize.getY() * 0.5f;
 
-        float xAdvance = mCardWidth * 1.5f;
-        float yAdvance = mCardHeight * 1.5f;
-
+        float xAdvance = mCardWidth * 1.2f;
+        float yAdvance = mCardHeight * 1.2f;
 
         float currentX = leftBorderX;
         float currentY = topBorderY;
@@ -161,7 +160,12 @@ public class CardsScreenFragment implements ICardsScreenFragment {
             currentX += xAdvance;
             if (currentX > rightBorderX) {
                 currentX = leftBorderX;
-                currentY += mCardHeight;
+                currentY += yAdvance;
+
+                //just return to the initial position
+                if (bottomBorderY > bottomBorderY) {
+                    currentY = topBorderY;
+                }
             }
         }
     }
@@ -257,7 +261,7 @@ public class CardsScreenFragment implements ICardsScreenFragment {
         //find destination position
         float destX = mPileIndexToPositionMap.get(toPile).getX();
         float destY = mPileIndexToPositionMap.get(toPile).getY();
-        int rotationRange = 30;
+        int rotationRange = 15;
         float destRotation = YANMathUtils.randomInRange(-rotationRange, rotationRange);
 
         //make the animation
