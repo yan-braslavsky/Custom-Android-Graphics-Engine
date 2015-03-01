@@ -169,7 +169,11 @@ public class PrototypeGameScreen extends BaseGameScreen {
                             if (mThrowInCardsAllowed == 0) {
                                 sendThrowInResponse();
                             }
-                        } else {
+                        } else if (mRequestedRetaliation) {
+                            //TODO : do nothing
+                        }
+
+                        else {
                             layoutBottomPlayerCards();
                         }
                     }
@@ -348,7 +352,7 @@ public class PrototypeGameScreen extends BaseGameScreen {
         pos.setXY(offsetX, topOffset);
 
         //setup 3 points for player at left top
-        origin = new YANVector2(pos.getX() /*+ avatar.getSize().getX()*/, pos.getY());
+        origin = new YANVector2(pos.getX() * 4, pos.getY());
         leftBasis = new YANVector2(origin.getX() + fanDistance, origin.getY());
         rightBasis = new YANVector2(origin.getX(), origin.getY() + fanDistance);
         mThreePointFanLayouterTopLeft.setThreePoints(origin, leftBasis, rightBasis);
@@ -440,9 +444,10 @@ public class PrototypeGameScreen extends BaseGameScreen {
             }
         }
 
-        for (CardNode cardNode : nodesToRemoveFromPlayerHand) {
-            mCardsScreenFragment.getBottomPlayerCardNodes().remove(cardNode);
-        }
+        //FIXME : that causes visual bug : cards are staying on the field
+//        for (CardNode cardNode : nodesToRemoveFromPlayerHand) {
+//            mCardsScreenFragment.getBottomPlayerCardNodes().remove(cardNode);
+//        }
 
         layoutBottomPlayerCards();
     }
