@@ -29,7 +29,7 @@ repositories {
         url "https://dl.dropboxusercontent.com/u/48976508/maven-repo"
     }
 }
-
+//tagged to 1.0
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':GlEngine')
