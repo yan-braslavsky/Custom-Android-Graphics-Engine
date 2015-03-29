@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.yan_home.openglengineandroid.R;
-import com.example.yan_home.openglengineandroid.durak.local_server.KickStarter;
+import com.example.yan_home.openglengineandroid.durak.communication.socket.LocalServerClient;
+import com.yan.durak.gamelogic.GameStarter;
 
 public class MainMenuActivity extends Activity {
 
@@ -25,7 +26,7 @@ public class MainMenuActivity extends Activity {
         (new Thread(new Runnable() {
             @Override
             public void run() {
-                (new KickStarter()).start();
+                (new GameStarter(new LocalServerClient(), null, null)).start();
             }
         })).start();
 

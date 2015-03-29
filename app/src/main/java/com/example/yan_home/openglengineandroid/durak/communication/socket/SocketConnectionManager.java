@@ -1,7 +1,7 @@
 package com.example.yan_home.openglengineandroid.durak.communication.socket;
 
 import com.yan.glengine.util.YANLogger;
-
+import com.yan.durak.gamelogic.communication.connection.SocketClient;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.LinkedList;
@@ -79,7 +79,7 @@ public class SocketConnectionManager {
         (new Thread(new Runnable() {
             @Override
             public void run() {
-                mSocketClient = new LocalClient();
+                mSocketClient = new RemoteServerClient();
                 mConnected = true;
 
                 while (isConnected()) {

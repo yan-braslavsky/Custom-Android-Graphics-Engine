@@ -1,9 +1,14 @@
 package com.example.yan_home.openglengineandroid.durak.communication.socket;
 
+import com.yan.durak.gamelogic.communication.connection.SocketClient;
+
 /**
  * Created by Yan-Home on 12/24/2014.
+ * <p/>
+ * Used to serve as a SocketClient on a client side that connected
+ * to a local server.
  */
-public class LocalClient implements SocketClient {
+public class RemoteServerClient implements SocketClient {
 
     @Override
     public void sendMessage(String msg) {

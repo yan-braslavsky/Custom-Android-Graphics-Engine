@@ -1,10 +1,13 @@
 package com.example.yan_home.openglengineandroid.durak.communication.socket;
 
+import com.yan.durak.gamelogic.communication.connection.SocketClient;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+
 
 /**
  * Created by Yan-Home on 12/24/2014.
