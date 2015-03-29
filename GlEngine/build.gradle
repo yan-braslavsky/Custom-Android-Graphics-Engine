@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
 
 android {
     compileSdkVersion 21
@@ -30,4 +31,15 @@ dependencies {
     compile files('libs/tween-engine-api.jar')
     compile files('libs/commons-math3-3.4.jar')
     compile files('libs/commons-math3-3.4-javadoc.jar')
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file:///E:/Dropbox/public/maven-repo")
+            pom.groupId = 'com.yan.glengine'
+            pom.artifactId = 'engine-lib'
+            pom.version = '1.0-SNAPSHOT'
+        }
+    }
 }
