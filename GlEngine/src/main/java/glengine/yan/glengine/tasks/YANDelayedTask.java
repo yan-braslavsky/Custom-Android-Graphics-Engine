@@ -11,6 +11,7 @@ public class YANDelayedTask implements YANTask {
 
 
     private float mDurationSeconds;
+    private float mOriginalDurationInSeconds;
     private YANDelayedTaskListener mDelayedTaskListener;
 
     public YANDelayedTask(float durationSeconds) {
@@ -19,6 +20,7 @@ public class YANDelayedTask implements YANTask {
 
     public YANDelayedTask(float durationSeconds, YANDelayedTaskListener listener) {
         mDurationSeconds = durationSeconds;
+        mOriginalDurationInSeconds = durationSeconds;
         mDelayedTaskListener = listener;
     }
 
@@ -36,6 +38,9 @@ public class YANDelayedTask implements YANTask {
         if (mDelayedTaskListener != null) {
             mDelayedTaskListener.onComplete();
         }
+
+        //reset duration in seconds to allow reuse this task
+        mDurationSeconds = mOriginalDurationInSeconds;
     }
 
     @Override

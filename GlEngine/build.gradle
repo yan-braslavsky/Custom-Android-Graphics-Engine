@@ -39,7 +39,8 @@ uploadArchives {
             repository(url: "file:///E:/Dropbox/public/maven-repo")
             pom.groupId = 'com.yan.glengine'
             pom.artifactId = 'engine-lib'
-            pom.version = '1.0-SNAPSHOT'
+            pom.version = '1.0'
+//            pom.version = '1.0-SNAPSHOT'
         }
     }
 }
