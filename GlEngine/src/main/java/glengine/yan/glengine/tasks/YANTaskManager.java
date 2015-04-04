@@ -1,6 +1,7 @@
 package glengine.yan.glengine.tasks;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by ybra on 12.12.2014.
@@ -8,7 +9,7 @@ import java.util.Vector;
 public class YANTaskManager {
 
     private static YANTaskManager INSTANCE = new YANTaskManager();
-    private Vector<YANTask> mTaskList = new Vector<>();
+    private volatile ArrayList<YANTask> mTaskList = new ArrayList<>();
 
     private YANTaskManager() {
     }
@@ -18,7 +19,10 @@ public class YANTaskManager {
     }
 
     public void update(float deltaSeconds) {
-        for (YANTask task : mTaskList) {
+        Iterator<YANTask> it = mTaskList.iterator();
+        while(it.hasNext())
+        {
+            YANTask task = it.next();
             task.onUpdate(deltaSeconds);
         }
     }
