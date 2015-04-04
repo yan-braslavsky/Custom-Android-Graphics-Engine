@@ -1,6 +1,6 @@
 package glengine.yan.glengine.tasks;
 
-import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * Created by ybra on 12.12.2014.
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class YANTaskManager {
 
     private static YANTaskManager INSTANCE = new YANTaskManager();
-    private ArrayList<YANTask> mTaskList = new ArrayList<>();
+    private Vector<YANTask> mTaskList = new Vector<>();
 
     private YANTaskManager() {
     }
