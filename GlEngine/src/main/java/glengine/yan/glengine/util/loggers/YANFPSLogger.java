@@ -1,4 +1,4 @@
-package glengine.yan.glengine.util;
+package glengine.yan.glengine.util.loggers;
 
 /**
  * Created by Yan-Home on 1/17/2015.

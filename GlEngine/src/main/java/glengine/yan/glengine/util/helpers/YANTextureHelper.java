@@ -6,7 +6,7 @@
  * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/kbogla for more book information.
  ***/
-package glengine.yan.glengine.util;
+package glengine.yan.glengine.util.helpers;
 
 import android.content.Context;
 import android.graphics.Bitmap;

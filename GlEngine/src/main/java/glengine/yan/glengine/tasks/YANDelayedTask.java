@@ -1,29 +1,29 @@
 package glengine.yan.glengine.tasks;
 
+import glengine.yan.glengine.util.object_pool.YANIPoolableObject;
+
 /**
  * Created by ybra on 12.12.2014.
  */
-public class YANDelayedTask implements YANTask {
+public class YANDelayedTask implements YANTask, YANIPoolableObject {
+
+    private volatile float mDurationSeconds;
+    private YANDelayedTaskListener mDelayedTaskListener;
+    private volatile boolean running;
+
+    @Override
+    public void resetState() {
+        stop();
+        mDelayedTaskListener = null;
+    }
 
     public interface YANDelayedTaskListener {
         void onComplete();
     }
 
-
-    private float mDurationSeconds;
-    private float mOriginalDurationInSeconds;
-    private YANDelayedTaskListener mDelayedTaskListener;
-
-    public YANDelayedTask(float durationSeconds) {
-        mDurationSeconds = durationSeconds;
+    public YANDelayedTask() {
+        //Default constructor is required by an object pool
     }
-
-    public YANDelayedTask(float durationSeconds, YANDelayedTaskListener listener) {
-        mDurationSeconds = durationSeconds;
-        mOriginalDurationInSeconds = durationSeconds;
-        mDelayedTaskListener = listener;
-    }
-
 
     @Override
     public void onUpdate(float deltaSeconds) {
@@ -38,13 +38,11 @@ public class YANDelayedTask implements YANTask {
         if (mDelayedTaskListener != null) {
             mDelayedTaskListener.onComplete();
         }
-
-        //reset duration in seconds to allow reuse this task
-        mDurationSeconds = mOriginalDurationInSeconds;
     }
 
     @Override
     public void start() {
+        running = true;
         YANTaskManager.getInstance().addTask(this);
     }
 
@@ -52,6 +50,25 @@ public class YANDelayedTask implements YANTask {
     public void stop() {
         YANTaskManager.getInstance().removeTask(this);
         mDurationSeconds = 0;
+        running = false;
     }
 
+    /**
+     * This amount is used to count down the task execution.
+     * Cannot be modified during the execution of a task
+     */
+    public void setDurationSeconds(float durationSeconds) {
+        mDurationSeconds = durationSeconds;
+    }
+
+    /**
+     * Indicates whether the task is currently running
+     */
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setDelayedTaskListener(YANDelayedTaskListener delayedTaskListener) {
+        mDelayedTaskListener = delayedTaskListener;
+    }
 }

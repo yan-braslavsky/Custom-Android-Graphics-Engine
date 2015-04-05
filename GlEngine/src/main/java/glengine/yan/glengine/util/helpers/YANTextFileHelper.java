@@ -1,4 +1,4 @@
-package glengine.yan.glengine.util;
+package glengine.yan.glengine.util.helpers;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class YANTextResourceReader {
+public class YANTextFileHelper {
     /**
      * Reads in text from a resource file and returns a String containing the
      * text.

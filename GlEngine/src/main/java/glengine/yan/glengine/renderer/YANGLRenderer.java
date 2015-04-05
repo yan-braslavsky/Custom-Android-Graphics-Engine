@@ -13,7 +13,7 @@ import glengine.yan.glengine.programs.YANTextShaderProgram;
 import glengine.yan.glengine.programs.YANTextureShaderProgram;
 import glengine.yan.glengine.screens.YANIScreen;
 import glengine.yan.glengine.tasks.YANTaskManager;
-import glengine.yan.glengine.util.YANMatrixHelper;
+import glengine.yan.glengine.util.helpers.YANMatrixHelper;
 import glengine.yan.glengine.util.colors.YANColor;
 import glengine.yan.glengine.util.geometry.YANVector2;
 

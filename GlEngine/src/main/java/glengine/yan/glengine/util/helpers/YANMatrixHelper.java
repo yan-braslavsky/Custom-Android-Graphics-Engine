@@ -1,4 +1,4 @@
-package glengine.yan.glengine.util;
+package glengine.yan.glengine.util.helpers;
 
 import android.opengl.Matrix;
 

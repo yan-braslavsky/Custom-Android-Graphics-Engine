@@ -7,7 +7,7 @@ import glengine.yan.glengine.nodes.YANTextNode;
 import glengine.yan.glengine.renderer.YANGLRenderer;
 import glengine.yan.glengine.screens.YANIScreen;
 import glengine.yan.glengine.screens.YANNodeScreen;
-import glengine.yan.glengine.util.YANFPSLogger;
+import glengine.yan.glengine.util.loggers.YANFPSLogger;
 import glengine.yan.glengine.util.colors.YANColor;
 
 /**

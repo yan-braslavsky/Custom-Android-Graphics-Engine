@@ -1,14 +1,14 @@
 package glengine.yan.glengine.assets.font;
 
-import glengine.yan.glengine.EngineWrapper;
-import glengine.yan.glengine.assets.YANAssetDescriptor;
-import glengine.yan.glengine.assets.YANAssetLoader;
-import glengine.yan.glengine.util.YANTextResourceReader;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import glengine.yan.glengine.EngineWrapper;
+import glengine.yan.glengine.assets.YANAssetDescriptor;
+import glengine.yan.glengine.assets.YANAssetLoader;
+import glengine.yan.glengine.util.helpers.YANTextFileHelper;
 
 /**
  * Created by Yan-Home on 1/10/2015.
@@ -17,7 +17,7 @@ public class YANFontLoader implements YANAssetLoader<YANFont> {
     @Override
     public YANFont loadAsset(YANAssetDescriptor assetDescriptor) {
         //load font file descriptor as a string
-        String jsonAtlasString = YANTextResourceReader.readTextFileFromAssets(EngineWrapper.getContext(), assetDescriptor.getPathToAsset() + assetDescriptor.getAssetName() + "." + assetDescriptor.getAssetExtension());
+        String jsonAtlasString = YANTextFileHelper.readTextFileFromAssets(EngineWrapper.getContext(), assetDescriptor.getPathToAsset() + assetDescriptor.getAssetName() + "." + assetDescriptor.getAssetExtension());
 
         //separate by lines
         String[] lines = jsonAtlasString.split("\\n");

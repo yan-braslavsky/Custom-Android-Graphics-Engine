@@ -27,11 +27,11 @@ public class YANTaskManager {
         }
     }
 
-    public void addTask(YANTask task) {
+    protected void addTask(YANTask task) {
         mTaskList.add(task);
     }
 
-    public void removeTask(YANTask task) {
+    protected void removeTask(YANTask task) {
         mTaskList.remove(task);
     }
 
