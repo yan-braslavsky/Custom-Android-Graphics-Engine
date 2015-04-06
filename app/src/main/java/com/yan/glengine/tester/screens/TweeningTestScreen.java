@@ -1,5 +1,12 @@
 package com.yan.glengine.tester.screens;
 
+import java.util.ArrayList;
+
+import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenManager;
 import glengine.yan.glengine.assets.YANAssetManager;
 import glengine.yan.glengine.nodes.YANButtonNode;
 import glengine.yan.glengine.nodes.YANIRenderableNode;
@@ -9,14 +16,6 @@ import glengine.yan.glengine.renderer.YANGLRenderer;
 import glengine.yan.glengine.screens.YANIScreen;
 import glengine.yan.glengine.tween.YANTweenNodeAccessor;
 import glengine.yan.glengine.util.math.YANMathUtils;
-
-import java.util.ArrayList;
-
-import aurelienribon.tweenengine.BaseTween;
-import aurelienribon.tweenengine.Timeline;
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenCallback;
-import aurelienribon.tweenengine.TweenManager;
 
 /**
  * Created by Yan-Home on 1/18/2015.
@@ -140,7 +139,7 @@ public class TweeningTestScreen extends BaseTestScreen {
 
     @Override
     protected YANIScreen onSetNextScreen() {
-        return null;
+        return new BlendingTestScreen(getRenderer());
     }
 
     @Override
