@@ -102,6 +102,11 @@ public class YANGLRenderer {
 
     private void drawNodes() {
         for (YANIRenderableNode iNode : mCurrentScreen.getNodeList()) {
+
+            //do not draw invisible nodes
+            if(iNode.getOpacity() == 0)
+                continue;
+
             YANMatrixHelper.positionObjectInScene(iNode);
 
             //rendering texture node
