@@ -21,19 +21,19 @@ public class BlendingTestScreen extends BaseTestScreen {
     private YANTextNode mNodesAmountText;
     private YANTexturedNode mGlade;
     private YANTexturedNode mCard;
+    private YANTexturedNode mYouWon;
 
 
     public BlendingTestScreen(YANGLRenderer renderer) {
         super(renderer);
         mTweenManager = new TweenManager();
-        //set gray background
-        renderer.setRendererBackgroundColor(YANColor.createFromHexColor(0x9F9E36));
 
     }
 
     @Override
     public void onSetActive() {
         super.onSetActive();
+        getRenderer().setRendererBackgroundColor(YANColor.createFromHexColor(0x9F9E36));
 
         float randomX = YANMathUtils.randomInRange(0, getSceneSize().getX() * 0.7f);
         float randomY = YANMathUtils.randomInRange(0, getSceneSize().getY() * 0.6f);
@@ -65,6 +65,9 @@ public class BlendingTestScreen extends BaseTestScreen {
         mNodesAmountText.setPosition(50, 50);
         mGlade.setPosition((getSceneSize().getX() - mGlade.getSize().getX()) / 2, (getSceneSize().getY() - mGlade.getSize().getY()) / 2);
         mCard.setPosition(100, 500);
+        mYouWon.setAnchorPoint(0.5f, 0.5f);
+        mYouWon.setPosition(getSceneSize().getX() / 2, getSceneSize().getY() / 2);
+
     }
 
     @Override
@@ -74,6 +77,7 @@ public class BlendingTestScreen extends BaseTestScreen {
         //add text node
         addNode(mNodesAmountText);
         addNode(mGlade);
+        addNode(mYouWon);
         addNode(mCard);
     }
 
@@ -84,6 +88,7 @@ public class BlendingTestScreen extends BaseTestScreen {
         //set size
         mGlade.setSize(mUiAtlas.getTextureRegion("glade.png").getWidth(), mUiAtlas.getTextureRegion("glade.png").getHeight());
         mCard.setSize(mCardsAtlas.getTextureRegion("cards_diamonds_queen.png").getWidth(), mCardsAtlas.getTextureRegion("cards_diamonds_queen.png").getHeight());
+        mYouWon.setSize(mUiAtlasGame.getTextureRegion("you_won.png").getWidth(), mUiAtlasGame.getTextureRegion("you_won.png").getHeight());
     }
 
     @Override
@@ -101,6 +106,7 @@ public class BlendingTestScreen extends BaseTestScreen {
         //semi transparent card
         mCard = new YANTexturedNode(mCardsAtlas.getTextureRegion("cards_diamonds_queen.png"));
 
+        mYouWon = new YANTexturedNode(mUiAtlasGame.getTextureRegion("you_won.png"));
     }
 
 
