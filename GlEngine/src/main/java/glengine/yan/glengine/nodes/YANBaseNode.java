@@ -107,7 +107,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
             glDisable(GLES20.GL_CULL_FACE);
 
         //change blending function if needed
-        if(getOpacity() == 1.0)
+        if(getOpacity() == 1.0f)
             GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
@@ -122,7 +122,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
             glDisable(GLES20.GL_CULL_FACE);
 
         //change blending function if needed
-        if(getOpacity() < 1.0)
+        if(getOpacity() < 1.0f)
             GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
