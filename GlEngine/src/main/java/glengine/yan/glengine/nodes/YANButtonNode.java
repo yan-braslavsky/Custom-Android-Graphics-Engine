@@ -67,6 +67,11 @@ public class YANButtonNode extends YANTexturedNode {
             }
 
         }
+
+        @Override
+        public int getSortingLayer() {
+            return YANButtonNode.this.getSortingLayer();
+        }
     };
 
     private void changeState(YANButtonState state) {

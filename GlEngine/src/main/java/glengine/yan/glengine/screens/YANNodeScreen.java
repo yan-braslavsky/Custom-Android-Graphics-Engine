@@ -1,13 +1,13 @@
 package glengine.yan.glengine.screens;
 
-import glengine.yan.glengine.nodes.YANIRenderableNode;
-import glengine.yan.glengine.renderer.YANGLRenderer;
-import glengine.yan.glengine.util.geometry.YANReadOnlyVector2;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import glengine.yan.glengine.nodes.YANIRenderableNode;
+import glengine.yan.glengine.renderer.YANGLRenderer;
+import glengine.yan.glengine.util.geometry.YANReadOnlyVector2;
 
 /**
  * Created by Yan-Home on 10/3/2014.
