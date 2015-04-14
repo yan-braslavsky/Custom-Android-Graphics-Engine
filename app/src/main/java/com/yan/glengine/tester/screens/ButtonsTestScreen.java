@@ -12,6 +12,7 @@ import glengine.yan.glengine.screens.YANIScreen;
 public class ButtonsTestScreen extends BaseTestScreen {
 
     private YANTextNode mTitleText;
+    private YANButtonNode mSimpleAnchoredButton;
     private YANButtonNode mSimpleButton;
 
 
@@ -36,7 +37,8 @@ public class ButtonsTestScreen extends BaseTestScreen {
         super.onLayoutNodes();
 
         mTitleText.setPosition(50, 50);
-        mSimpleButton.setPosition((getSceneSize().getX() - mSimpleButton.getSize().getX()) / 2, (getSceneSize().getY() - mSimpleButton.getSize().getY()) / 2);
+        mSimpleAnchoredButton.setPosition((getSceneSize().getX() - mSimpleAnchoredButton.getSize().getX()) / 2, (getSceneSize().getY() - mSimpleAnchoredButton.getSize().getY()) / 2);
+        mSimpleButton.setPosition(200, 200);
 
 
     }
@@ -47,6 +49,7 @@ public class ButtonsTestScreen extends BaseTestScreen {
 
         //add text node
         addNode(mTitleText);
+        addNode(mSimpleAnchoredButton);
         addNode(mSimpleButton);
     }
 
@@ -55,8 +58,10 @@ public class ButtonsTestScreen extends BaseTestScreen {
         super.onChangeNodesSize();
 
         //set size
-        mSimpleButton.setSize(mUiAtlas.getTextureRegion("call_btn_default.png").getWidth() *3, mUiAtlas.getTextureRegion("call_btn_default.png").getHeight()*3);
-        mSimpleButton.setAnchorPoint(0.5f,0.5f);
+        mSimpleAnchoredButton.setSize(mUiAtlas.getTextureRegion("call_btn_default.png").getWidth() * 3, mUiAtlas.getTextureRegion("call_btn_default.png").getHeight() * 3);
+        mSimpleButton.setSize(mUiAtlas.getTextureRegion("call_btn_default.png").getWidth() * 3, mUiAtlas.getTextureRegion("call_btn_default.png").getHeight() * 3);
+        mSimpleAnchoredButton.setAnchorPoint(0.9f, 0.5f);
+        mSimpleButton.setAnchorPoint(0f, 0f);
 
     }
 
@@ -69,7 +74,7 @@ public class ButtonsTestScreen extends BaseTestScreen {
         mTitleText.setText("Buttons Test");
         mTitleText.setSortingLayer(OVERLAY_SORTING_LAYER);
 
-        //create glade
+        mSimpleAnchoredButton = new YANButtonNode(mUiAtlas.getTextureRegion("call_btn_default.png"), mUiAtlas.getTextureRegion("call_btn_pressed.png"));
         mSimpleButton = new YANButtonNode(mUiAtlas.getTextureRegion("call_btn_default.png"), mUiAtlas.getTextureRegion("call_btn_pressed.png"));
 
     }

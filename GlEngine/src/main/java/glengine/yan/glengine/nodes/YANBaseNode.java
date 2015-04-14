@@ -99,6 +99,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     /**
      * This method called right before glDrawArrays is executed.
      * This is a good place to change relevant GL states.
+     *
      * @param renderer
      */
     protected void onAfterRendering(YANGLRenderer renderer) {
@@ -107,13 +108,14 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
             glDisable(GLES20.GL_CULL_FACE);
 
         //change blending function if needed
-        if(getOpacity() == 1.0f)
+        if (getOpacity() == 1.0f)
             GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     /**
      * This method called right after glDrawArrays is executed.
      * This is a good place to change relevant GL states.
+     *
      * @param renderer
      */
     protected void onBeforeRendering(YANGLRenderer renderer) {
@@ -122,7 +124,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
             glDisable(GLES20.GL_CULL_FACE);
 
         //change blending function if needed
-        if(getOpacity() < 1.0f)
+        if (getOpacity() < 1.0f)
             GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
@@ -135,11 +137,16 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     @Override
     public YANRectangle getBoundingRectangle() {
 
-        YANVector2 leftTop = new YANVector2(getPosition().getX() + getSize().getX() * getAnchorPoint().getX(),
-                getPosition().getY() + getSize().getY() * getAnchorPoint().getY());
+        //TODO : for optimization it can be cached and updated only on size or anchor change
+        //calculate offset for anchor point
+        float anchorPointOffsetX = getSize().getX() * getAnchorPoint().getX();
+        float anchorPointOffsetY = getSize().getY() * getAnchorPoint().getY();
 
-        YANVector2 rightBottom = new YANVector2(getPosition().getX() + getSize().getX() + getSize().getX() * getAnchorPoint().getX(),
-                getPosition().getY() + getSize().getY() + getSize().getY() * getAnchorPoint().getY());
+        YANVector2 leftTop = new YANVector2(getPosition().getX() - anchorPointOffsetX,
+                getPosition().getY() - anchorPointOffsetY);
+
+        YANVector2 rightBottom = new YANVector2((getPosition().getX() + getSize().getX()) - anchorPointOffsetX,
+                (getPosition().getY() + getSize().getY()) - anchorPointOffsetY);
 
         return new YANRectangle(leftTop, rightBottom);
     }
