@@ -106,10 +106,6 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
         //enable culling again
         if (getRotationY() != 0)
             glDisable(GLES20.GL_CULL_FACE);
-
-        //change blending function if needed
-        if (getOpacity() == 1.0f)
-            GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     /**
@@ -123,9 +119,14 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
         if (getRotationY() != 0)
             glDisable(GLES20.GL_CULL_FACE);
 
-        //change blending function if needed
-        if (getOpacity() < 1.0f)
+        //TODO : This is not efficient due to fact that we can switch states that are
+        //already there.
+        //change blending function as needed
+        if (getOpacity() < 1.0f) {
             GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+        } else {
+            GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+        }
     }
 
     protected void recalculateDimensions() {
