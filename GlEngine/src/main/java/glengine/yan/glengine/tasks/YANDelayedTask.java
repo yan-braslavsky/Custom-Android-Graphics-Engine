@@ -28,7 +28,7 @@ public class YANDelayedTask implements YANTask, YANIPoolableObject {
     @Override
     public void onUpdate(float deltaSeconds) {
         mDurationSeconds -= deltaSeconds;
-        if (mDurationSeconds <= 0) {
+        if (running && (mDurationSeconds <= 0)) {
             finishTask();
         }
     }
@@ -48,7 +48,6 @@ public class YANDelayedTask implements YANTask, YANIPoolableObject {
 
     @Override
     public void stop() {
-        mDurationSeconds = 0;
         running = false;
     }
 
