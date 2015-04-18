@@ -22,4 +22,10 @@ interface YANTask {
      */
     void stop();
 
+    /**
+     * Returns true if the task is still running.
+     * Otherwise returns false
+     */
+    public boolean isRunning();
+
 }

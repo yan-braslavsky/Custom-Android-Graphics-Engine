@@ -20,19 +20,18 @@ public class YANTaskManager {
 
     public void update(float deltaSeconds) {
         Iterator<YANTask> it = mTaskList.iterator();
-        while(it.hasNext())
-        {
+        while (it.hasNext()) {
             YANTask task = it.next();
             task.onUpdate(deltaSeconds);
+
+            //remove finished task
+            //this is the only place where task can be removed
+            if (!task.isRunning())
+                it.remove();
         }
     }
 
     protected void addTask(YANTask task) {
         mTaskList.add(task);
     }
-
-    protected void removeTask(YANTask task) {
-        mTaskList.remove(task);
-    }
-
 }

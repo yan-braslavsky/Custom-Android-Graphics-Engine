@@ -48,7 +48,6 @@ public class YANDelayedTask implements YANTask, YANIPoolableObject {
 
     @Override
     public void stop() {
-        YANTaskManager.getInstance().removeTask(this);
         mDurationSeconds = 0;
         running = false;
     }
@@ -61,9 +60,8 @@ public class YANDelayedTask implements YANTask, YANIPoolableObject {
         mDurationSeconds = durationSeconds;
     }
 
-    /**
-     * Indicates whether the task is currently running
-     */
+
+    @Override
     public boolean isRunning() {
         return running;
     }
