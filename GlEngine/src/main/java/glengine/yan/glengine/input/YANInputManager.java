@@ -79,6 +79,11 @@ public class YANInputManager {
     }
 
     public void addEventListener(TouchListener listener) {
+
+        //do not add the same instance twice
+        if (mListeners.contains(listener))
+            return;
+
         mListeners.add(listener);
     }
 
