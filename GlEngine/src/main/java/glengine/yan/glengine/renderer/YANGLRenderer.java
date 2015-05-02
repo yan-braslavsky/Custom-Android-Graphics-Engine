@@ -115,7 +115,7 @@ public class YANGLRenderer {
                 mTextureShaderProgram.setUniforms(
                         YANMatrixHelper.modelViewProjectionMatrix,
                         YANAssetManager.getInstance().getLoadedTextureOpenGLHandle(((YANTexturedNode) iNode).getTextureRegion().getAtlas().getAtlasImageFilePath()),
-                        iNode.getOpacity());
+                        iNode.getOpacity(),iNode.getOverlayColor().asFloatArray());
 
                 //bind data
                 iNode.bindData(mTextureShaderProgram);

@@ -1,6 +1,6 @@
 package com.yan.glengine.tester.activities;
 
-import com.yan.glengine.tester.screens.FontTestScreen;
+import com.yan.glengine.tester.screens.ColorOverlayTestScreen;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class VisualTestsActivity extends EngineActivity {
 
     @Override
     protected YANIScreen onCreateStartScreen(YANGLRenderer renderer) {
-        return new FontTestScreen(renderer);
+        return new ColorOverlayTestScreen(renderer);
     }
 
 }

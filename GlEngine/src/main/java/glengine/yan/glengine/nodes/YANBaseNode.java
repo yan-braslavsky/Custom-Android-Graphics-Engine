@@ -6,6 +6,7 @@ import glengine.yan.glengine.data.YANVertexArray;
 import glengine.yan.glengine.input.YANNodeTouchListener;
 import glengine.yan.glengine.programs.ShaderProgram;
 import glengine.yan.glengine.renderer.YANGLRenderer;
+import glengine.yan.glengine.util.colors.YANColor;
 import glengine.yan.glengine.util.geometry.YANReadOnlyVector2;
 import glengine.yan.glengine.util.geometry.YANRectangle;
 import glengine.yan.glengine.util.geometry.YANVector2;
@@ -33,6 +34,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     private float mRotationY;
     private float mOpacity;
     private int mSortingLayer;
+    private YANColor mOverlayColor;
 
     protected YANBaseNode() {
         mSize = new YANVector2(0, 0);
@@ -41,6 +43,9 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
         mRotationZ = 0;
         mRotationY = 0;
         mOpacity = 1f;
+
+        //no overlay color tint by default
+        mOverlayColor = new YANColor(0f, 0f, 0f, 0f);
     }
 
     @Override
@@ -205,5 +210,15 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     @Override
     public int getSortingLayer() {
         return mSortingLayer;
+    }
+
+    @Override
+    public YANColor getOverlayColor() {
+        return mOverlayColor;
+    }
+
+    @Override
+    public void setOverlayColor(float r, float g, float b, float a) {
+        mOverlayColor.setColor(r, g, b, a);
     }
 }

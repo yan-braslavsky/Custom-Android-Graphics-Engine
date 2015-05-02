@@ -55,7 +55,7 @@ public class FontTestScreen extends BaseTestScreen {
 
     @Override
     protected YANIScreen onSetPreviousScreen() {
-        return null;
+        return new ColorOverlayTestScreen(getRenderer());
     }
 
     @Override

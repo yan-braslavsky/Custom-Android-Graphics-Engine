@@ -7,16 +7,11 @@ import android.graphics.Color;
  */
 public class YANColor {
 
-    private float mR;
-    private float mG;
-    private float mB;
-    private float mA;
+    private final float[] mArr;
 
-    public YANColor(float mR, float mG, float mB, float mA) {
-        this.mR = mR;
-        this.mG = mG;
-        this.mB = mB;
-        this.mA = mA;
+    public YANColor(float r, float g, float b, float a) {
+        mArr = new float[]{0, 0, 0, 0};
+        setColor(r, g, b, a);
     }
 
     public static YANColor createFromHexColor(int hexaColor) {
@@ -24,18 +19,35 @@ public class YANColor {
     }
 
     public float getR() {
-        return mR;
+        return mArr[0];
     }
 
     public float getG() {
-        return mG;
+        return mArr[1];
     }
 
     public float getB() {
-        return mB;
+        return mArr[2];
     }
 
     public float getA() {
-        return mA;
+        return mArr[3];
+    }
+
+    /**
+     * Returns float array that defines a color.
+     * If values of the array will be changed , then the color will be changed too
+     *
+     * @return float array {red,green,blue,alpha}
+     */
+    public float[] asFloatArray() {
+        return mArr;
+    }
+
+    public void setColor(float r, float g, float b, float a) {
+        mArr[0] = r;
+        mArr[1] = g;
+        mArr[2] = b;
+        mArr[3] = a;
     }
 }

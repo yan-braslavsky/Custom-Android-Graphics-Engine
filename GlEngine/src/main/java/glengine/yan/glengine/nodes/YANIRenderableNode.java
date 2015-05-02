@@ -2,6 +2,7 @@ package glengine.yan.glengine.nodes;
 
 import glengine.yan.glengine.programs.ShaderProgram;
 import glengine.yan.glengine.renderer.YANGLRenderer;
+import glengine.yan.glengine.util.colors.YANColor;
 import glengine.yan.glengine.util.geometry.YANReadOnlyVector2;
 import glengine.yan.glengine.util.geometry.YANRectangle;
 import glengine.yan.glengine.util.geometry.YANVector2;
@@ -65,4 +66,8 @@ public interface YANIRenderableNode<T extends ShaderProgram> {
     void setSortingLayer(int sortingLayer);
 
     int getSortingLayer();
+
+    YANColor getOverlayColor();
+
+    void setOverlayColor(float r, float g, float b, float a);
 }
