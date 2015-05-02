@@ -20,11 +20,11 @@ vec4 overlay(in vec4 srcColor,in vec4 u_TextureOverlayColor){
     float dA = srcColor.a;
 
     //implement tinting function
-    float dstAlpha =  sA + dA*(1 -sA);
+    float dstAlpha =  sA + dA*(1.0 -sA);
 
-    float dstRed   = (sR*sA + dR*dA*(1-sA)) / dstAlpha;
-    float dstGreen = (sG*sA + dG*dA*(1-sA)) / dstAlpha;
-    float dstBlue  = (sB*sA + dB*dA*(1-sA)) / dstAlpha;
+    float dstRed   = (sR*sA + dR*dA*(1.0-sA)) / dstAlpha;
+    float dstGreen = (sG*sA + dG*dA*(1.0-sA)) / dstAlpha;
+    float dstBlue  = (sB*sA + dB*dA*(1.0-sA)) / dstAlpha;
 
     dstRed  = dstRed * srcColor.a;
     dstGreen = dstGreen * srcColor.a;
@@ -44,7 +44,7 @@ void main()
     gl_FragColor = texture2D(u_TextureUnit, v_TextureCoordinates);
     gl_FragColor.a *= u_opacity;
 
-    if(u_TextureOverlayColor.a > 0){
+    if(u_TextureOverlayColor.a > 0.0){
         //do overlay color
         gl_FragColor = overlay(gl_FragColor,u_TextureOverlayColor);
     }
