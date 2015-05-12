@@ -5,6 +5,7 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import glengine.yan.glengine.assets.YANAssetManager;
+import glengine.yan.glengine.nodes.YANCircleNode;
 import glengine.yan.glengine.nodes.YANIRenderableNode;
 import glengine.yan.glengine.nodes.YANTextNode;
 import glengine.yan.glengine.nodes.YANTexturedNode;
@@ -104,7 +105,7 @@ public class YANGLRenderer {
         for (YANIRenderableNode iNode : mCurrentScreen.getNodeList()) {
 
             //do not draw invisible nodes
-            if(iNode.getOpacity() == 0)
+            if (iNode.getOpacity() == 0)
                 continue;
 
             YANMatrixHelper.positionObjectInScene(iNode);
@@ -115,7 +116,7 @@ public class YANGLRenderer {
                 mTextureShaderProgram.setUniforms(
                         YANMatrixHelper.modelViewProjectionMatrix,
                         YANAssetManager.getInstance().getLoadedTextureOpenGLHandle(((YANTexturedNode) iNode).getTextureRegion().getAtlas().getAtlasImageFilePath()),
-                        iNode.getOpacity(),iNode.getOverlayColor().asFloatArray());
+                        iNode.getOpacity(), iNode.getOverlayColor().asFloatArray());
 
                 //bind data
                 iNode.bindData(mTextureShaderProgram);
@@ -132,6 +133,15 @@ public class YANGLRenderer {
 
                 //bind data
                 iNode.bindData(mTextShaderProgram);
+            } else if (iNode instanceof YANCircleNode) {
+                colorProgram.useProgram();
+                YANColor color = ((YANCircleNode) iNode).getColor();
+                colorProgram.setUniforms(
+                        YANMatrixHelper.modelViewProjectionMatrix,
+                        color.getR(), color.getG(), color.getB());
+
+                //bind data
+                iNode.bindData(colorProgram);
             }
 
             //don't know how to render a node

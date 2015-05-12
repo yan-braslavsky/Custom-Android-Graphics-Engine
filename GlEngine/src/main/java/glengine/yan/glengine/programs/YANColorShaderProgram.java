@@ -1,11 +1,12 @@
-/***
+/**
  * Excerpted from "OpenGL ES for Android",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material, 
+ * Copyrights apply to this code. It may not be used to create training material,
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose. 
+ * We make no guarantees that this code is fit for any purpose.
  * Visit http://www.pragmaticprogrammer.com/titles/kbogla for more book information.
- ***/
+ * *
+ */
 package glengine.yan.glengine.programs;
 
 import android.content.Context;
@@ -19,8 +20,6 @@ import static android.opengl.GLES20.glUniformMatrix4fv;
 
 
 public class YANColorShaderProgram extends ShaderProgram {
-
-    protected static final String A_COLOR = "a_Color";
 
     // Uniform locations
     private final int uMatrixLocation;

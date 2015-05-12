@@ -22,6 +22,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
 
     protected static final int POSITION_COMPONENT_COUNT = 2;
     protected static final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
+    protected static final int COLOR_COMPONENT_COUNT = 4;
     protected static final int VALUES_PER_VERTEX = POSITION_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT;
     protected static final int BYTES_PER_FLOAT = 4;
     protected static final int STRIDE = (POSITION_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT) * BYTES_PER_FLOAT;
