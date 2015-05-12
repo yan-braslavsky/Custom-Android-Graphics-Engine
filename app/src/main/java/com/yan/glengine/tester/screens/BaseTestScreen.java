@@ -52,7 +52,7 @@ public abstract class BaseTestScreen extends YANNodeScreen {
         });
 
         mUiAtlas = YANAssetManager.getInstance().getLoadedAtlas("ui_atlas");
-        mUiAtlasGame = YANAssetManager.getInstance().getLoadedAtlas("ui_atlas_game");
+//        mUiAtlasGame = YANAssetManager.getInstance().getLoadedAtlas("ui_atlas_game");
         mCardsAtlas = YANAssetManager.getInstance().getLoadedAtlas("cards_atlas");
     }
 
@@ -61,7 +61,7 @@ public abstract class BaseTestScreen extends YANNodeScreen {
         super.onSetActive();
         //load atlas into a memory
         YANAssetManager.getInstance().loadTexture(YANAssetManager.getInstance().getLoadedAtlas("ui_atlas").getAtlasImageFilePath());
-        YANAssetManager.getInstance().loadTexture(YANAssetManager.getInstance().getLoadedAtlas("ui_atlas_game").getAtlasImageFilePath());
+//        YANAssetManager.getInstance().loadTexture(YANAssetManager.getInstance().getLoadedAtlas("ui_atlas_game").getAtlasImageFilePath());
         YANAssetManager.getInstance().loadTexture(YANAssetManager.getInstance().getLoadedAtlas("cards_atlas").getAtlasImageFilePath());
         //load font atlas into a memory
         YANAssetManager.getInstance().loadTexture(YANAssetManager.getInstance().getLoadedFont("standard_font").getGlyphImageFilePath());
