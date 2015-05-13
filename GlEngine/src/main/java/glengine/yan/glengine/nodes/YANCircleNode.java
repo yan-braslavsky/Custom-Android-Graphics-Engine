@@ -16,13 +16,20 @@ public class YANCircleNode extends YANBaseNode<YANColorShaderProgram> {
     private float[] buffer;
     private YANColor mColor = YANColor.createFromHexColor(0xFF00FF);
 
+    public YANCircleNode() {
+        super();
+        buffer = new float[30 * POSITION_COMPONENT_COUNT];
+    }
+
     @Override
     protected void onRender() {
 
-        int valuesPerVertex = POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT;
+        int valuesPerVertex = POSITION_COMPONENT_COUNT * Float.SIZE;
 
         //draw circle as filled shape
-        glDrawArrays(GL_TRIANGLE_FAN, 0, buffer.length / valuesPerVertex);
+//        int vertexCount = buffer.length / valuesPerVertex;
+        int vertexCount = 30;
+        glDrawArrays(GL_TRIANGLE_FAN, 0, vertexCount);
 
         //draw circle contours (skip center vertex at start of buffer)
 //        glDrawArrays(GL_LINE_LOOP, 2, outerVertexCount);
@@ -31,23 +38,56 @@ public class YANCircleNode extends YANBaseNode<YANColorShaderProgram> {
     @Override
     protected float[] createVertexData() {
 
+//        float halfWidth = getSize().getX() / 2f;
+//        float halfHeight = getSize().getY() / 2f;
+//
+//
+//        // Order of coordinates: X, Y, U, V
+//        // Triangle Fan
+//
+//        //first vertex (center)
+//        buffer[0] = 0f;
+//        buffer[1] = 0f;
+//
+//
+//        //second vertex (bottom left)
+//        buffer[2] = -halfWidth;
+//        buffer[3] = -halfHeight;
+//
+//
+//        //third vertex (top left)
+//        buffer[4] = -halfWidth;
+//        buffer[5] = halfHeight;
+//
+//
+//        //fourth vertex (top right)
+//        buffer[6] = halfWidth;
+//        buffer[7] = halfHeight;
+//
+//
+//        //fifth vertex (bottom right)
+//        buffer[8] = halfWidth;
+//        buffer[9] = -halfHeight;
+//
+//
+//        //sixth vertex (bottom left)
+//        buffer[10] = -halfWidth;
+//        buffer[11] = -halfHeight;
+//
+//        return buffer;
+
         int vertexCount = 30;
-        float radius = 1.0f;
+        float radius = getSize().getX() / 2f;
         float center_x = 0.0f;
         float center_y = 0.0f;
 
-        //create a buffer for vertex data
-        buffer = new float[vertexCount * POSITION_COMPONENT_COUNT * COLOR_COMPONENT_COUNT]; // (x,y) for each vertex
+//        //create a buffer for vertex data
+//        buffer = new float[vertexCount * POSITION_COMPONENT_COUNT ]; // (x,y) for each vertex
         int idx = 0;
 
         //center vertex for triangle fan
         buffer[idx++] = center_x;
         buffer[idx++] = center_y;
-
-        buffer[idx++] = mColor.getR();
-        buffer[idx++] = mColor.getG();
-        buffer[idx++] = mColor.getB();
-        buffer[idx++] = mColor.getA();
 
         //outer vertices of the circle
         int outerVertexCount = vertexCount - 1;
@@ -62,11 +102,6 @@ public class YANCircleNode extends YANBaseNode<YANColorShaderProgram> {
 
             buffer[idx++] = outer_x;
             buffer[idx++] = outer_y;
-
-            buffer[idx++] = mColor.getR();
-            buffer[idx++] = mColor.getG();
-            buffer[idx++] = mColor.getB();
-            buffer[idx++] = mColor.getA();
         }
 
         //TODO : create VBO from buffer with glBufferData()
@@ -76,17 +111,20 @@ public class YANCircleNode extends YANBaseNode<YANColorShaderProgram> {
 
     @Override
     public void bindData(YANColorShaderProgram shaderProgram) {
+
+        int stride = (POSITION_COMPONENT_COUNT) * BYTES_PER_FLOAT;
+
         vertexArray.setVertexAttribPointer(
                 0,
                 shaderProgram.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
-                STRIDE);
+                stride);
 
-        vertexArray.setVertexAttribPointer(
-                POSITION_COMPONENT_COUNT,
-                shaderProgram.getColorAttributeLocation(),
-                COLOR_COMPONENT_COUNT,
-                STRIDE);
+//        vertexArray.setVertexAttribPointer(
+//                POSITION_COMPONENT_COUNT,
+//                shaderProgram.getColorAttributeLocation(),
+//                COLOR_COMPONENT_COUNT,
+//                STRIDE);
     }
 
     public YANColor getColor() {

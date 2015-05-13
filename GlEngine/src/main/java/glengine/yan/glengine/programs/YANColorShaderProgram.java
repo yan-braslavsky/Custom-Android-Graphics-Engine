@@ -15,7 +15,7 @@ import com.yan.glengine.R;
 
 import static android.opengl.GLES20.glGetAttribLocation;
 import static android.opengl.GLES20.glGetUniformLocation;
-import static android.opengl.GLES20.glUniform4f;
+import static android.opengl.GLES20.glUniform4fv;
 import static android.opengl.GLES20.glUniformMatrix4fv;
 
 
@@ -39,16 +39,12 @@ public class YANColorShaderProgram extends ShaderProgram {
         aPositionLocation = glGetAttribLocation(program, A_POSITION);
     }
 
-    public void setUniforms(float[] matrix, float r, float g, float b) {
+    public void setUniforms(float[] matrix,  float[] color) {
         glUniformMatrix4fv(uMatrixLocation, 1, false, matrix, 0);
-        glUniform4f(uColorLocation, r, g, b, 1f);
+        glUniform4fv(uColorLocation, 1, color, 0);
     }
 
     public int getPositionAttributeLocation() {
         return aPositionLocation;
-    }
-
-    public int getColorAttributeLocation() {
-        return uColorLocation;
     }
 }

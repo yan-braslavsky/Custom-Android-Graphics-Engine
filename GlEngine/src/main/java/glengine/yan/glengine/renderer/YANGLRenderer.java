@@ -14,9 +14,9 @@ import glengine.yan.glengine.programs.YANTextShaderProgram;
 import glengine.yan.glengine.programs.YANTextureShaderProgram;
 import glengine.yan.glengine.screens.YANIScreen;
 import glengine.yan.glengine.tasks.YANTaskManager;
-import glengine.yan.glengine.util.helpers.YANMatrixHelper;
 import glengine.yan.glengine.util.colors.YANColor;
 import glengine.yan.glengine.util.geometry.YANVector2;
+import glengine.yan.glengine.util.helpers.YANMatrixHelper;
 
 import static android.opengl.GLES20.glEnable;
 
@@ -138,7 +138,7 @@ public class YANGLRenderer {
                 YANColor color = ((YANCircleNode) iNode).getColor();
                 colorProgram.setUniforms(
                         YANMatrixHelper.modelViewProjectionMatrix,
-                        color.getR(), color.getG(), color.getB());
+                        color.asFloatArray());
 
                 //bind data
                 iNode.bindData(colorProgram);
