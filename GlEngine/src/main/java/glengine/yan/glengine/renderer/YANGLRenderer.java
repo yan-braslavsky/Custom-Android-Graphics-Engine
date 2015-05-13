@@ -89,10 +89,11 @@ public class YANGLRenderer {
         // Clear the rendering surface.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-        // Update the viewProjection matrix, and create an inverted matrix for
-        // touch picking.
+        // Update the viewProjection matrix
         Matrix.multiplyMM(YANMatrixHelper.viewProjectionMatrix, 0, YANMatrixHelper.projectionMatrix, 0, YANMatrixHelper.viewMatrix, 0);
-        Matrix.invertM(YANMatrixHelper.invertedViewProjectionMatrix, 0, YANMatrixHelper.viewProjectionMatrix, 0);
+
+        //Inverted View Projection matrix can be used for view picking , but we are not using it right now
+//        Matrix.invertM(YANMatrixHelper.invertedViewProjectionMatrix, 0, YANMatrixHelper.viewProjectionMatrix, 0);
 
         //render each node
         if (mCurrentScreen != null) {
@@ -112,11 +113,15 @@ public class YANGLRenderer {
             //rendering texture node
             if (iNode instanceof YANTexturedNode) {
                 mTextureShaderProgram.useProgram();
+
+                //TODO : extract unified model matrix to node
+                //TODO : extract texture opacity and overlay to material
                 mTextureShaderProgram.setUniforms(
                         YANMatrixHelper.modelViewProjectionMatrix,
                         YANAssetManager.getInstance().getLoadedTextureOpenGLHandle(((YANTexturedNode) iNode).getTextureRegion().getAtlas().getAtlasImageFilePath()),
                         iNode.getOpacity(),iNode.getOverlayColor().asFloatArray());
 
+                //TODO :extract all bind data to mesh of the node
                 //bind data
                 iNode.bindData(mTextureShaderProgram);
             }
