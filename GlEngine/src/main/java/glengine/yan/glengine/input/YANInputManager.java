@@ -1,11 +1,11 @@
 package glengine.yan.glengine.input;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import glengine.yan.glengine.util.geometry.YANVector2;
+import glengine.yan.glengine.util.sort.YANSort;
 
 /**
  * Created by Yan-Home on 10/3/2014.
@@ -43,9 +43,7 @@ public class YANInputManager {
     }
 
     public void handleTouchPress(float normalizedX, float normalizedY) {
-
-        //TODO : Very inneficient ! Rethink !
-        Collections.sort(mListeners, mInputSortingLayerComparator);
+        YANSort.sort(mListeners, mInputSortingLayerComparator);
 
         for (int i = mListeners.size() - 1; i >= 0; i--) {
             boolean consumed = mListeners.get(i).onTouchDown(normalizedX, normalizedY);

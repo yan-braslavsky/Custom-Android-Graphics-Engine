@@ -1,13 +1,13 @@
 package glengine.yan.glengine.screens;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import glengine.yan.glengine.nodes.YANIRenderableNode;
 import glengine.yan.glengine.renderer.YANGLRenderer;
 import glengine.yan.glengine.util.geometry.YANReadOnlyVector2;
+import glengine.yan.glengine.util.sort.YANSort;
 
 /**
  * Created by Yan-Home on 10/3/2014.
@@ -49,9 +49,8 @@ public abstract class YANNodeScreen implements YANIScreen {
     }
 
     private void sortNodesBySortingLayer() {
-        //TODO : think about more efficient solution
         //reorder children by sorting layer
-        Collections.sort(getNodeList(), mSortingLayerComparator);
+        YANSort.sort(getNodeList(), mSortingLayerComparator);
     }
 
     protected void removeNode(YANIRenderableNode node) {

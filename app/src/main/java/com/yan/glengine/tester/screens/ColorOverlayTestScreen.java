@@ -49,7 +49,7 @@ public class ColorOverlayTestScreen extends BaseTestScreen {
 
     @Override
     protected YANIScreen onSetPreviousScreen() {
-        return null;
+        return new CircleTestScreen(getRenderer());
     }
 
     @Override
