@@ -21,7 +21,6 @@ public abstract class BaseTestScreen extends YANNodeScreen {
     protected static final int OVERLAY_SORTING_LAYER = 1000;
 
     protected YANTextureAtlas mUiAtlas;
-    protected YANTextureAtlas mUiAtlasGame;
     protected YANTextureAtlas mCardsAtlas;
 
     //Used to log FPS data on screen
@@ -52,7 +51,6 @@ public abstract class BaseTestScreen extends YANNodeScreen {
         });
 
         mUiAtlas = YANAssetManager.getInstance().getLoadedAtlas("ui_atlas");
-//        mUiAtlasGame = YANAssetManager.getInstance().getLoadedAtlas("ui_atlas_game");
         mCardsAtlas = YANAssetManager.getInstance().getLoadedAtlas("cards_atlas");
     }
 
@@ -61,7 +59,6 @@ public abstract class BaseTestScreen extends YANNodeScreen {
         super.onSetActive();
         //load atlas into a memory
         YANAssetManager.getInstance().loadTexture(YANAssetManager.getInstance().getLoadedAtlas("ui_atlas").getAtlasImageFilePath());
-//        YANAssetManager.getInstance().loadTexture(YANAssetManager.getInstance().getLoadedAtlas("ui_atlas_game").getAtlasImageFilePath());
         YANAssetManager.getInstance().loadTexture(YANAssetManager.getInstance().getLoadedAtlas("cards_atlas").getAtlasImageFilePath());
         //load font atlas into a memory
         YANAssetManager.getInstance().loadTexture(YANAssetManager.getInstance().getLoadedFont("standard_font").getGlyphImageFilePath());

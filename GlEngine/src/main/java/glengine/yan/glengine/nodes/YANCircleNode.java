@@ -1,133 +1,156 @@
 package glengine.yan.glengine.nodes;
 
+import android.opengl.GLES20;
+
 import glengine.yan.glengine.programs.YANColorShaderProgram;
 import glengine.yan.glengine.util.colors.YANColor;
+import glengine.yan.glengine.util.math.YANMathUtils;
 
-import static android.opengl.GLES20.GL_TRIANGLE_FAN;
 import static android.opengl.GLES20.glDrawArrays;
 
 /**
  * Created by yan.braslavsky on 5/12/2015.
- * <p/>
- * Stack overflow reference : http://stackoverflow.com/questions/18140117/how-to-draw-basic-circle-in-opengl-es-2-0-android
  */
 public class YANCircleNode extends YANBaseNode<YANColorShaderProgram> {
 
+
+    public static final int CIRCLE_OUTER_VERTEX_COUNT = 360;
+
+    //We need one additional vertex for center and another for closing the loop
+    public static final int TOTAL_VERTEX_COUNT = CIRCLE_OUTER_VERTEX_COUNT + 2;
     private float[] buffer;
-    private YANColor mColor = YANColor.createFromHexColor(0xFF00FF);
+    private YANColor mColor;
+
+    //We are using this value to  draw partial pie like circle
+    //if the percentage is full full circle will be drawn
+    private float mPieCirclePercentage;
+
+    //defines in what direction the circlie is drawn
+    private boolean clockWiseDraw;
 
     public YANCircleNode() {
         super();
-        buffer = new float[30 * POSITION_COMPONENT_COUNT];
+        buffer = new float[TOTAL_VERTEX_COUNT * POSITION_COMPONENT_COUNT];
+        mPieCirclePercentage = 1.0f;
+        clockWiseDraw = true;
+        mColor = YANColor.createFromHexColor(0xFFFFFF);
     }
 
     @Override
     protected void onRender() {
-
-        int valuesPerVertex = POSITION_COMPONENT_COUNT * Float.SIZE;
-
         //draw circle as filled shape
-//        int vertexCount = buffer.length / valuesPerVertex;
-        int vertexCount = 30;
-        glDrawArrays(GL_TRIANGLE_FAN, 0, vertexCount);
-
-        //draw circle contours (skip center vertex at start of buffer)
-//        glDrawArrays(GL_LINE_LOOP, 2, outerVertexCount);
+        glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, TOTAL_VERTEX_COUNT);
     }
 
     @Override
     protected float[] createVertexData() {
 
-//        float halfWidth = getSize().getX() / 2f;
-//        float halfHeight = getSize().getY() / 2f;
-//
-//
-//        // Order of coordinates: X, Y, U, V
-//        // Triangle Fan
-//
-//        //first vertex (center)
-//        buffer[0] = 0f;
-//        buffer[1] = 0f;
-//
-//
-//        //second vertex (bottom left)
-//        buffer[2] = -halfWidth;
-//        buffer[3] = -halfHeight;
-//
-//
-//        //third vertex (top left)
-//        buffer[4] = -halfWidth;
-//        buffer[5] = halfHeight;
-//
-//
-//        //fourth vertex (top right)
-//        buffer[6] = halfWidth;
-//        buffer[7] = halfHeight;
-//
-//
-//        //fifth vertex (bottom right)
-//        buffer[8] = halfWidth;
-//        buffer[9] = -halfHeight;
-//
-//
-//        //sixth vertex (bottom left)
-//        buffer[10] = -halfWidth;
-//        buffer[11] = -halfHeight;
-//
-//        return buffer;
-
-        int vertexCount = 30;
         float radius = getSize().getX() / 2f;
-        float center_x = 0.0f;
-        float center_y = 0.0f;
-
-//        //create a buffer for vertex data
-//        buffer = new float[vertexCount * POSITION_COMPONENT_COUNT ]; // (x,y) for each vertex
-        int idx = 0;
+        float centerX = 0.0f;
+        float centerY = 0.0f;
+        int index = 0;
 
         //center vertex for triangle fan
-        buffer[idx++] = center_x;
-        buffer[idx++] = center_y;
+        buffer[index++] = centerX;
+        buffer[index++] = centerY;
+
+        //we choosing step in degrees according to outer vertex count
+        float degreeStep = 360 / CIRCLE_OUTER_VERTEX_COUNT;
+
+        //the final matrix is getting offset , that is why we drawing with initial
+        ///rotation offset
+        float rotationOffset = 270f;
 
         //outer vertices of the circle
-        int outerVertexCount = vertexCount - 1;
+//        int verticesToDraw = (int) (CIRCLE_OUTER_VERTEX_COUNT - ((1f - mPieCirclePercentage) * (float) CIRCLE_OUTER_VERTEX_COUNT));
+        int verticesToDraw = (clockWiseDraw) ? CIRCLE_OUTER_VERTEX_COUNT : (int) (CIRCLE_OUTER_VERTEX_COUNT - ((1f - mPieCirclePercentage) * (float) CIRCLE_OUTER_VERTEX_COUNT));
+        int startingVertex = (clockWiseDraw) ? (int) ((1f - mPieCirclePercentage) * (float) CIRCLE_OUTER_VERTEX_COUNT) : 0;
 
-        for (int i = 0; i < outerVertexCount; ++i) {
-            float percent = (i / (float) (outerVertexCount - 1));
-            float rad = (float) (percent * 2 * Math.PI);
-
-            //vertex position
-            float outer_x = (float) (center_x + radius * Math.cos(rad));
-            float outer_y = (float) (center_y + radius * Math.sin(rad));
-
-            buffer[idx++] = outer_x;
-            buffer[idx++] = outer_y;
+        for (int i = startingVertex; i < verticesToDraw; ++i) {
+            float rad = (float) Math.toRadians(rotationOffset - (degreeStep * (float) i));
+            buffer[index++] = (float) (centerX + radius * Math.cos(rad));
+            buffer[index++] = (float) (centerY + radius * Math.sin(rad));
         }
 
-        //TODO : create VBO from buffer with glBufferData()
+        //when we drawing a full circle we want to close the loop
+        //close the loop with the first drawn vertex
+        if (mPieCirclePercentage == 1.0f) {
+            buffer[index++] = buffer[2];
+            buffer[index++] = buffer[3];
+        }
+
+        //fill the rest of the buffer with zero
+        while (index < buffer.length)
+            buffer[index++] = 0f;
 
         return buffer;
     }
 
     @Override
+    public void setOpacity(float opacity) {
+        throw new UnsupportedOperationException("Opacity Not yet implemented for this node");
+    }
+
+    @Override
+    public void setOverlayColor(float r, float g, float b, float a) {
+        throw new UnsupportedOperationException("Overlay color is not yet implemented for this node");
+    }
+
+    @Override
     public void bindData(YANColorShaderProgram shaderProgram) {
 
-        int stride = (POSITION_COMPONENT_COUNT) * BYTES_PER_FLOAT;
-
+        int stride = POSITION_COMPONENT_COUNT * BYTES_PER_FLOAT;
         vertexArray.setVertexAttribPointer(
                 0,
                 shaderProgram.getPositionAttributeLocation(),
                 POSITION_COMPONENT_COUNT,
                 stride);
+    }
 
-//        vertexArray.setVertexAttribPointer(
-//                POSITION_COMPONENT_COUNT,
-//                shaderProgram.getColorAttributeLocation(),
-//                COLOR_COMPONENT_COUNT,
-//                STRIDE);
+
+    public float getPieCirclePercentage() {
+        return mPieCirclePercentage;
+    }
+
+    /**
+     * Used to draw pie like circle.
+     * When percentage is full (1.0) , then full circle will be drawn.
+     *
+     * @param pieCirclePercentage must be between 0.0f - 1.0f <br/>
+     *                            Input with incorrect range will be clamped to 0.0f - 1.0f;
+     */
+    public void setPieCirclePercentage(float pieCirclePercentage) {
+        //we are clamping the input
+        pieCirclePercentage = YANMathUtils.clamp(pieCirclePercentage, 0f, 1f);
+
+        mPieCirclePercentage = pieCirclePercentage;
+        recalculateDimensions();
+    }
+
+    /**
+     * Indicates the direction of circle draw
+     *
+     * @return true if drawn in clockwise order
+     */
+    public boolean isClockWiseDraw() {
+        return clockWiseDraw;
+    }
+
+    /**
+     * Indicates the direction of circle draw
+     *
+     * @param clockWiseDraw true if drawn in clockwise order , false if drawn in counterclockwise
+     */
+    public void setClockWiseDraw(boolean clockWiseDraw) {
+        this.clockWiseDraw = clockWiseDraw;
+    }
+
+    public void setColor(float r, float g, float b) {
+        mColor.setColor(r, g, b, 1f);
     }
 
     public YANColor getColor() {
         return mColor;
     }
+
 }
