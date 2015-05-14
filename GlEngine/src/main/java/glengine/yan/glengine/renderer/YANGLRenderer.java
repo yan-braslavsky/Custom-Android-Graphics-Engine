@@ -5,6 +5,7 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import glengine.yan.glengine.assets.YANAssetManager;
+import glengine.yan.glengine.nodes.YANCircleNode;
 import glengine.yan.glengine.nodes.YANIRenderableNode;
 import glengine.yan.glengine.nodes.YANTextNode;
 import glengine.yan.glengine.nodes.YANTexturedNode;
@@ -13,9 +14,9 @@ import glengine.yan.glengine.programs.YANTextShaderProgram;
 import glengine.yan.glengine.programs.YANTextureShaderProgram;
 import glengine.yan.glengine.screens.YANIScreen;
 import glengine.yan.glengine.tasks.YANTaskManager;
-import glengine.yan.glengine.util.helpers.YANMatrixHelper;
 import glengine.yan.glengine.util.colors.YANColor;
 import glengine.yan.glengine.util.geometry.YANVector2;
+import glengine.yan.glengine.util.helpers.YANMatrixHelper;
 
 import static android.opengl.GLES20.glEnable;
 
@@ -105,7 +106,7 @@ public class YANGLRenderer {
         for (YANIRenderableNode iNode : mCurrentScreen.getNodeList()) {
 
             //do not draw invisible nodes
-            if(iNode.getOpacity() == 0)
+            if (iNode.getOpacity() == 0)
                 continue;
 
             YANMatrixHelper.positionObjectInScene(iNode);
@@ -119,7 +120,7 @@ public class YANGLRenderer {
                 mTextureShaderProgram.setUniforms(
                         YANMatrixHelper.modelViewProjectionMatrix,
                         YANAssetManager.getInstance().getLoadedTextureOpenGLHandle(((YANTexturedNode) iNode).getTextureRegion().getAtlas().getAtlasImageFilePath()),
-                        iNode.getOpacity(),iNode.getOverlayColor().asFloatArray());
+                        iNode.getOpacity(), iNode.getOverlayColor().asFloatArray());
 
                 //TODO :extract all bind data to mesh of the node
                 //bind data
@@ -137,6 +138,15 @@ public class YANGLRenderer {
 
                 //bind data
                 iNode.bindData(mTextShaderProgram);
+            } else if (iNode instanceof YANCircleNode) {
+                colorProgram.useProgram();
+                YANColor color = ((YANCircleNode) iNode).getColor();
+                colorProgram.setUniforms(
+                        YANMatrixHelper.modelViewProjectionMatrix,
+                        color.asFloatArray());
+
+                //bind data
+                iNode.bindData(colorProgram);
             }
 
             //don't know how to render a node

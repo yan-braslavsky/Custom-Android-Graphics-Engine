@@ -13,6 +13,7 @@ public class ColorOverlayTestScreen extends BaseTestScreen {
     private double mColorAngle;
     private double mColorChangeSpeed = 0.02f;
 
+
     public ColorOverlayTestScreen(YANGLRenderer renderer) {
         super(renderer);
     }
@@ -26,7 +27,7 @@ public class ColorOverlayTestScreen extends BaseTestScreen {
     @Override
     protected void onLayoutNodes() {
         super.onLayoutNodes();
-        mGreyCock1.setPosition((getSceneSize().getX() - mGreyCock1.getSize().getX()) / 2, (getSceneSize().getX() - mGreyCock1.getSize().getY()) / 2);
+        mGreyCock1.setPosition((getSceneSize().getX() - mGreyCock1.getSize().getX()) / 2, (getSceneSize().getY() - mGreyCock1.getSize().getY()) / 2);
     }
 
     @Override
