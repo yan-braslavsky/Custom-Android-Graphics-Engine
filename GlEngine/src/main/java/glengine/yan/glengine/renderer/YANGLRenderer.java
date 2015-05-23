@@ -103,7 +103,9 @@ public class YANGLRenderer {
     }
 
     private void drawNodes() {
-        for (YANIRenderableNode iNode : mCurrentScreen.getNodeList()) {
+
+        for (int i = 0; i < mCurrentScreen.getNodeList().size(); i++) {
+            YANIRenderableNode iNode = mCurrentScreen.getNodeList().get(i);
 
             //do not draw invisible nodes
             if (iNode.getOpacity() == 0)

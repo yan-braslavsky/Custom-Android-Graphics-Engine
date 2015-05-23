@@ -46,7 +46,8 @@ public class YANObjectPool {
             mCachedList.add(this.obtain(objClass));
         }
 
-        for (YANIPoolableObject obj : mCachedList) {
+        for (int i = 0; i < mCachedList.size(); i++) {
+            YANIPoolableObject obj = mCachedList.get(i);
             obj.resetState();
             this.offer(obj);
         }
@@ -62,7 +63,7 @@ public class YANObjectPool {
     public synchronized <T extends YANIPoolableObject> T obtain(Class<T> objClass) {
         Deque<YANIPoolableObject> deque = mObjectsMap.get(objClass);
 
-        if(deque == null){
+        if (deque == null) {
             deque = new ArrayDeque<>();
             mObjectsMap.put(objClass, deque);
         }

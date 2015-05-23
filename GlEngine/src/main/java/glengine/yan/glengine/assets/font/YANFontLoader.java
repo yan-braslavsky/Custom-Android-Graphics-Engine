@@ -32,10 +32,11 @@ public class YANFontLoader implements YANAssetLoader<YANFont> {
 
         //extract char data
         List<YANFontChar> charList = extractCharList(lines);
-        Map<Integer,YANFontChar> charMap = new HashMap<>();
+        Map<Integer, YANFontChar> charMap = new HashMap<>();
 
-        for (YANFontChar aChar : charList) {
-            charMap.put(aChar.getID(),aChar);
+        for (int i = 0; i < charList.size(); i++) {
+            YANFontChar aChar = charList.get(i);
+            charMap.put(aChar.getID(), aChar);
         }
 
         List<YANFontKerning> kerningList = extractKerningList(lines);
@@ -106,7 +107,7 @@ public class YANFontLoader implements YANAssetLoader<YANFont> {
         String[] entries = line.split("\\s+");
         String[] splicedEntry = entries[2].split("=");
         String tringWithQuotes = splicedEntry[1];
-        return tringWithQuotes.replace("\"","");
+        return tringWithQuotes.replace("\"", "");
     }
 
     private int extractScaleHeight(String line) {

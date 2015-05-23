@@ -4,6 +4,7 @@ package glengine.yan.glengine.assets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import glengine.yan.glengine.EngineWrapper;
 import glengine.yan.glengine.assets.atlas.YANTextureAtlas;
@@ -32,12 +33,12 @@ public class YANAssetManager {
      * Used to map reference between texture names and openGL handles
      * for those loaded textures
      */
-    private Map<String, Integer> mTextureHandlesMap;
+    private HashMap<String, Integer> mTextureHandlesMap;
 
     /**
      * Used to map  between texture atlases names and actual loaded atlases
      */
-    private Map<String, YANTextureAtlas> mAtlasesMap;
+    private HashMap<String, YANTextureAtlas> mAtlasesMap;
 
     /**
      * Used to map  between font names and actual loaded fonts
@@ -71,7 +72,9 @@ public class YANAssetManager {
      * @param assets array of asset descriptors
      */
     public void preloadAssets(ArrayList<YANAssetDescriptor> assets) {
-        for (YANAssetDescriptor asset : assets) {
+
+        for (int i = 0; i < assets.size(); i++) {
+            YANAssetDescriptor asset = assets.get(i);
             switch (asset.getType()) {
                 case TEXTURE_ATLAS:
                     loadTextureAtlas(asset);

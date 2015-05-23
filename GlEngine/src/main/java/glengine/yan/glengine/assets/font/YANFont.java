@@ -65,7 +65,9 @@ public class YANFont {
     }
 
     private void loadKerningTable(List<YANFontKerning> kerningList) {
-        for (YANFontKerning kerning : kerningList) {
+
+        for (int i = 0; i < kerningList.size(); i++) {
+            YANFontKerning kerning = kerningList.get(i);
             Map<Integer, Integer> followingCharIds;
             if (!mKerningsTable.containsKey(kerning.getFirstCharId())) {
                 followingCharIds = new HashMap<>();
