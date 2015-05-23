@@ -19,6 +19,10 @@ public class YANTaskManager {
     }
 
     public void update(float deltaSeconds) {
+
+        if(mTaskList.isEmpty())
+            return;
+
         Iterator<YANTask> it = mTaskList.iterator();
         while (it.hasNext()) {
             YANTask task = it.next();

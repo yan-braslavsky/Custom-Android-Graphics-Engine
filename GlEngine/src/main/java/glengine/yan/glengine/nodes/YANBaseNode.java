@@ -6,6 +6,7 @@ import glengine.yan.glengine.data.YANVertexArray;
 import glengine.yan.glengine.input.YANNodeTouchListener;
 import glengine.yan.glengine.programs.ShaderProgram;
 import glengine.yan.glengine.renderer.YANGLRenderer;
+import glengine.yan.glengine.screens.YANNodeScreen;
 import glengine.yan.glengine.util.colors.YANColor;
 import glengine.yan.glengine.util.geometry.YANReadOnlyVector2;
 import glengine.yan.glengine.util.geometry.YANRectangle;
@@ -36,6 +37,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     private float mOpacity;
     private int mSortingLayer;
     private YANColor mOverlayColor;
+    private YANNodeScreen.SortingLayerChangeListener mSortingLayerChangeListener;
 
     protected YANBaseNode() {
         mSize = new YANVector2(0, 0);
@@ -50,13 +52,13 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     }
 
     @Override
-    public void onAttachedToScreen() {
-        //TODO : Override
+    public void onAttachedToScreen(YANNodeScreen.SortingLayerChangeListener sortingLayerChangeListener) {
+        mSortingLayerChangeListener = sortingLayerChangeListener;
     }
 
     @Override
     public void onDetachedFromScreen() {
-        //TODO : Override
+        mSortingLayerChangeListener = null;
     }
 
 
@@ -136,7 +138,12 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     }
 
     protected void recalculateDimensions() {
-        vertexArray = new YANVertexArray(createVertexData());
+        //as an optimisation we will not reallocate  the vertex array if it is already exists
+        if (vertexArray == null) {
+            vertexArray = new YANVertexArray(createVertexData());
+        } else {
+            vertexArray.setData(createVertexData());
+        }
     }
 
     protected abstract float[] createVertexData();
@@ -205,7 +212,11 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
 
     @Override
     public void setSortingLayer(int sortingLayer) {
+        int prevSortingLayer = mSortingLayer;
         mSortingLayer = sortingLayer;
+        if (mSortingLayerChangeListener != null) {
+            mSortingLayerChangeListener.onNodeChangesSortingLayer(prevSortingLayer, sortingLayer, this);
+        }
     }
 
     @Override

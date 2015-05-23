@@ -2,6 +2,7 @@ package glengine.yan.glengine.nodes;
 
 import glengine.yan.glengine.programs.ShaderProgram;
 import glengine.yan.glengine.renderer.YANGLRenderer;
+import glengine.yan.glengine.screens.YANNodeScreen;
 import glengine.yan.glengine.util.colors.YANColor;
 import glengine.yan.glengine.util.geometry.YANReadOnlyVector2;
 import glengine.yan.glengine.util.geometry.YANRectangle;
@@ -29,7 +30,7 @@ public interface YANIRenderableNode<T extends ShaderProgram> {
 
     YANRectangle getBoundingRectangle();
 
-    void onAttachedToScreen();
+    void onAttachedToScreen(YANNodeScreen.SortingLayerChangeListener sortingLayerChangeListener);
 
     void onDetachedFromScreen();
 

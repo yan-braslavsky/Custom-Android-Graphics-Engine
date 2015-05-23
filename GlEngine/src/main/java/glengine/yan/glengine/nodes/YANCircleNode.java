@@ -62,7 +62,6 @@ public class YANCircleNode extends YANBaseNode<YANColorShaderProgram> {
         float rotationOffset = 270f;
 
         //outer vertices of the circle
-//        int verticesToDraw = (int) (CIRCLE_OUTER_VERTEX_COUNT - ((1f - mPieCirclePercentage) * (float) CIRCLE_OUTER_VERTEX_COUNT));
         int verticesToDraw = (clockWiseDraw) ? CIRCLE_OUTER_VERTEX_COUNT : (int) (CIRCLE_OUTER_VERTEX_COUNT - ((1f - mPieCirclePercentage) * (float) CIRCLE_OUTER_VERTEX_COUNT));
         int startingVertex = (clockWiseDraw) ? (int) ((1f - mPieCirclePercentage) * (float) CIRCLE_OUTER_VERTEX_COUNT) : 0;
 

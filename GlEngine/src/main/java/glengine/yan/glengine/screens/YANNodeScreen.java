@@ -14,10 +14,19 @@ import glengine.yan.glengine.util.sort.YANSort;
  */
 public abstract class YANNodeScreen implements YANIScreen {
 
+    public interface SortingLayerChangeListener {
+        void onNodeChangesSortingLayer(int prevSortingLayer, int newSortingLayer, YANIRenderableNode node);
+    }
+
     private final YANGLRenderer mRenderer;
     private List<YANIRenderableNode> mNodeList;
 
     private Comparator<YANIRenderableNode> mSortingLayerComparator;
+
+    //This flag is used for optimisation
+    //we don't want to sort nodes every frame
+    private boolean shouldSortNodes;
+    private SortingLayerChangeListener mSortingLayerChangeListener;
 
     public YANNodeScreen(YANGLRenderer renderer) {
         mRenderer = renderer;
@@ -27,6 +36,13 @@ public abstract class YANNodeScreen implements YANIScreen {
             @Override
             public int compare(YANIRenderableNode lhs, YANIRenderableNode rhs) {
                 return lhs.getSortingLayer() - rhs.getSortingLayer();
+            }
+        };
+
+        mSortingLayerChangeListener = new SortingLayerChangeListener() {
+            @Override
+            public void onNodeChangesSortingLayer(int prevSortingLayer, int newSortingLayer, YANIRenderableNode node) {
+                shouldSortNodes = true;
             }
         };
     }
@@ -44,8 +60,9 @@ public abstract class YANNodeScreen implements YANIScreen {
     protected abstract void onCreateNodes();
 
     protected void addNode(YANIRenderableNode node) {
-        node.onAttachedToScreen();
+        node.onAttachedToScreen(mSortingLayerChangeListener);
         getNodeList().add(node);
+        shouldSortNodes = true;
     }
 
     private void sortNodesBySortingLayer() {
@@ -56,6 +73,7 @@ public abstract class YANNodeScreen implements YANIScreen {
     protected void removeNode(YANIRenderableNode node) {
         node.onDetachedFromScreen();
         getNodeList().remove(node);
+        shouldSortNodes = true;
     }
 
 
@@ -88,9 +106,11 @@ public abstract class YANNodeScreen implements YANIScreen {
     @Override
     public void onUpdate(float deltaTimeSeconds) {
 
-        //TODO : think about more efficient solution
         //Sorting nodes every frame is expensive
-        sortNodesBySortingLayer();
+        if (shouldSortNodes) {
+            sortNodesBySortingLayer();
+            shouldSortNodes = false;
+        }
     }
 
     @Override

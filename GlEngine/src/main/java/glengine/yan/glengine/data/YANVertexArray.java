@@ -38,4 +38,9 @@ public class YANVertexArray {
         
         floatBuffer.position(0);
     }
+
+    public void setData(float[] vertexData) {
+        floatBuffer.position(0);
+        floatBuffer.put(vertexData);
+    }
 }

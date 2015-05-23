@@ -3,6 +3,7 @@ package glengine.yan.glengine.nodes;
 import glengine.yan.glengine.assets.YANTextureRegion;
 import glengine.yan.glengine.assets.font.YANFont;
 import glengine.yan.glengine.assets.font.YANFontChar;
+import glengine.yan.glengine.data.YANVertexArray;
 import glengine.yan.glengine.programs.YANTextShaderProgram;
 
 import static android.opengl.GLES20.GL_TRIANGLES;
@@ -168,6 +169,13 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
 
         //every time text changes , data must be recalculated
         recalculateDimensions();
+    }
+
+    @Override
+    protected void recalculateDimensions() {
+        //we don't know what size of the text will be so we reallocating the buffers
+        //TODO : as an optimisation we can set max chars count to know in advance what the max size can be
+        vertexArray = new YANVertexArray(createVertexData());
     }
 
     public void setFont(YANFont font) {
