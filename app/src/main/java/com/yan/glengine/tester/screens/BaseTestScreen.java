@@ -113,7 +113,7 @@ public abstract class BaseTestScreen extends YANNodeScreen {
     @Override
     protected void onCreateNodes() {
         //create a text node
-        mFpsTextNode = new YANTextNode(YANAssetManager.getInstance().getLoadedFont("standard_font"));
+        mFpsTextNode = new YANTextNode(YANAssetManager.getInstance().getLoadedFont("standard_font"),"FPS 100".length());
         mFpsTextNode.setText("FPS " + 0);
         mFpsTextNode.setSortingLayer(OVERLAY_SORTING_LAYER);
 

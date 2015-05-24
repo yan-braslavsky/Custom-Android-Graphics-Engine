@@ -108,7 +108,7 @@ public class TweeningTestScreen extends BaseTestScreen {
         }
 
         //create a text node
-        mNodesAmountText = new YANTextNode(YANAssetManager.getInstance().getLoadedFont("standard_font"));
+        mNodesAmountText = new YANTextNode(YANAssetManager.getInstance().getLoadedFont("standard_font"), "Nodes Amount 10000".length());
         mNodesAmountText.setText("Nodes Amount " + mAnimateNodes.size());
         mNodesAmountText.setSortingLayer(OVERLAY_SORTING_LAYER);
 

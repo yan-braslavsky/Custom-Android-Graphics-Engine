@@ -18,7 +18,7 @@ import glengine.yan.glengine.util.math.YANMathUtils;
 public class BlendingTestScreen extends BaseTestScreen {
 
     private TweenManager mTweenManager;
-    private YANTextNode mNodesAmountText;
+    private YANTextNode mBlendingTextNode;
     private YANTexturedNode mGlade;
     private YANTexturedNode mCard;
 
@@ -60,7 +60,7 @@ public class BlendingTestScreen extends BaseTestScreen {
     protected void onLayoutNodes() {
         super.onLayoutNodes();
 
-        mNodesAmountText.setPosition(50, 50);
+        mBlendingTextNode.setPosition(50, 50);
         mGlade.setPosition((getSceneSize().getX() - mGlade.getSize().getX()) / 2, (getSceneSize().getY() - mGlade.getSize().getY()) / 2);
         mCard.setPosition(100, 500);
     }
@@ -70,7 +70,7 @@ public class BlendingTestScreen extends BaseTestScreen {
         super.onAddNodesToScene();
 
         //add text node
-        addNode(mNodesAmountText);
+        addNode(mBlendingTextNode);
         addNode(mGlade);
         addNode(mCard);
     }
@@ -89,9 +89,9 @@ public class BlendingTestScreen extends BaseTestScreen {
         super.onCreateNodes();
 
         //create a text node
-        mNodesAmountText = new YANTextNode(YANAssetManager.getInstance().getLoadedFont("standard_font"));
-        mNodesAmountText.setText("blending test");
-        mNodesAmountText.setSortingLayer(OVERLAY_SORTING_LAYER);
+        mBlendingTextNode = new YANTextNode(YANAssetManager.getInstance().getLoadedFont("standard_font"),"blending test".length());
+        mBlendingTextNode.setText("blending test");
+        mBlendingTextNode.setSortingLayer(OVERLAY_SORTING_LAYER);
 
         //create glade
         mGlade = new YANTexturedNode(mUiAtlas.getTextureRegion("glade.png"));

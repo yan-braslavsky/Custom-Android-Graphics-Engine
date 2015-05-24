@@ -12,7 +12,10 @@ import glengine.yan.glengine.screens.YANIScreen;
 public class FontTestScreen extends BaseTestScreen {
 
     public static final String ANIMATION_STRING = "Animation";
-    YANTextNode mTextNode;
+    public static final String COLORED_TEXT_STRING = "I am Colored Text !";
+    public static final String SCALED_TEXT_STRING = "I am Scaled Text";
+    YANTextNode mColoredTextNode;
+    YANTextNode mScaledText;
     YANTextNode mAnimatedTextNode;
 
     float animationChangeAccumulator;
@@ -28,9 +31,13 @@ public class FontTestScreen extends BaseTestScreen {
         super.onCreateNodes();
         mFont = YANAssetManager.getInstance().getLoadedFont("tale_font");
 
-        mTextNode = new YANTextNode(mFont);
-        mAnimatedTextNode = new YANTextNode(mFont);
-        mTextNode.setText("Hello World !");
+        mColoredTextNode = new YANTextNode(mFont, COLORED_TEXT_STRING.length());
+        mColoredTextNode.setTextColor(1f, 0, 0);
+        mScaledText = new YANTextNode(mFont,SCALED_TEXT_STRING.length());
+        mScaledText.setText(SCALED_TEXT_STRING);
+        mScaledText.setTextScale(2f);
+        mAnimatedTextNode = new YANTextNode(mFont,ANIMATION_STRING.length());
+        mColoredTextNode.setText(COLORED_TEXT_STRING);
         mAnimatedTextNode.setText(ANIMATION_STRING);
     }
 
@@ -84,15 +91,17 @@ public class FontTestScreen extends BaseTestScreen {
     @Override
     protected void onLayoutNodes() {
         super.onLayoutNodes();
-        mTextNode.setPosition(100, 200);
+        mColoredTextNode.setPosition(0, 0);
         mAnimatedTextNode.setPosition(200, 400);
+        mScaledText.setPosition(150,500);
     }
 
     @Override
     protected void onAddNodesToScene() {
         super.onAddNodesToScene();
-        addNode(mTextNode);
+        addNode(mColoredTextNode);
         addNode(mAnimatedTextNode);
+        addNode(mScaledText);
     }
 
 

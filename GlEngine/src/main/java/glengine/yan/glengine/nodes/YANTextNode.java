@@ -5,6 +5,7 @@ import glengine.yan.glengine.assets.font.YANFont;
 import glengine.yan.glengine.assets.font.YANFontChar;
 import glengine.yan.glengine.data.YANVertexArray;
 import glengine.yan.glengine.programs.YANTextShaderProgram;
+import glengine.yan.glengine.util.colors.YANColor;
 
 import static android.opengl.GLES20.GL_TRIANGLES;
 import static android.opengl.GLES20.glDrawArrays;
@@ -32,12 +33,32 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
      */
     private float[] mVertexData;
 
+    private YANColor mTextextColor;
 
-    public YANTextNode(YANFont font) {
+    private float mTextScale;
+    private int mMaxCharachters;
+
+
+    /**
+     * @param font           that will be used to render text
+     * @param maxCharachters if bigger than 0 will be used to optimize rendering.
+     */
+    public YANTextNode(YANFont font, int maxCharachters) {
         mFont = font;
 
         //text should never be empty !
         mText = " ";
+
+        //by default font is white
+        mTextextColor = new YANColor(1f, 1f, 1f, 1f);
+
+        //default is not scale
+        mTextScale = 1f;
+
+        mMaxCharachters = maxCharachters;
+
+        int charachtersAmount = (mMaxCharachters > 0) ? mMaxCharachters : mText.length();
+        mVertexData = new float[VALUES_PER_VERTEX * VERTICES_COUNT_FOR_ONE_CHAR * charachtersAmount];
     }
 
     @Override
@@ -49,9 +70,6 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
         // here we are creating a mesh with indices and texture coordinates for the entire text
         // that way we can render it in one render call.
         // According to rendering guide http://www.angelcode.com/products/bmfont/doc/render_text.html
-
-        //we must render the amount of characters according to a length of the text
-        mVertexData = new float[VALUES_PER_VERTEX * VERTICES_COUNT_FOR_ONE_CHAR * mText.length()];
 
         //TODO : need to consider a size of the node somehow ?
 
@@ -83,14 +101,14 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
             }
 
             //move cursor by advance value
-            cursorPositionX += kerning;
+            cursorPositionX += (kerning * mTextScale);
 
             //now we are filling a data array to store rendering information for the character
-            loadDataForTextureRegion(currChar.getWidth(), currChar.getHeight(), currChar.getYANTextureRegion(), arrOffset,
-                    cursorPositionX + currChar.getXOffset(), 0);
+            loadDataForTextureRegion(currChar.getWidth() * mTextScale, currChar.getHeight() * mTextScale, currChar.getYANTextureRegion(), arrOffset,
+                    cursorPositionX + (currChar.getXOffset() * mTextScale), 0);
 
             //move cursor by advance value
-            cursorPositionX += currChar.getXAdvance();
+            cursorPositionX += (currChar.getXAdvance() * mTextScale);
 
             //update float array offset
             arrOffset += numElementsForOneCharRendering;
@@ -101,7 +119,7 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
         return mVertexData;
     }
 
-    private void loadDataForTextureRegion(float width, float height, YANTextureRegion sampleTextureRegion, int arrOffset, int offsetX, int offsetY) {
+    private void loadDataForTextureRegion(float width, float height, YANTextureRegion sampleTextureRegion, int arrOffset, float offsetX, float offsetY) {
         // Order of coordinates: X, Y, U, V
         // Triangle Strip
 
@@ -155,8 +173,6 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
                 shaderProgram.getTextureCoordinatesAttributeLocation(),
                 TEXTURE_COORDINATES_COMPONENT_COUNT,
                 STRIDE);
-
-        //TODO : maybe color ?
     }
 
     public void setText(String text) {
@@ -173,9 +189,11 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
 
     @Override
     protected void recalculateDimensions() {
-        //we don't know what size of the text will be so we reallocating the buffers
-        //TODO : as an optimisation we can set max chars count to know in advance what the max size can be
-        vertexArray = new YANVertexArray(createVertexData());
+        if(vertexArray == null) {
+            vertexArray = new YANVertexArray(createVertexData());
+        }else{
+            vertexArray.setData(createVertexData());
+        }
     }
 
     public void setFont(YANFont font) {
@@ -189,10 +207,27 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
     @Override
     protected void onRender() {
         //do the draw
-        glDrawArrays(GL_TRIANGLES, 0, mVertexData.length / VALUES_PER_VERTEX);
+        glDrawArrays(GL_TRIANGLES, 0, (mText.length() * VERTICES_COUNT_FOR_ONE_CHAR));
     }
 
     public String getText() {
         return mText;
+    }
+
+    public YANColor getTextColor() {
+        return mTextextColor;
+    }
+
+    public void setTextColor(float r, float g, float b) {
+        mTextextColor.setColor(r, g, b, 1f);
+    }
+
+    public float getTextScale() {
+        return mTextScale;
+    }
+
+    public void setTextScale(float textScale) {
+        this.mTextScale = textScale;
+        recalculateDimensions();
     }
 }

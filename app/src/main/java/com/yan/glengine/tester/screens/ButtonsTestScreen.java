@@ -70,7 +70,7 @@ public class ButtonsTestScreen extends BaseTestScreen {
         super.onCreateNodes();
 
         //create a text node
-        mTitleText = new YANTextNode(YANAssetManager.getInstance().getLoadedFont("standard_font"));
+        mTitleText = new YANTextNode(YANAssetManager.getInstance().getLoadedFont("standard_font"), "Buttons Test".length());
         mTitleText.setText("Buttons Test");
         mTitleText.setSortingLayer(OVERLAY_SORTING_LAYER);
 
