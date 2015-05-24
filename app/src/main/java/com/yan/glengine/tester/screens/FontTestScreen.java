@@ -21,6 +21,7 @@ public class FontTestScreen extends BaseTestScreen {
     float animationChangeAccumulator;
     boolean isDecreasing;
     private YANFont mFont;
+    private YANFont mChunkFiveFont;
 
     public FontTestScreen(YANGLRenderer renderer) {
         super(renderer);
@@ -30,10 +31,11 @@ public class FontTestScreen extends BaseTestScreen {
     protected void onCreateNodes() {
         super.onCreateNodes();
         mFont = YANAssetManager.getInstance().getLoadedFont("tale_font");
+        mChunkFiveFont = YANAssetManager.getInstance().getLoadedFont("chunkfive");
 
-        mColoredTextNode = new YANTextNode(mFont, COLORED_TEXT_STRING.length());
+        mColoredTextNode = new YANTextNode(mChunkFiveFont, COLORED_TEXT_STRING.length());
         mColoredTextNode.setTextColor(1f, 0, 0);
-        mScaledText = new YANTextNode(mFont,SCALED_TEXT_STRING.length());
+        mScaledText = new YANTextNode(mChunkFiveFont,SCALED_TEXT_STRING.length());
         mScaledText.setText(SCALED_TEXT_STRING);
         mScaledText.setTextScale(2f);
         mAnimatedTextNode = new YANTextNode(mFont,ANIMATION_STRING.length());
@@ -46,6 +48,7 @@ public class FontTestScreen extends BaseTestScreen {
         super.onSetActive();
 
         YANAssetManager.getInstance().loadTexture(mFont.getGlyphImageFilePath());
+        YANAssetManager.getInstance().loadTexture(mChunkFiveFont.getGlyphImageFilePath());
     }
 
     @Override
@@ -53,6 +56,7 @@ public class FontTestScreen extends BaseTestScreen {
         super.onSetNotActive();
 
         YANAssetManager.getInstance().unloadTexture(mFont.getGlyphImageFilePath());
+        YANAssetManager.getInstance().unloadTexture(mChunkFiveFont.getGlyphImageFilePath());
     }
 
     @Override
