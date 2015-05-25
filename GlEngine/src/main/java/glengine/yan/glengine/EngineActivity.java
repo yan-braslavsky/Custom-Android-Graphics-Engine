@@ -10,15 +10,16 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import glengine.yan.glengine.assets.YANAssetDescriptor;
 import glengine.yan.glengine.assets.YANAssetManager;
 import glengine.yan.glengine.renderer.YANGLRenderer;
 import glengine.yan.glengine.screens.YANIScreen;
 import glengine.yan.glengine.setup.YANEngineSetup;
-
-import java.util.ArrayList;
 
 public abstract class EngineActivity extends Activity {
 
@@ -32,6 +33,8 @@ public abstract class EngineActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if (renderer == null) {
             renderer = new EngineWrapper(getApplicationContext());
@@ -64,6 +67,10 @@ public abstract class EngineActivity extends Activity {
 
     // This snippet hides the system bars.
     public void hideSystemUI() {
+
+        if(glSurfaceView == null)
+            return;
+
         // Set the IMMERSIVE flag.
         // Set the content to appear under the system bars so that the content
         // doesn't resize when the system bars hide and show.
@@ -187,7 +194,6 @@ public abstract class EngineActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
         hideSystemUI();
 
         if (glSurfaceView != null) {

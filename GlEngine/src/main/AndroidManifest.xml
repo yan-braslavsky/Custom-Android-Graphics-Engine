@@ -1,8 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.yan.glengine">
 
-    <application android:allowBackup="true">
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <application android:allowBackup="true">
     </application>
 
 </manifest>
