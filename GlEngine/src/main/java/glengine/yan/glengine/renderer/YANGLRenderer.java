@@ -146,7 +146,7 @@ public class YANGLRenderer {
                 YANColor color = ((YANCircleNode) iNode).getColor();
                 colorProgram.setUniforms(
                         YANMatrixHelper.modelViewProjectionMatrix,
-                        color.asFloatArray());
+                        color.asFloatArray(),iNode.getOpacity());
 
                 //bind data
                 iNode.bindData(colorProgram);

@@ -86,11 +86,6 @@ public class YANCircleNode extends YANBaseNode<YANColorShaderProgram> {
     }
 
     @Override
-    public void setOpacity(float opacity) {
-        throw new UnsupportedOperationException("Opacity Not yet implemented for this node");
-    }
-
-    @Override
     public void setOverlayColor(float r, float g, float b, float a) {
         throw new UnsupportedOperationException("Overlay color is not yet implemented for this node");
     }
