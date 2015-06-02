@@ -113,6 +113,8 @@ public abstract class EngineActivity extends Activity {
             // Request an OpenGL ES 2.0 compatible context.
             glSurfaceView.setEGLContextClientVersion(2);
 
+            glSurfaceView.setEGLConfigChooser(new YANConfigChooser());
+
             // Assign our renderer.
             glSurfaceView.setRenderer(renderer);
         } else {
