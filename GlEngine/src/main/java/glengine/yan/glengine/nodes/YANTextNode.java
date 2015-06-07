@@ -177,39 +177,41 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
         // Order of coordinates: X, Y, U, V
         // Triangle Strip
 
+        float halfHeight = height/2;
+
         // vertex (top left)
         mVertexData[arrOffset + 0] = offsetX;
-        mVertexData[arrOffset + 1] = offsetY + height;
+        mVertexData[arrOffset + 1] = offsetY + halfHeight;
         mVertexData[arrOffset + 2] = sampleTextureRegion.getU0();
         mVertexData[arrOffset + 3] = sampleTextureRegion.getV1();
 
         // vertex (bottom right)
         mVertexData[arrOffset + 4] = offsetX + width;
-        mVertexData[arrOffset + 5] = offsetY;
+        mVertexData[arrOffset + 5] = offsetY - halfHeight;
         mVertexData[arrOffset + 6] = sampleTextureRegion.getU1();
         mVertexData[arrOffset + 7] = sampleTextureRegion.getV0();
 
         // vertex (bottom left)
         mVertexData[arrOffset + 8] = offsetX;
-        mVertexData[arrOffset + 9] = offsetY;
+        mVertexData[arrOffset + 9] = offsetY - halfHeight;
         mVertexData[arrOffset + 10] = sampleTextureRegion.getU0();
         mVertexData[arrOffset + 11] = sampleTextureRegion.getV0();
 
         // vertex (top left)
         mVertexData[arrOffset + 12] = offsetX;
-        mVertexData[arrOffset + 13] = offsetY + height;
+        mVertexData[arrOffset + 13] = offsetY + halfHeight;
         mVertexData[arrOffset + 14] = sampleTextureRegion.getU0();
         mVertexData[arrOffset + 15] = sampleTextureRegion.getV1();
 
         // vertex (top right)
         mVertexData[arrOffset + 16] = offsetX + width;
-        mVertexData[arrOffset + 17] = offsetY + height;
+        mVertexData[arrOffset + 17] = offsetY + halfHeight;
         mVertexData[arrOffset + 18] = sampleTextureRegion.getU1();
         mVertexData[arrOffset + 19] = sampleTextureRegion.getV1();
 
         // vertex (bottom right)
         mVertexData[arrOffset + 20] = offsetX + width;
-        mVertexData[arrOffset + 21] = offsetY;
+        mVertexData[arrOffset + 21] = offsetY - halfHeight;
         mVertexData[arrOffset + 22] = sampleTextureRegion.getU1();
         mVertexData[arrOffset + 23] = sampleTextureRegion.getV0();
     }
