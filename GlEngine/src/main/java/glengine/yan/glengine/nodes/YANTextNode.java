@@ -1,11 +1,15 @@
 package glengine.yan.glengine.nodes;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import glengine.yan.glengine.assets.YANTextureRegion;
 import glengine.yan.glengine.assets.font.YANFont;
 import glengine.yan.glengine.assets.font.YANFontChar;
 import glengine.yan.glengine.data.YANVertexArray;
 import glengine.yan.glengine.programs.YANTextShaderProgram;
 import glengine.yan.glengine.util.colors.YANColor;
+import glengine.yan.glengine.util.geometry.YANVector2;
 
 import static android.opengl.GLES20.GL_TRIANGLES;
 import static android.opengl.GLES20.glDrawArrays;
@@ -79,8 +83,12 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
         //data array offset
         int arrOffset = 0;
 
+        //pre calculate size
+        calculateSizeForString(mText, mTextScale, mSize);
+
         //cursor is used to calculate character position
-        int cursorPositionX = 0;
+        //we want to draw text as if it was in model space . from center
+        float cursorPositionX = -(mSize.getX() / 2);
         int kerning;
 
         YANFontChar currChar;
@@ -117,6 +125,52 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
         }
 
         return mVertexData;
+    }
+
+    /**
+     * Calculates the exact size of text node for provided string.
+     *
+     * @param str          string to be used for size calculation
+     * @param textScale    scale to be used to calculate the size
+     * @param resultVector used to store result.
+     * @return the final size of the text node.
+     */
+    public void calculateSizeForString(@NonNull final String str, float textScale, @Nullable final YANVector2 resultVector) {
+
+        if (str.length() == 0)
+            return;
+
+        //cursor is used to calculate character position
+        int cursorPositionX = 0;
+        int kerning;
+
+        YANFontChar currChar = null;
+
+        //go over the entire text and get chars from font
+        for (int i = 0; i < str.length(); i++) {
+            //we are checking kernings from second element and on
+            kerning = ((i > 0)) ? mFont.getKerningValueForChars(str.charAt(i - 1), str.charAt(i)) : 0;
+
+            //convert char to ascii value
+            char chr = str.charAt(i);
+
+            //try to obtain a char form the loaded font object
+            currChar = mFont.getCharsMap().get((int) chr);
+            if (currChar == null) {
+                throw new RuntimeException("Character " + chr + " is not found !");
+            }
+
+            //move cursor by advance value
+            cursorPositionX += (kerning * textScale);
+
+            //move cursor by advance value
+            cursorPositionX += (currChar.getXAdvance() * textScale);
+        }
+
+        //store the result
+        if (resultVector != null) {
+            resultVector.setXY((float) cursorPositionX, (float) currChar.getHeight() * textScale);
+        }
     }
 
     private void loadDataForTextureRegion(float width, float height, YANTextureRegion sampleTextureRegion, int arrOffset, float offsetX, float offsetY) {
@@ -189,9 +243,9 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
 
     @Override
     protected void recalculateDimensions() {
-        if(vertexArray == null) {
+        if (vertexArray == null) {
             vertexArray = new YANVertexArray(createVertexData());
-        }else{
+        } else {
             vertexArray.setData(createVertexData());
         }
     }
@@ -224,6 +278,11 @@ public class YANTextNode extends YANBaseNode<YANTextShaderProgram> {
 
     public float getTextScale() {
         return mTextScale;
+    }
+
+    @Override
+    public void setSize(float width, float height) {
+        throw new UnsupportedOperationException("Text node size calculated automatically depending on text string.Use setTextScale to change dimentions.");
     }
 
     public void setTextScale(float textScale) {

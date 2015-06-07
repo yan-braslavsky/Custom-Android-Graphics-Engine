@@ -15,6 +15,7 @@ public class FontTestScreen extends BaseTestScreen {
     public static final String COLORED_TEXT_STRING = "I am Colored Text !";
     public static final String SCALED_TEXT_STRING = "I am Scaled Text";
     YANTextNode mColoredTextNode;
+    YANTextNode mColoredTextNodePivotCenter;
     YANTextNode mScaledText;
     YANTextNode mAnimatedTextNode;
 
@@ -35,12 +36,21 @@ public class FontTestScreen extends BaseTestScreen {
 
         mColoredTextNode = new YANTextNode(mChunkFiveFont, COLORED_TEXT_STRING.length());
         mColoredTextNode.setTextColor(1f, 0, 0);
+        mColoredTextNodePivotCenter = new YANTextNode(mChunkFiveFont, COLORED_TEXT_STRING.length());
+        mColoredTextNodePivotCenter.setTextColor(0.5f, 0.7f, 0.3f);
         mScaledText = new YANTextNode(mChunkFiveFont,SCALED_TEXT_STRING.length());
         mScaledText.setText(SCALED_TEXT_STRING);
         mScaledText.setTextScale(2f);
         mAnimatedTextNode = new YANTextNode(mFont,ANIMATION_STRING.length());
         mColoredTextNode.setText(COLORED_TEXT_STRING);
+        mColoredTextNodePivotCenter.setText(COLORED_TEXT_STRING);
         mAnimatedTextNode.setText(ANIMATION_STRING);
+    }
+
+    @Override
+    protected void onChangeNodesSize() {
+        super.onChangeNodesSize();
+        //Text node size cannot be changed , only scale
     }
 
     @Override
@@ -96,6 +106,8 @@ public class FontTestScreen extends BaseTestScreen {
     protected void onLayoutNodes() {
         super.onLayoutNodes();
         mColoredTextNode.setPosition(0, 0);
+        mColoredTextNodePivotCenter.setAnchorPoint(0.5f,0f);
+        mColoredTextNodePivotCenter.setPosition(0, 80);
         mAnimatedTextNode.setPosition(200, 400);
         mScaledText.setPosition(150,500);
     }
@@ -106,6 +118,7 @@ public class FontTestScreen extends BaseTestScreen {
         addNode(mColoredTextNode);
         addNode(mAnimatedTextNode);
         addNode(mScaledText);
+        addNode(mColoredTextNodePivotCenter);
     }
 
 

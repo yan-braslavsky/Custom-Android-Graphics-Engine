@@ -29,7 +29,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     protected static final int STRIDE = (POSITION_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT) * BYTES_PER_FLOAT;
     protected YANVertexArray vertexArray;
     private YANVector2 mPosition;
-    private YANVector2 mSize;
+    protected YANVector2 mSize;
     private YANNodeTouchListener mNodeTouchListener;
     private YANVector2 mAnchorPoint;
     private float mRotationZ;
