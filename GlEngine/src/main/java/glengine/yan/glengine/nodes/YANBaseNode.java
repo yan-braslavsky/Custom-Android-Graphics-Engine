@@ -38,6 +38,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     private int mSortingLayer;
     private YANColor mOverlayColor;
     private YANNodeScreen.SortingLayerChangeListener mSortingLayerChangeListener;
+    private YANNodeScreen mScreen;
 
     protected YANBaseNode() {
         mSize = new YANVector2(0, 0);
@@ -52,13 +53,15 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     }
 
     @Override
-    public void onAttachedToScreen(YANNodeScreen.SortingLayerChangeListener sortingLayerChangeListener) {
+    public void onAttachedToScreen(YANNodeScreen screen, YANNodeScreen.SortingLayerChangeListener sortingLayerChangeListener) {
         mSortingLayerChangeListener = sortingLayerChangeListener;
+        mScreen = screen;
     }
 
     @Override
     public void onDetachedFromScreen() {
         mSortingLayerChangeListener = null;
+        mScreen = null;
     }
 
 
@@ -232,5 +235,9 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     @Override
     public void setOverlayColor(float r, float g, float b, float a) {
         mOverlayColor.setColor(r, g, b, a);
+    }
+
+    public YANNodeScreen getScreen() {
+        return mScreen;
     }
 }

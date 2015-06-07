@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
+import android.content.res.Configuration;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,11 +20,12 @@ import glengine.yan.glengine.assets.YANAssetDescriptor;
 import glengine.yan.glengine.assets.YANAssetManager;
 import glengine.yan.glengine.renderer.YANGLRenderer;
 import glengine.yan.glengine.screens.YANIScreen;
+import glengine.yan.glengine.service.ServiceLocator;
 import glengine.yan.glengine.setup.YANEngineSetup;
 
 public abstract class EngineActivity extends Activity {
 
-    private static EngineWrapper renderer;
+    private EngineWrapper wrapper;
     private GLSurfaceView glSurfaceView;
 
     public EngineActivity() {
@@ -33,32 +35,31 @@ public abstract class EngineActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        if (renderer == null) {
-            renderer = new EngineWrapper(getApplicationContext());
+        wrapper = new EngineWrapper(this);
 
-            //can be loaded during the atlas parsing
-            ArrayList<YANAssetDescriptor> assets = onCreateAssets();
+        //can be loaded during the atlas parsing
+        ArrayList<YANAssetDescriptor> assets = onCreateAssets();
 
-            //preload assets
-            YANAssetManager.getInstance().preloadAssets(assets);
+        //preload assets
+        ServiceLocator.addService(new YANAssetManager(getApplicationContext()));
+        ServiceLocator.locateService(YANAssetManager.class).preloadAssets(assets);
 
-            //setup the tween engine
-            YANEngineSetup.setupTweenEngine();
+        //setup the tween engine
+        YANEngineSetup.setupTweenEngine();
 
-            //set the first screen
-            EngineWrapper.getRenderer().setActiveScreen(onCreateStartScreen(EngineWrapper.getRenderer()));
+        //set the first screen
+        wrapper.getRenderer().setActiveScreen(onCreateStartScreen(wrapper.getRenderer()));
 
-            //init the engine
-            init();
-        } else {
+        //init the engine
+        init();
+    }
 
-            //init the engine
-            init();
-        }
-
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //called when orientation changes
     }
 
     protected abstract ArrayList<YANAssetDescriptor> onCreateAssets();
@@ -68,7 +69,7 @@ public abstract class EngineActivity extends Activity {
     // This snippet hides the system bars.
     public void hideSystemUI() {
 
-        if(glSurfaceView == null)
+        if (glSurfaceView == null)
             return;
 
         // Set the IMMERSIVE flag.
@@ -116,12 +117,12 @@ public abstract class EngineActivity extends Activity {
             //TODO : Uncomment for devices , Genymotion crashes
 //            glSurfaceView.setEGLConfigChooser(new YANConfigChooser());
 
-            // Assign our renderer.
-            glSurfaceView.setRenderer(renderer);
+            // Assign our wrapper.
+            glSurfaceView.setRenderer(wrapper);
         } else {
             /*
              * This is where you could create an OpenGL ES 1.x compatible
-             * renderer if you wanted to support both ES 1 and ES 2. Since
+             * wrapper if you wanted to support both ES 1 and ES 2. Since
              * we're not doing anything, the app will crash if the device
              * doesn't support OpenGL ES 2.0. If we publish on the market, we
              * should also add the following to AndroidManifest.xml:
@@ -153,7 +154,7 @@ public abstract class EngineActivity extends Activity {
                         glSurfaceView.queueEvent(new Runnable() {
                             @Override
                             public void run() {
-                                renderer.handleTouchDown(
+                                wrapper.handleTouchDown(
                                         normalizedX, normalizedY);
                             }
                         });
@@ -161,7 +162,7 @@ public abstract class EngineActivity extends Activity {
                         glSurfaceView.queueEvent(new Runnable() {
                             @Override
                             public void run() {
-                                renderer.handleTouchDrag(
+                                wrapper.handleTouchDrag(
                                         normalizedX, normalizedY);
                             }
                         });
@@ -169,7 +170,7 @@ public abstract class EngineActivity extends Activity {
                         glSurfaceView.queueEvent(new Runnable() {
                             @Override
                             public void run() {
-                                renderer.handleTouchUp(
+                                wrapper.handleTouchUp(
                                         normalizedX, normalizedY);
                             }
                         });
@@ -192,6 +193,12 @@ public abstract class EngineActivity extends Activity {
         if (glSurfaceView != null) {
             glSurfaceView.onPause();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        wrapper.onBackPressed();
     }
 
     @Override

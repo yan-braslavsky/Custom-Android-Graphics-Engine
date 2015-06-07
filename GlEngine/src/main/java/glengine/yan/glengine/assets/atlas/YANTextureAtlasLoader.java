@@ -1,11 +1,12 @@
 package glengine.yan.glengine.assets.atlas;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import glengine.yan.glengine.EngineWrapper;
 import glengine.yan.glengine.assets.YANAssetDescriptor;
 import glengine.yan.glengine.assets.YANAssetLoader;
 import glengine.yan.glengine.assets.atlas.pojos.YANTexturePackerPojos;
@@ -16,10 +17,16 @@ import glengine.yan.glengine.util.helpers.YANTextFileHelper;
  */
 public class YANTextureAtlasLoader implements YANAssetLoader<YANTextureAtlas> {
 
+    private final Context mCtx;
+
+    public YANTextureAtlasLoader(Context appContext) {
+        mCtx = appContext;
+    }
+
     @Override
     public YANTextureAtlas loadAsset(YANAssetDescriptor assetDescriptor) {
         //load json ui atlas descriptor
-        String jsonAtlasString = YANTextFileHelper.readTextFileFromAssets(EngineWrapper.getContext(), assetDescriptor.getPathToAsset() + assetDescriptor.getAssetName() + "." + assetDescriptor.getAssetExtension());
+        String jsonAtlasString = YANTextFileHelper.readTextFileFromAssets(mCtx, assetDescriptor.getPathToAsset() + assetDescriptor.getAssetName() + "." + assetDescriptor.getAssetExtension());
         YANTexturePackerPojos.WrappingObject loadedPojo = (new Gson()).fromJson(jsonAtlasString, YANTexturePackerPojos.WrappingObject.class);
 
         //allocate texture atlas

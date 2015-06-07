@@ -1,8 +1,8 @@
 package glengine.yan.glengine.screens;
 
-import glengine.yan.glengine.nodes.YANIRenderableNode;
-
 import java.util.List;
+
+import glengine.yan.glengine.nodes.YANIRenderableNode;
 
 /**
  * Created by Yan-Home on 10/3/2014.
@@ -17,4 +17,9 @@ public interface YANIScreen {
     List<YANIRenderableNode> getNodeList();
 
     void onSetNotActive();
+
+    /**
+     * Called when user presses back button
+     */
+    void onBackPressed();
 }

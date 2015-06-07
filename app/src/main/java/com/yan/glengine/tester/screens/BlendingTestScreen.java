@@ -8,6 +8,7 @@ import glengine.yan.glengine.nodes.YANTextNode;
 import glengine.yan.glengine.nodes.YANTexturedNode;
 import glengine.yan.glengine.renderer.YANGLRenderer;
 import glengine.yan.glengine.screens.YANIScreen;
+import glengine.yan.glengine.service.ServiceLocator;
 import glengine.yan.glengine.tween.YANTweenNodeAccessor;
 import glengine.yan.glengine.util.colors.YANColor;
 import glengine.yan.glengine.util.math.YANMathUtils;
@@ -89,7 +90,7 @@ public class BlendingTestScreen extends BaseTestScreen {
         super.onCreateNodes();
 
         //create a text node
-        mBlendingTextNode = new YANTextNode(YANAssetManager.getInstance().getLoadedFont("standard_font"),"blending test".length());
+        mBlendingTextNode = new YANTextNode(ServiceLocator.locateService(YANAssetManager.class).getLoadedFont("standard_font"),"blending test".length());
         mBlendingTextNode.setText("blending test");
         mBlendingTextNode.setSortingLayer(OVERLAY_SORTING_LAYER);
 

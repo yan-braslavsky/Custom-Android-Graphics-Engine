@@ -1,16 +1,17 @@
 package glengine.yan.glengine.assets;
 
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-import glengine.yan.glengine.EngineWrapper;
 import glengine.yan.glengine.assets.atlas.YANTextureAtlas;
 import glengine.yan.glengine.assets.atlas.YANTextureAtlasLoader;
 import glengine.yan.glengine.assets.font.YANFont;
 import glengine.yan.glengine.assets.font.YANFontLoader;
+import glengine.yan.glengine.service.IService;
 import glengine.yan.glengine.util.helpers.YANTextureHelper;
 
 /**
@@ -19,15 +20,11 @@ import glengine.yan.glengine.util.helpers.YANTextureHelper;
  * Responsible for assets loading and management.
  * Implemented as Singleton.
  */
-public class YANAssetManager {
+public class YANAssetManager implements IService {
 
-    private static final YANAssetManager INSTANCE = new YANAssetManager();
-    private YANTextureAtlasLoader mTextureAtlasLoader;
-    private YANFontLoader mFontLoader;
-
-    public static final YANAssetManager getInstance() {
-        return INSTANCE;
-    }
+    private final Context mCtx;
+    private final YANTextureAtlasLoader mTextureAtlasLoader;
+    private final YANFontLoader mFontLoader;
 
     /**
      * Used to map reference between texture names and openGL handles
@@ -46,12 +43,13 @@ public class YANAssetManager {
     private Map<String, YANFont> mFontsMap;
 
 
-    private YANAssetManager() {
+    public YANAssetManager(final Context appContext) {
         mAtlasesMap = new HashMap<>();
         mTextureHandlesMap = new HashMap<>();
         mFontsMap = new HashMap<>();
-        mTextureAtlasLoader = new YANTextureAtlasLoader();
-        mFontLoader = new YANFontLoader();
+        mTextureAtlasLoader = new YANTextureAtlasLoader(appContext);
+        mFontLoader = new YANFontLoader(appContext);
+        mCtx = appContext;
     }
 
     /**
@@ -126,7 +124,7 @@ public class YANAssetManager {
      * @param texturePath full path to a texture located at assets folder including extension
      */
     public void loadTexture(String texturePath) {
-        int handle = YANTextureHelper.loadTexture(EngineWrapper.getContext(), texturePath);
+        int handle = YANTextureHelper.loadTexture(mCtx, texturePath);
         mTextureHandlesMap.put(texturePath, handle);
     }
 

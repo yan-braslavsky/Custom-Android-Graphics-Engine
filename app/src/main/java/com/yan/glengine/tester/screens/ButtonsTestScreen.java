@@ -5,6 +5,7 @@ import glengine.yan.glengine.nodes.YANButtonNode;
 import glengine.yan.glengine.nodes.YANTextNode;
 import glengine.yan.glengine.renderer.YANGLRenderer;
 import glengine.yan.glengine.screens.YANIScreen;
+import glengine.yan.glengine.service.ServiceLocator;
 
 /**
  * Created by Yan-Home on 1/18/2015.
@@ -70,7 +71,7 @@ public class ButtonsTestScreen extends BaseTestScreen {
         super.onCreateNodes();
 
         //create a text node
-        mTitleText = new YANTextNode(YANAssetManager.getInstance().getLoadedFont("standard_font"), "Buttons Test".length());
+        mTitleText = new YANTextNode(ServiceLocator.locateService(YANAssetManager.class).getLoadedFont("standard_font"), "Buttons Test".length());
         mTitleText.setText("Buttons Test");
         mTitleText.setSortingLayer(OVERLAY_SORTING_LAYER);
 

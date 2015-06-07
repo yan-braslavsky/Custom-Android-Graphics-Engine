@@ -14,6 +14,7 @@ import glengine.yan.glengine.nodes.YANTextNode;
 import glengine.yan.glengine.nodes.YANTexturedNode;
 import glengine.yan.glengine.renderer.YANGLRenderer;
 import glengine.yan.glengine.screens.YANIScreen;
+import glengine.yan.glengine.service.ServiceLocator;
 import glengine.yan.glengine.tween.YANTweenNodeAccessor;
 import glengine.yan.glengine.util.math.YANMathUtils;
 
@@ -108,7 +109,7 @@ public class TweeningTestScreen extends BaseTestScreen {
         }
 
         //create a text node
-        mNodesAmountText = new YANTextNode(YANAssetManager.getInstance().getLoadedFont("standard_font"), "Nodes Amount 10000".length());
+        mNodesAmountText = new YANTextNode(ServiceLocator.locateService(YANAssetManager.class).getLoadedFont("standard_font"), "Nodes Amount 10000".length());
         mNodesAmountText.setText("Nodes Amount " + mAnimateNodes.size());
         mNodesAmountText.setSortingLayer(OVERLAY_SORTING_LAYER);
 

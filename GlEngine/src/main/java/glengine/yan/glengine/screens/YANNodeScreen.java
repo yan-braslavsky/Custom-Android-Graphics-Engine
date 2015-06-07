@@ -60,7 +60,7 @@ public abstract class YANNodeScreen implements YANIScreen {
     protected abstract void onCreateNodes();
 
     protected void addNode(YANIRenderableNode node) {
-        node.onAttachedToScreen(mSortingLayerChangeListener);
+        node.onAttachedToScreen(this,mSortingLayerChangeListener);
         getNodeList().add(node);
         shouldSortNodes = true;
     }
@@ -76,6 +76,10 @@ public abstract class YANNodeScreen implements YANIScreen {
         shouldSortNodes = true;
     }
 
+    @Override
+    public void onBackPressed() {
+        //Does nothing by default
+    }
 
     @Override
     public void onSetActive() {

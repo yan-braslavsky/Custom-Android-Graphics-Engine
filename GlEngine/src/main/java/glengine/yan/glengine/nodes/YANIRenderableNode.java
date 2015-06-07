@@ -30,7 +30,7 @@ public interface YANIRenderableNode<T extends ShaderProgram> {
 
     YANRectangle getBoundingRectangle();
 
-    void onAttachedToScreen(YANNodeScreen.SortingLayerChangeListener sortingLayerChangeListener);
+    void onAttachedToScreen(YANNodeScreen screen,YANNodeScreen.SortingLayerChangeListener sortingLayerChangeListener);
 
     void onDetachedFromScreen();
 

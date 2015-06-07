@@ -4,11 +4,11 @@ package glengine.yan.glengine;
 import android.content.Context;
 import android.opengl.GLSurfaceView.Renderer;
 
-import glengine.yan.glengine.input.YANInputManager;
-import glengine.yan.glengine.renderer.YANGLRenderer;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
+import glengine.yan.glengine.input.YANInputManager;
+import glengine.yan.glengine.renderer.YANGLRenderer;
 
 /**
  * This object serves as an entry point for android events ,
@@ -18,16 +18,16 @@ public class EngineWrapper implements Renderer {
 
     //Static reference kept , to prevent recreation of the
     //implementator renderer each time screen is rotated
-    private static YANGLRenderer mRenderer;
-    private static Context mCtx;
+    private YANGLRenderer mRenderer;
+    private EngineActivity mEngineActivity;
 
-    public static YANGLRenderer getRenderer() {
+    public YANGLRenderer getRenderer() {
         return mRenderer;
     }
 
-    public EngineWrapper(Context ctx) {
-        mRenderer = new YANGLRenderer(ctx);
-        mCtx = ctx;
+    public EngineWrapper(EngineActivity engineActivity) {
+        mRenderer = new YANGLRenderer(engineActivity);
+        mEngineActivity = engineActivity;
     }
 
     public void handleTouchDown(float normalizedX, float normalizedY) {
@@ -57,7 +57,15 @@ public class EngineWrapper implements Renderer {
         mRenderer.onDrawFrame();
     }
 
-    public static Context getContext() {
-        return mCtx;
+    public Context getContext() {
+        return mEngineActivity.getApplicationContext();
     }
+
+    /**
+     * Called when user presses back button
+     */
+    public void onBackPressed() {
+        mRenderer.onBackPressed();
+    }
+
 }

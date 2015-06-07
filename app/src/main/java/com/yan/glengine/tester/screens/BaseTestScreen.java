@@ -7,8 +7,9 @@ import glengine.yan.glengine.nodes.YANTextNode;
 import glengine.yan.glengine.renderer.YANGLRenderer;
 import glengine.yan.glengine.screens.YANIScreen;
 import glengine.yan.glengine.screens.YANNodeScreen;
-import glengine.yan.glengine.util.loggers.YANFPSLogger;
+import glengine.yan.glengine.service.ServiceLocator;
 import glengine.yan.glengine.util.colors.YANColor;
+import glengine.yan.glengine.util.loggers.YANFPSLogger;
 
 /**
  * Created by Yan-Home on 1/17/2015.
@@ -50,18 +51,18 @@ public abstract class BaseTestScreen extends YANNodeScreen {
             }
         });
 
-        mUiAtlas = YANAssetManager.getInstance().getLoadedAtlas("ui_atlas");
-        mCardsAtlas = YANAssetManager.getInstance().getLoadedAtlas("cards_atlas");
+        mUiAtlas = ServiceLocator.locateService(YANAssetManager.class).getLoadedAtlas("ui_atlas");
+        mCardsAtlas = ServiceLocator.locateService(YANAssetManager.class).getLoadedAtlas("cards_atlas");
     }
 
     @Override
     public void onSetActive() {
         super.onSetActive();
         //load atlas into a memory
-        YANAssetManager.getInstance().loadTexture(YANAssetManager.getInstance().getLoadedAtlas("ui_atlas").getAtlasImageFilePath());
-        YANAssetManager.getInstance().loadTexture(YANAssetManager.getInstance().getLoadedAtlas("cards_atlas").getAtlasImageFilePath());
+        ServiceLocator.locateService(YANAssetManager.class).loadTexture(ServiceLocator.locateService(YANAssetManager.class).getLoadedAtlas("ui_atlas").getAtlasImageFilePath());
+        ServiceLocator.locateService(YANAssetManager.class).loadTexture(ServiceLocator.locateService(YANAssetManager.class).getLoadedAtlas("cards_atlas").getAtlasImageFilePath());
         //load font atlas into a memory
-        YANAssetManager.getInstance().loadTexture(YANAssetManager.getInstance().getLoadedFont("standard_font").getGlyphImageFilePath());
+        ServiceLocator.locateService(YANAssetManager.class).loadTexture(ServiceLocator.locateService(YANAssetManager.class).getLoadedFont("standard_font").getGlyphImageFilePath());
 
         mNextScreen = onSetNextScreen();
         mPreviousScreen = onSetPreviousScreen();
@@ -72,9 +73,9 @@ public abstract class BaseTestScreen extends YANNodeScreen {
     public void onSetNotActive() {
         super.onSetNotActive();
         //release atlas from a memory
-        YANAssetManager.getInstance().unloadTexture(YANAssetManager.getInstance().getLoadedAtlas("ui_atlas").getAtlasImageFilePath());
+        ServiceLocator.locateService(YANAssetManager.class).unloadTexture(ServiceLocator.locateService(YANAssetManager.class).getLoadedAtlas("ui_atlas").getAtlasImageFilePath());
         //release atlas font from a memory
-        YANAssetManager.getInstance().unloadTexture(YANAssetManager.getInstance().getLoadedFont("standard_font").getGlyphImageFilePath());
+        ServiceLocator.locateService(YANAssetManager.class).unloadTexture(ServiceLocator.locateService(YANAssetManager.class).getLoadedFont("standard_font").getGlyphImageFilePath());
     }
 
     @Override
@@ -113,7 +114,7 @@ public abstract class BaseTestScreen extends YANNodeScreen {
     @Override
     protected void onCreateNodes() {
         //create a text node
-        mFpsTextNode = new YANTextNode(YANAssetManager.getInstance().getLoadedFont("standard_font"),"FPS 100".length());
+        mFpsTextNode = new YANTextNode(ServiceLocator.locateService(YANAssetManager.class).getLoadedFont("standard_font"), "FPS 100".length());
         mFpsTextNode.setText("FPS " + 0);
         mFpsTextNode.setSortingLayer(OVERLAY_SORTING_LAYER);
 

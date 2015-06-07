@@ -13,6 +13,7 @@ import glengine.yan.glengine.programs.YANColorShaderProgram;
 import glengine.yan.glengine.programs.YANTextShaderProgram;
 import glengine.yan.glengine.programs.YANTextureShaderProgram;
 import glengine.yan.glengine.screens.YANIScreen;
+import glengine.yan.glengine.service.ServiceLocator;
 import glengine.yan.glengine.tasks.YANTaskManager;
 import glengine.yan.glengine.util.colors.YANColor;
 import glengine.yan.glengine.util.geometry.YANVector2;
@@ -60,7 +61,7 @@ public class YANGLRenderer {
         mSurfaceSize = new YANVector2(width, height);
 
         //when context is recreated all previously loaded textures must be cleaned.
-        YANAssetManager.getInstance().reloadAllLoadedTextures();
+        ServiceLocator.locateService(YANAssetManager.class).reloadAllLoadedTextures();
 
         //set orthographic projection
         Matrix.orthoM(YANMatrixHelper.projectionMatrix, 0, 0, width, height, 0, 50, 1000);
@@ -121,7 +122,7 @@ public class YANGLRenderer {
                 //TODO : extract texture opacity and overlay to material
                 mTextureShaderProgram.setUniforms(
                         YANMatrixHelper.modelViewProjectionMatrix,
-                        YANAssetManager.getInstance().getLoadedTextureOpenGLHandle(((YANTexturedNode) iNode).getTextureRegion().getAtlas().getAtlasImageFilePath()),
+                        ServiceLocator.locateService(YANAssetManager.class).getLoadedTextureOpenGLHandle(((YANTexturedNode) iNode).getTextureRegion().getAtlas().getAtlasImageFilePath()),
                         iNode.getOpacity(), iNode.getOverlayColor().asFloatArray());
 
                 //TODO :extract all bind data to mesh of the node
@@ -136,7 +137,7 @@ public class YANGLRenderer {
                 String texturePath = textNode.getFont().getGlyphImageFilePath();
                 mTextShaderProgram.setUniforms(
                         YANMatrixHelper.modelViewProjectionMatrix,
-                        YANAssetManager.getInstance().getLoadedTextureOpenGLHandle(texturePath),
+                        ServiceLocator.locateService(YANAssetManager.class).getLoadedTextureOpenGLHandle(texturePath),
                         iNode.getOpacity(), textNode.getTextColor().asFloatArray());
 
                 //bind data
@@ -202,5 +203,18 @@ public class YANGLRenderer {
         mClearColor = clearColor;
         //clear color
         GLES20.glClearColor(mClearColor.getR(), mClearColor.getG(), mClearColor.getB(), mClearColor.getA());
+    }
+
+    /**
+     * Called when user presses back button
+     */
+    public void onBackPressed() {
+        if(mCurrentScreen != null){
+            mCurrentScreen.onBackPressed();
+        }
+    }
+
+    public Context getAppContext() {
+        return mCtx;
     }
 }

@@ -1,6 +1,5 @@
 package glengine.yan.glengine.nodes;
 
-import glengine.yan.glengine.EngineWrapper;
 import glengine.yan.glengine.assets.atlas.YANAtlasTextureRegion;
 import glengine.yan.glengine.input.YANInputManager;
 import glengine.yan.glengine.screens.YANNodeScreen;
@@ -19,9 +18,8 @@ public class YANButtonNode extends YANTexturedNode {
     private YANInputManager.TouchListener mInputManagerTouchListener = new YANInputManager.TouchListener() {
         @Override
         public boolean onTouchDown(float normalizedX, float normalizedY) {
-
             YANVector2 touchToWorldPoint = YANInputManager.touchToWorld(normalizedX, normalizedY,
-                    EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY());
+                    getScreen().getRenderer().getSurfaceSize().getX(), getScreen().getRenderer().getSurfaceSize().getY());
             YANRectangle boundingRectangle = getBoundingRectangle();
             if (boundingRectangle.contains(touchToWorldPoint)) {
                 changeState(YANButtonState.PRESSED);
@@ -34,7 +32,7 @@ public class YANButtonNode extends YANTexturedNode {
         @Override
         public boolean onTouchUp(float normalizedX, float normalizedY) {
             if (getBoundingRectangle().contains(YANInputManager.touchToWorld(normalizedX, normalizedY,
-                    EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY()))) {
+                    getScreen().getRenderer().getSurfaceSize().getX(), getScreen().getRenderer().getSurfaceSize().getY()))) {
 
                 //on click will be called only if we press up happens after press down
                 boolean wasPressed = YANButtonState.PRESSED == mState;
@@ -58,7 +56,7 @@ public class YANButtonNode extends YANTexturedNode {
                 return false;
 
             if (getBoundingRectangle().contains(YANInputManager.touchToWorld(normalizedX, normalizedY,
-                    EngineWrapper.getRenderer().getSurfaceSize().getX(), EngineWrapper.getRenderer().getSurfaceSize().getY()))) {
+                    getScreen().getRenderer().getSurfaceSize().getX(), getScreen().getRenderer().getSurfaceSize().getY()))) {
                 //node still touched inside , do nothing
                 return true;
             } else {
@@ -100,8 +98,8 @@ public class YANButtonNode extends YANTexturedNode {
     }
 
     @Override
-    public void onAttachedToScreen(YANNodeScreen.SortingLayerChangeListener sortingLayerChangeListener) {
-        super.onAttachedToScreen(sortingLayerChangeListener);
+    public void onAttachedToScreen(YANNodeScreen screen,YANNodeScreen.SortingLayerChangeListener sortingLayerChangeListener) {
+        super.onAttachedToScreen(screen,sortingLayerChangeListener);
         // Add itself to input manager
         YANInputManager.getInstance().addEventListener(mInputManagerTouchListener);
     }

@@ -5,6 +5,7 @@ import glengine.yan.glengine.assets.font.YANFont;
 import glengine.yan.glengine.nodes.YANTextNode;
 import glengine.yan.glengine.renderer.YANGLRenderer;
 import glengine.yan.glengine.screens.YANIScreen;
+import glengine.yan.glengine.service.ServiceLocator;
 
 /**
  * Created by Yan-Home on 1/11/2015.
@@ -31,8 +32,8 @@ public class FontTestScreen extends BaseTestScreen {
     @Override
     protected void onCreateNodes() {
         super.onCreateNodes();
-        mFont = YANAssetManager.getInstance().getLoadedFont("tale_font");
-        mChunkFiveFont = YANAssetManager.getInstance().getLoadedFont("chunkfive");
+        mFont = ServiceLocator.locateService(YANAssetManager.class).getLoadedFont("tale_font");
+        mChunkFiveFont = ServiceLocator.locateService(YANAssetManager.class).getLoadedFont("chunkfive");
 
         mColoredTextNode = new YANTextNode(mChunkFiveFont, COLORED_TEXT_STRING.length());
         mColoredTextNode.setTextColor(1f, 0, 0);
@@ -57,16 +58,16 @@ public class FontTestScreen extends BaseTestScreen {
     public void onSetActive() {
         super.onSetActive();
 
-        YANAssetManager.getInstance().loadTexture(mFont.getGlyphImageFilePath());
-        YANAssetManager.getInstance().loadTexture(mChunkFiveFont.getGlyphImageFilePath());
+        ServiceLocator.locateService(YANAssetManager.class).loadTexture(mFont.getGlyphImageFilePath());
+        ServiceLocator.locateService(YANAssetManager.class).loadTexture(mChunkFiveFont.getGlyphImageFilePath());
     }
 
     @Override
     public void onSetNotActive() {
         super.onSetNotActive();
 
-        YANAssetManager.getInstance().unloadTexture(mFont.getGlyphImageFilePath());
-        YANAssetManager.getInstance().unloadTexture(mChunkFiveFont.getGlyphImageFilePath());
+        ServiceLocator.locateService(YANAssetManager.class).unloadTexture(mFont.getGlyphImageFilePath());
+        ServiceLocator.locateService(YANAssetManager.class).unloadTexture(mChunkFiveFont.getGlyphImageFilePath());
     }
 
     @Override
