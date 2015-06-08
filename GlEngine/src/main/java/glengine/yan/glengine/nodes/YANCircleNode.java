@@ -55,14 +55,14 @@ public class YANCircleNode extends YANBaseNode<YANColorShaderProgram> {
         buffer[index++] = centerY;
 
         //we choosing step in degrees according to outer vertex count
-        float degreeStep = 360 / CIRCLE_OUTER_VERTEX_COUNT;
+        float degreeStep = 360f / CIRCLE_OUTER_VERTEX_COUNT;
 
         //the final matrix is getting offset , that is why we drawing with initial
         ///rotation offset
         float rotationOffset = 270f;
 
         //outer vertices of the circle
-        int verticesToDraw = (clockWiseDraw) ? CIRCLE_OUTER_VERTEX_COUNT : (int) (CIRCLE_OUTER_VERTEX_COUNT - ((1f - mPieCirclePercentage) * (float) CIRCLE_OUTER_VERTEX_COUNT));
+        int verticesToDraw = (clockWiseDraw) ? CIRCLE_OUTER_VERTEX_COUNT : (int) ((float)CIRCLE_OUTER_VERTEX_COUNT - ((1f - mPieCirclePercentage) * (float) CIRCLE_OUTER_VERTEX_COUNT));
         int startingVertex = (clockWiseDraw) ? (int) ((1f - mPieCirclePercentage) * (float) CIRCLE_OUTER_VERTEX_COUNT) : 0;
 
         for (int i = startingVertex; i < verticesToDraw; ++i) {
