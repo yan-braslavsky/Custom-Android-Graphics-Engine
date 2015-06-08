@@ -197,7 +197,6 @@ public abstract class EngineActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         wrapper.onBackPressed();
     }
 
