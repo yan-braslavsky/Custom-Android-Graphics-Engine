@@ -4,6 +4,7 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
+import glengine.yan.glengine.EngineActivity;
 import glengine.yan.glengine.assets.YANAssetManager;
 import glengine.yan.glengine.nodes.YANCircleNode;
 import glengine.yan.glengine.nodes.YANIRenderableNode;
@@ -28,6 +29,7 @@ import static android.opengl.GLES20.glEnable;
  */
 public class YANGLRenderer {
 
+    private final EngineActivity mEngineActivity;
     private YANIScreen mCurrentScreen;
     private YANVector2 mSurfaceSize;
 
@@ -40,10 +42,11 @@ public class YANGLRenderer {
     private YANColor mClearColor;
 
 
-    public YANGLRenderer(Context appContext) {
-        mCtx = appContext;
+    public YANGLRenderer(EngineActivity engineActivity) {
+        mCtx = engineActivity.getApplicationContext();
         mSurfaceSize = new YANVector2();
         mClearColor = new YANColor(1f, 1f, 1f, 1f);
+        mEngineActivity = engineActivity;
     }
 
     public void onGLSurfaceCreated() {
@@ -216,5 +219,9 @@ public class YANGLRenderer {
 
     public Context getAppContext() {
         return mCtx;
+    }
+
+    public EngineActivity getEngineActivity() {
+        return mEngineActivity;
     }
 }
