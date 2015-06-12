@@ -165,4 +165,12 @@ public class YANAssetManager implements IService {
         }
     }
 
+    @Override
+    public void clearServiceData() {
+        //Delete all loaded textures
+        for (String textureResourceName : mTextureHandlesMap.keySet()) {
+            //delete textureResourceName rom GL context
+            YANTextureHelper.deleteTexture(mTextureHandlesMap.get(textureResourceName));
+        }
+    }
 }

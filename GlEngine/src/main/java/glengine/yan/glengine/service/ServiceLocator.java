@@ -7,7 +7,7 @@ import java.util.HashMap;
  */
 public class ServiceLocator {
 
-    private static final HashMap<Class<? extends IService>, Object> mServicesMap = new HashMap<>();
+    private static final HashMap<Class<? extends IService>, IService> mServicesMap = new HashMap<>();
 
     public static final <T extends IService> void addService(T service) {
         mServicesMap.put(service.getClass(), service);
@@ -15,5 +15,12 @@ public class ServiceLocator {
 
     public static final <T extends IService> T locateService(Class<T> serviceClass) {
         return (T) mServicesMap.get(serviceClass);
+    }
+
+    public static void clearAllServices() {
+        for (IService service : mServicesMap.values()) {
+            service.clearServiceData();
+        }
+        mServicesMap.clear();
     }
 }

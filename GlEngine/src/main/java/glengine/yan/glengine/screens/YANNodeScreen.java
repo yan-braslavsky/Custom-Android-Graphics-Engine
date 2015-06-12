@@ -78,7 +78,8 @@ public abstract class YANNodeScreen implements YANIScreen {
 
     @Override
     public void onBackPressed() {
-        //Does nothing by default
+        //Shuts down the renderer by default
+        getRenderer().shutDown();
     }
 
     @Override

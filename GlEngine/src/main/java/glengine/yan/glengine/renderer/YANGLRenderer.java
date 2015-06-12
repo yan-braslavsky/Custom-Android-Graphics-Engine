@@ -38,8 +38,9 @@ public class YANGLRenderer {
     private YANTextShaderProgram mTextShaderProgram;
     private YANColorShaderProgram colorProgram;
     private long mPreviousFrameTime;
-    private Context mCtx;
+    private final Context mCtx;
     private YANColor mClearColor;
+    private boolean mShuttingDown;
 
 
     public YANGLRenderer(EngineActivity engineActivity) {
@@ -82,6 +83,14 @@ public class YANGLRenderer {
 
         float deltaTimeSeconds = ((float) (System.currentTimeMillis() - mPreviousFrameTime)) / 1000f;
         mPreviousFrameTime = System.currentTimeMillis();
+
+        if (mShuttingDown) {
+            //release resources
+            mCurrentScreen.onSetNotActive();
+            ServiceLocator.clearAllServices();
+            mEngineActivity.finish();
+            return;
+        }
 
         //onUpdate tasks
         YANTaskManager.getInstance().update(deltaTimeSeconds);
@@ -150,7 +159,7 @@ public class YANGLRenderer {
                 YANColor color = ((YANCircleNode) iNode).getColor();
                 colorProgram.setUniforms(
                         YANMatrixHelper.modelViewProjectionMatrix,
-                        color.asFloatArray(),iNode.getOpacity());
+                        color.asFloatArray(), iNode.getOpacity());
 
                 //bind data
                 iNode.bindData(colorProgram);
@@ -212,7 +221,7 @@ public class YANGLRenderer {
      * Called when user presses back button
      */
     public void onBackPressed() {
-        if(mCurrentScreen != null){
+        if (mCurrentScreen != null) {
             mCurrentScreen.onBackPressed();
         }
     }
@@ -223,5 +232,9 @@ public class YANGLRenderer {
 
     public EngineActivity getEngineActivity() {
         return mEngineActivity;
+    }
+
+    public void shutDown() {
+        mShuttingDown = true;
     }
 }
