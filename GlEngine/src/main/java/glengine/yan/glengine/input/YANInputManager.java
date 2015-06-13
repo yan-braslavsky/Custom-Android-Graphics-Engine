@@ -4,28 +4,39 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import glengine.yan.glengine.service.IService;
 import glengine.yan.glengine.util.geometry.YANVector2;
 import glengine.yan.glengine.util.sort.YANSort;
 
 /**
  * Created by Yan-Home on 10/3/2014.
  */
-public class YANInputManager {
+public class YANInputManager implements IService {
 
-    private static final YANInputManager INSTANCE = new YANInputManager();
+    public interface TouchListener {
+        boolean onTouchDown(float normalizedX, float normalizedY);
 
-    private Comparator<YANInputManager.TouchListener> mInputSortingLayerComparator = new Comparator<YANInputManager.TouchListener>() {
-        @Override
-        public int compare(YANInputManager.TouchListener lhs, YANInputManager.TouchListener rhs) {
-            return lhs.getSortingLayer() - rhs.getSortingLayer();
-        }
-    };
+        boolean onTouchUp(float normalizedX, float normalizedY);
 
-    public static final YANInputManager getInstance() {
-        return INSTANCE;
+        boolean onTouchDrag(float normalizedX, float normalizedY);
+
+        int getSortingLayer();
     }
 
-    public static YANVector2 touchToWorld(float normalizedX, float normalizedY, float worldWidth, float worldHeight) {
+    private final Comparator<YANInputManager.TouchListener> mInputSortingLayerComparator;
+    private final List<TouchListener> mListeners;
+
+    public YANInputManager() {
+        mListeners = new ArrayList<>();
+        mInputSortingLayerComparator = new Comparator<YANInputManager.TouchListener>() {
+            @Override
+            public int compare(YANInputManager.TouchListener lhs, YANInputManager.TouchListener rhs) {
+                return lhs.getSortingLayer() - rhs.getSortingLayer();
+            }
+        };
+    }
+
+    public static final YANVector2 touchToWorld(float normalizedX, float normalizedY, float worldWidth, float worldHeight) {
         //convert touch point to world coordinates
         float realTouchX = normalizedX * worldWidth;
         float realTouchY = normalizedY * worldHeight;
@@ -60,21 +71,6 @@ public class YANInputManager {
         }
     }
 
-    public interface TouchListener {
-        boolean onTouchDown(float normalizedX, float normalizedY);
-
-        boolean onTouchUp(float normalizedX, float normalizedY);
-
-        boolean onTouchDrag(float normalizedX, float normalizedY);
-
-        int getSortingLayer();
-    }
-
-    private List<TouchListener> mListeners;
-
-    private YANInputManager() {
-        mListeners = new ArrayList<>();
-    }
 
     public void addEventListener(TouchListener listener) {
 
@@ -87,5 +83,10 @@ public class YANInputManager {
 
     public void removeEventListener(TouchListener listener) {
         mListeners.remove(listener);
+    }
+
+    @Override
+    public void clearServiceData() {
+        mListeners.clear();
     }
 }

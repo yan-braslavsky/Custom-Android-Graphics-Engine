@@ -3,6 +3,7 @@ package glengine.yan.glengine.nodes;
 import glengine.yan.glengine.assets.atlas.YANAtlasTextureRegion;
 import glengine.yan.glengine.input.YANInputManager;
 import glengine.yan.glengine.screens.YANNodeScreen;
+import glengine.yan.glengine.service.ServiceLocator;
 import glengine.yan.glengine.util.geometry.YANRectangle;
 import glengine.yan.glengine.util.geometry.YANVector2;
 
@@ -101,14 +102,14 @@ public class YANButtonNode extends YANTexturedNode {
     public void onAttachedToScreen(YANNodeScreen screen,YANNodeScreen.SortingLayerChangeListener sortingLayerChangeListener) {
         super.onAttachedToScreen(screen,sortingLayerChangeListener);
         // Add itself to input manager
-        YANInputManager.getInstance().addEventListener(mInputManagerTouchListener);
+        ServiceLocator.locateService(YANInputManager.class).addEventListener(mInputManagerTouchListener);
     }
 
     @Override
     public void onDetachedFromScreen() {
         super.onDetachedFromScreen();
         // Add itself to input manager
-        YANInputManager.getInstance().removeEventListener(mInputManagerTouchListener);
+        ServiceLocator.locateService(YANInputManager.class).removeEventListener(mInputManagerTouchListener);
     }
 
     public void setClickListener(YanButtonNodeClickListener clickListener) {

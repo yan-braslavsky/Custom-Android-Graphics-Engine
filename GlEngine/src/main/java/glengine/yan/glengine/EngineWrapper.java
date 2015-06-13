@@ -9,6 +9,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import glengine.yan.glengine.input.YANInputManager;
 import glengine.yan.glengine.renderer.YANGLRenderer;
+import glengine.yan.glengine.service.ServiceLocator;
 
 /**
  * This object serves as an entry point for android events ,
@@ -31,15 +32,15 @@ public class EngineWrapper implements Renderer {
     }
 
     public void handleTouchDown(float normalizedX, float normalizedY) {
-        YANInputManager.getInstance().handleTouchPress(normalizedX, normalizedY);
+        ServiceLocator.locateService(YANInputManager.class).handleTouchPress(normalizedX, normalizedY);
     }
 
     public void handleTouchDrag(float normalizedX, float normalizedY) {
-        YANInputManager.getInstance().handleTouchDrag(normalizedX, normalizedY);
+        ServiceLocator.locateService(YANInputManager.class).handleTouchDrag(normalizedX, normalizedY);
     }
 
     public void handleTouchUp(float normalizedX, float normalizedY) {
-        YANInputManager.getInstance().handleTouchUp(normalizedX, normalizedY);
+        ServiceLocator.locateService(YANInputManager.class).handleTouchUp(normalizedX, normalizedY);
     }
 
     @Override

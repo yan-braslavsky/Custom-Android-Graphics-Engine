@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import glengine.yan.glengine.assets.YANAssetDescriptor;
 import glengine.yan.glengine.assets.YANAssetManager;
+import glengine.yan.glengine.input.YANInputManager;
 import glengine.yan.glengine.renderer.YANGLRenderer;
 import glengine.yan.glengine.screens.YANIScreen;
 import glengine.yan.glengine.service.ServiceLocator;
@@ -42,8 +43,10 @@ public abstract class EngineActivity extends Activity {
         //can be loaded during the atlas parsing
         ArrayList<YANAssetDescriptor> assets = onCreateAssets();
 
+        //initialize local services
+        initServices();
+
         //preload assets
-        ServiceLocator.addService(new YANAssetManager(getApplicationContext()));
         ServiceLocator.locateService(YANAssetManager.class).preloadAssets(assets);
 
         //setup the tween engine
@@ -54,6 +57,14 @@ public abstract class EngineActivity extends Activity {
 
         //init the engine
         init();
+    }
+
+    /**
+     * Initializes services that can be accessed by {@link ServiceLocator}
+     */
+    protected void initServices() {
+        ServiceLocator.addService(new YANAssetManager(getApplicationContext()));
+        ServiceLocator.addService(new YANInputManager());
     }
 
     @Override
