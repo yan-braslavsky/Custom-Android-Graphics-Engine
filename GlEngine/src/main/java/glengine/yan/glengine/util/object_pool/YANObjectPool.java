@@ -104,4 +104,8 @@ public class YANObjectPool {
         //put an object into a deque
         deque.offer(obj);
     }
+
+    public void empty() {
+        mObjectsMap.clear();
+    }
 }

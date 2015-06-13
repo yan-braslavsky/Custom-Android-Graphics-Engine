@@ -19,6 +19,7 @@ import glengine.yan.glengine.tasks.YANTaskManager;
 import glengine.yan.glengine.util.colors.YANColor;
 import glengine.yan.glengine.util.geometry.YANVector2;
 import glengine.yan.glengine.util.helpers.YANMatrixHelper;
+import glengine.yan.glengine.util.object_pool.YANObjectPool;
 
 import static android.opengl.GLES20.glEnable;
 
@@ -88,6 +89,7 @@ public class YANGLRenderer {
             //release resources
             mCurrentScreen.onSetNotActive();
             ServiceLocator.clearAllServices();
+            YANObjectPool.getInstance().empty();
             mEngineActivity.finish();
             return;
         }
