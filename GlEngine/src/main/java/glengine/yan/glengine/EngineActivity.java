@@ -114,8 +114,11 @@ public abstract class EngineActivity extends Activity {
             // Request an OpenGL ES 2.0 compatible context.
             glSurfaceView.setEGLContextClientVersion(2);
 
-            //TODO : Uncomment for devices , Genymotion crashes
-//            glSurfaceView.setEGLConfigChooser(new YANConfigChooser());
+            //Real devices are capable to benefit from built in multisampling
+            //AntiAliasing , but emulators will often crash
+            if (isUsingAntiAliasing()) {
+                glSurfaceView.setEGLConfigChooser(new YANConfigChooser());
+            }
 
             // Assign our wrapper.
             glSurfaceView.setRenderer(wrapper);
@@ -184,6 +187,13 @@ public abstract class EngineActivity extends Activity {
         });
 
         setContentView(glSurfaceView);
+    }
+
+    /**
+     * If true will use a MSAA for the GL configuration.
+     */
+    protected boolean isUsingAntiAliasing() {
+        return false;
     }
 
     @Override
