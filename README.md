@@ -17,6 +17,6 @@ Supports basic rectangle based collision detection.
 Supports touch events and their propagation across the nodes.
 
 
-[![ScreenShot](https://raw.githubusercontent.com/ivelius/OpenGLEngineAndroid/master/app/src/main/assets/EngineCollage.jpg)
+![ScreenShot](https://raw.githubusercontent.com/ivelius/OpenGLEngineAndroid/master/app/src/main/assets/EngineCollage.jpg)
 
 [1]:https://code.google.com/p/java-universal-tween-engine/
