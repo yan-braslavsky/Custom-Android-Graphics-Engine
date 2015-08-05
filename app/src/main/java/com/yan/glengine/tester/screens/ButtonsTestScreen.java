@@ -1,11 +1,16 @@
 package com.yan.glengine.tester.screens;
 
+import android.support.annotation.NonNull;
+
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
 import glengine.yan.glengine.assets.YANAssetManager;
 import glengine.yan.glengine.nodes.YANButtonNode;
 import glengine.yan.glengine.nodes.YANTextNode;
 import glengine.yan.glengine.renderer.YANGLRenderer;
 import glengine.yan.glengine.screens.YANIScreen;
 import glengine.yan.glengine.service.ServiceLocator;
+import glengine.yan.glengine.tween.YANTweenNodeAccessor;
 import glengine.yan.glengine.util.colors.YANColor;
 
 /**
@@ -65,7 +70,39 @@ public class ButtonsTestScreen extends BaseTestScreen {
         mSimpleButton.setSize(mUiAtlas.getTextureRegion("call_btn_default.png").getWidth() * 3, mUiAtlas.getTextureRegion("call_btn_default.png").getHeight() * 3);
         mSimpleAnchoredButton.setAnchorPoint(0.9f, 0.5f);
         mSimpleButton.setAnchorPoint(0f, 0f);
-        mButtonWithStateChangeAnimator.setSize(mSimpleAnchoredButton.getSize().getX(),mSimpleAnchoredButton.getSize().getY());
+        mButtonWithStateChangeAnimator.setSize(mSimpleAnchoredButton.getSize().getX(), mSimpleAnchoredButton.getSize().getY());
+
+
+        final float originalWidth = mButtonWithStateChangeAnimator.getSize().getX();
+        final float originalHeight = mButtonWithStateChangeAnimator.getSize().getY();
+        final float duration = 0.05f;
+        mButtonWithStateChangeAnimator.setStateChangeAnimator(mButtonWithStateChangeAnimator.createStateChangeAnimator(YANButtonNode.YANButtonState.DEFAULT, YANButtonNode.YANButtonState.PRESSED,
+                new YANButtonNode.ButtonAnimation() {
+                    @Override
+                    public void startButtonAnimation(@NonNull YANButtonNode buttonNode) {
+
+                        mTweenManager.killTarget(mButtonWithStateChangeAnimator);
+                        Timeline.createSequence()
+                                .beginParallel()
+                                .push(Tween.to(mButtonWithStateChangeAnimator, YANTweenNodeAccessor.SIZE_X, duration).target(originalWidth * 0.7f))
+                                .push(Tween.to(mButtonWithStateChangeAnimator, YANTweenNodeAccessor.SIZE_Y, duration).target(originalHeight * 0.7f))
+                                .start(mTweenManager);
+                    }
+                }));
+
+        mButtonWithStateChangeAnimator.setStateChangeAnimator(
+                mButtonWithStateChangeAnimator.createStateChangeAnimator(YANButtonNode.YANButtonState.PRESSED, YANButtonNode.YANButtonState.DEFAULT,
+                        new YANButtonNode.ButtonAnimation() {
+                            @Override
+                            public void startButtonAnimation(@NonNull YANButtonNode buttonNode) {
+                                mTweenManager.killTarget(mButtonWithStateChangeAnimator);
+                                Timeline.createSequence()
+                                        .beginParallel()
+                                        .push(Tween.to(mButtonWithStateChangeAnimator, YANTweenNodeAccessor.SIZE_X, duration).target(originalWidth))
+                                        .push(Tween.to(mButtonWithStateChangeAnimator, YANTweenNodeAccessor.SIZE_Y, duration).target(originalHeight))
+                                        .start(mTweenManager);
+                            }
+                        }));
 
     }
 
@@ -81,9 +118,10 @@ public class ButtonsTestScreen extends BaseTestScreen {
         mSimpleAnchoredButton = new YANButtonNode(mUiAtlas.getTextureRegion("call_btn_default.png"), mUiAtlas.getTextureRegion("call_btn_pressed.png"));
         mSimpleButton = new YANButtonNode(mUiAtlas.getTextureRegion("call_btn_default.png"), mUiAtlas.getTextureRegion("call_btn_pressed.png"));
         mButtonWithStateChangeAnimator = new YANButtonNode(mUiAtlas.getTextureRegion("call_btn_default.png"), mUiAtlas.getTextureRegion("call_btn_pressed.png"));
-
         YANColor color = YANColor.createFromHexColor(0xFF5987);
-        mButtonWithStateChangeAnimator.setOverlayColor(color.getR(),color.getG(),color.getB(),0.5f);
+        mButtonWithStateChangeAnimator.setOverlayColor(color.getR(), color.getG(), color.getB(), 0.5f);
+
+
     }
 
 

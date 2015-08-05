@@ -2,7 +2,6 @@ package com.yan.glengine.tester.screens;
 
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenManager;
 import glengine.yan.glengine.assets.YANAssetManager;
 import glengine.yan.glengine.nodes.YANTextNode;
 import glengine.yan.glengine.nodes.YANTexturedNode;
@@ -18,15 +17,12 @@ import glengine.yan.glengine.util.math.YANMathUtils;
  */
 public class BlendingTestScreen extends BaseTestScreen {
 
-    private TweenManager mTweenManager;
     private YANTextNode mBlendingTextNode;
     private YANTexturedNode mGlade;
     private YANTexturedNode mCard;
 
     public BlendingTestScreen(YANGLRenderer renderer) {
         super(renderer);
-        mTweenManager = new TweenManager();
-
     }
 
     @Override
@@ -52,9 +48,6 @@ public class BlendingTestScreen extends BaseTestScreen {
     @Override
     public void onSetNotActive() {
         super.onSetNotActive();
-
-        //remove all animations
-        mTweenManager.killAll();
     }
 
     @Override
@@ -115,6 +108,5 @@ public class BlendingTestScreen extends BaseTestScreen {
     @Override
     public void onUpdate(float deltaTimeSeconds) {
         super.onUpdate(deltaTimeSeconds);
-        mTweenManager.update(deltaTimeSeconds);
     }
 }

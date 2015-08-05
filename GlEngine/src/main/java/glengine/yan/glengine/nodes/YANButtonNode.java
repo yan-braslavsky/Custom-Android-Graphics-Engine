@@ -1,9 +1,14 @@
 package glengine.yan.glengine.nodes;
 
+import android.support.annotation.NonNull;
+
+import java.util.HashMap;
+
 import glengine.yan.glengine.assets.atlas.YANAtlasTextureRegion;
 import glengine.yan.glengine.input.YANInputManager;
 import glengine.yan.glengine.screens.YANNodeScreen;
 import glengine.yan.glengine.service.ServiceLocator;
+import glengine.yan.glengine.util.YANPair;
 import glengine.yan.glengine.util.geometry.YANRectangle;
 import glengine.yan.glengine.util.geometry.YANVector2;
 
@@ -16,6 +21,7 @@ public class YANButtonNode extends YANTexturedNode {
     private YANAtlasTextureRegion mPressedTextureRegion;
     private YANButtonState mState;
     private YanButtonNodeClickListener mClickListener;
+    private final HashMap<YANPair<YANButtonState, YANButtonState>, StateChangeAnimator> mFromToButtonStateAnimators;
     private YANInputManager.TouchListener mInputManagerTouchListener = new YANInputManager.TouchListener() {
         @Override
         public boolean onTouchDown(float normalizedX, float normalizedY) {
@@ -44,6 +50,9 @@ public class YANButtonNode extends YANTexturedNode {
                 }
 
                 return true;
+            } else {
+                //we must change button state to default , because it is not pressed any more
+                changeState(YANButtonState.DEFAULT);
             }
 
             return false;
@@ -74,11 +83,33 @@ public class YANButtonNode extends YANTexturedNode {
         }
     };
 
+    public YANButtonNode(YANAtlasTextureRegion defaultTextureRegion, YANAtlasTextureRegion pressedTextureRegion) {
+        super(defaultTextureRegion);
+        mDefaultTextureRegion = defaultTextureRegion;
+        mPressedTextureRegion = pressedTextureRegion;
+        mState = YANButtonState.DEFAULT;
+        mFromToButtonStateAnimators = new HashMap<>(YANButtonState.values().length * (YANButtonState.values().length - 1));
+    }
+
+
     private void changeState(YANButtonState state) {
         if (mState == state)
             return;
+
+        //check for state change animation and run it
+        runStateAnimation(mState,state);
+
         mState = state;
         setTextureRegion(getCurrentStateTextureRegion());
+    }
+
+    private YANPair<YANButtonState,YANButtonState> _cachedStatePair = new YANPair<>(null,null);
+    private void runStateAnimation(YANButtonState fromState,YANButtonState toState) {
+        _cachedStatePair.setFirst(fromState);
+        _cachedStatePair.setSecond(toState);
+        StateChangeAnimator animator = mFromToButtonStateAnimators.get(_cachedStatePair);
+        if (animator != null)
+            animator.animate();
     }
 
     public YANAtlasTextureRegion getCurrentStateTextureRegion() {
@@ -91,16 +122,10 @@ public class YANButtonNode extends YANTexturedNode {
         void onButtonClick();
     }
 
-    public YANButtonNode(YANAtlasTextureRegion defaultTextureRegion, YANAtlasTextureRegion pressedTextureRegion) {
-        super(defaultTextureRegion);
-        mDefaultTextureRegion = defaultTextureRegion;
-        mPressedTextureRegion = pressedTextureRegion;
-        mState = YANButtonState.DEFAULT;
-    }
 
     @Override
-    public void onAttachedToScreen(YANNodeScreen screen,YANNodeScreen.SortingLayerChangeListener sortingLayerChangeListener) {
-        super.onAttachedToScreen(screen,sortingLayerChangeListener);
+    public void onAttachedToScreen(YANNodeScreen screen, YANNodeScreen.SortingLayerChangeListener sortingLayerChangeListener) {
+        super.onAttachedToScreen(screen, sortingLayerChangeListener);
         // Add itself to input manager
         ServiceLocator.locateService(YANInputManager.class).addEventListener(mInputManagerTouchListener);
     }
@@ -116,9 +141,6 @@ public class YANButtonNode extends YANTexturedNode {
         mClickListener = clickListener;
     }
 
-    private enum YANButtonState {
-        PRESSED, DEFAULT
-    }
 
     public YANAtlasTextureRegion getDefaultTextureRegion() {
         return mDefaultTextureRegion;
@@ -144,7 +166,55 @@ public class YANButtonNode extends YANTexturedNode {
         mPressedTextureRegion = pressedTextureRegion;
     }
 
+    public void setStateChangeAnimator(@NonNull final StateChangeAnimator animator) {
+        mFromToButtonStateAnimators.put(new YANPair<>(animator.getFromState(), animator.getToState()), animator);
+    }
+
     public YanButtonNodeClickListener getClickListener() {
         return mClickListener;
+    }
+
+    public enum YANButtonState {
+        PRESSED, DEFAULT
+    }
+
+    public interface ButtonAnimation {
+        void startButtonAnimation(@NonNull final YANButtonNode buttonNode);
+    }
+
+    public StateChangeAnimator createStateChangeAnimator(@NonNull final YANButtonState fromState,
+                                                         @NonNull final YANButtonState toState,
+                                                         @NonNull final ButtonAnimation animation) {
+        return new StateChangeAnimator(fromState, toState, animation);
+    }
+
+    public class StateChangeAnimator {
+        private final YANButtonState mFromState;
+        private final YANButtonState mToState;
+        private final ButtonAnimation mAnimation;
+
+        public StateChangeAnimator(@NonNull final YANButtonState fromState,
+                                   @NonNull final YANButtonState toState,
+                                   @NonNull final ButtonAnimation animation) {
+            this.mFromState = fromState;
+            this.mToState = toState;
+            this.mAnimation = animation;
+        }
+
+        public void animate() {
+            mAnimation.startButtonAnimation(YANButtonNode.this);
+        }
+
+        public YANButtonState getFromState() {
+            return mFromState;
+        }
+
+        public YANButtonState getToState() {
+            return mToState;
+        }
+
+        public ButtonAnimation getAnimation() {
+            return mAnimation;
+        }
     }
 }

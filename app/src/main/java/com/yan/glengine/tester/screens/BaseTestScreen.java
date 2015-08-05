@@ -1,5 +1,6 @@
 package com.yan.glengine.tester.screens;
 
+import aurelienribon.tweenengine.TweenManager;
 import glengine.yan.glengine.assets.YANAssetManager;
 import glengine.yan.glengine.assets.atlas.YANTextureAtlas;
 import glengine.yan.glengine.nodes.YANButtonNode;
@@ -21,6 +22,7 @@ public abstract class BaseTestScreen extends YANNodeScreen {
 
     protected static final int OVERLAY_SORTING_LAYER = 1000;
 
+    protected TweenManager mTweenManager;
     protected YANTextureAtlas mUiAtlas;
     protected YANTextureAtlas mCardsAtlas;
 
@@ -38,6 +40,8 @@ public abstract class BaseTestScreen extends YANNodeScreen {
 
     public BaseTestScreen(YANGLRenderer renderer) {
         super(renderer);
+
+        mTweenManager = new TweenManager();
 
         //set gray background
         renderer.setRendererBackgroundColor(YANColor.createFromHexColor(0xa9a9a9));
@@ -72,6 +76,9 @@ public abstract class BaseTestScreen extends YANNodeScreen {
     @Override
     public void onSetNotActive() {
         super.onSetNotActive();
+        //remove all animations
+        mTweenManager.killAll();
+
         //release atlas from a memory
         ServiceLocator.locateService(YANAssetManager.class).unloadTexture(ServiceLocator.locateService(YANAssetManager.class).getLoadedAtlas("ui_atlas").getAtlasImageFilePath());
         //release atlas font from a memory
@@ -81,6 +88,8 @@ public abstract class BaseTestScreen extends YANNodeScreen {
     @Override
     public void onUpdate(float deltaTimeSeconds) {
         super.onUpdate(deltaTimeSeconds);
+
+        mTweenManager.update(deltaTimeSeconds);
 
         //update logger value
         mFPSLogger.update(deltaTimeSeconds);
