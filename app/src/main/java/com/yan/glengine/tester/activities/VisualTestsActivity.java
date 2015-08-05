@@ -1,6 +1,6 @@
 package com.yan.glengine.tester.activities;
 
-import com.yan.glengine.tester.screens.CircleTestScreen;
+import com.yan.glengine.tester.screens.ButtonsTestScreen;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class VisualTestsActivity extends EngineActivity {
 
     @Override
     protected YANIScreen onCreateStartScreen(YANGLRenderer renderer) {
-        return new CircleTestScreen(renderer);
+        return new ButtonsTestScreen(renderer);
     }
 
 }

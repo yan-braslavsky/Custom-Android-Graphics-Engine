@@ -6,6 +6,7 @@ import glengine.yan.glengine.nodes.YANTextNode;
 import glengine.yan.glengine.renderer.YANGLRenderer;
 import glengine.yan.glengine.screens.YANIScreen;
 import glengine.yan.glengine.service.ServiceLocator;
+import glengine.yan.glengine.util.colors.YANColor;
 
 /**
  * Created by Yan-Home on 1/18/2015.
@@ -15,6 +16,7 @@ public class ButtonsTestScreen extends BaseTestScreen {
     private YANTextNode mTitleText;
     private YANButtonNode mSimpleAnchoredButton;
     private YANButtonNode mSimpleButton;
+    private YANButtonNode mButtonWithStateChangeAnimator;
 
 
     public ButtonsTestScreen(YANGLRenderer renderer) {
@@ -40,8 +42,7 @@ public class ButtonsTestScreen extends BaseTestScreen {
         mTitleText.setPosition(50, 50);
         mSimpleAnchoredButton.setPosition((getSceneSize().getX() - mSimpleAnchoredButton.getSize().getX()) / 2, (getSceneSize().getY() - mSimpleAnchoredButton.getSize().getY()) / 2);
         mSimpleButton.setPosition(200, 200);
-
-
+        mButtonWithStateChangeAnimator.setPosition(300, 450);
     }
 
     @Override
@@ -52,6 +53,7 @@ public class ButtonsTestScreen extends BaseTestScreen {
         addNode(mTitleText);
         addNode(mSimpleAnchoredButton);
         addNode(mSimpleButton);
+        addNode(mButtonWithStateChangeAnimator);
     }
 
     @Override
@@ -63,6 +65,7 @@ public class ButtonsTestScreen extends BaseTestScreen {
         mSimpleButton.setSize(mUiAtlas.getTextureRegion("call_btn_default.png").getWidth() * 3, mUiAtlas.getTextureRegion("call_btn_default.png").getHeight() * 3);
         mSimpleAnchoredButton.setAnchorPoint(0.9f, 0.5f);
         mSimpleButton.setAnchorPoint(0f, 0f);
+        mButtonWithStateChangeAnimator.setSize(mSimpleAnchoredButton.getSize().getX(),mSimpleAnchoredButton.getSize().getY());
 
     }
 
@@ -77,13 +80,16 @@ public class ButtonsTestScreen extends BaseTestScreen {
 
         mSimpleAnchoredButton = new YANButtonNode(mUiAtlas.getTextureRegion("call_btn_default.png"), mUiAtlas.getTextureRegion("call_btn_pressed.png"));
         mSimpleButton = new YANButtonNode(mUiAtlas.getTextureRegion("call_btn_default.png"), mUiAtlas.getTextureRegion("call_btn_pressed.png"));
+        mButtonWithStateChangeAnimator = new YANButtonNode(mUiAtlas.getTextureRegion("call_btn_default.png"), mUiAtlas.getTextureRegion("call_btn_pressed.png"));
 
+        YANColor color = YANColor.createFromHexColor(0xFF5987);
+        mButtonWithStateChangeAnimator.setOverlayColor(color.getR(),color.getG(),color.getB(),0.5f);
     }
 
 
     @Override
     protected YANIScreen onSetNextScreen() {
-        return null;
+        return new CircleTestScreen(getRenderer());
     }
 
     @Override

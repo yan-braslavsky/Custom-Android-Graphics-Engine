@@ -117,7 +117,7 @@ public class YANButtonNode extends YANTexturedNode {
     }
 
     private enum YANButtonState {
-        PRESSED, DEFAULT;
+        PRESSED, DEFAULT
     }
 
     public YANAtlasTextureRegion getDefaultTextureRegion() {

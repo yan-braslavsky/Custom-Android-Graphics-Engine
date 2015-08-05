@@ -50,7 +50,7 @@ public class CircleTestScreen extends BaseTestScreen {
 
     @Override
     protected YANIScreen onSetPreviousScreen() {
-        return null;
+        return new ButtonsTestScreen(getRenderer());
     }
 
     @Override
