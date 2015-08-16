@@ -132,7 +132,7 @@ public class ButtonsTestScreen extends BaseTestScreen {
 
     @Override
     protected YANIScreen onSetPreviousScreen() {
-        return null;
+        return new ParentingTestScreen(getRenderer());
     }
 
     @Override

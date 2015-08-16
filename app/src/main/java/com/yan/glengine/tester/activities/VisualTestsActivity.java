@@ -1,6 +1,6 @@
 package com.yan.glengine.tester.activities;
 
-import com.yan.glengine.tester.screens.ButtonsTestScreen;
+import com.yan.glengine.tester.screens.ParentingTestScreen;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class VisualTestsActivity extends EngineActivity {
 
     @Override
     protected YANIScreen onCreateStartScreen(YANGLRenderer renderer) {
-        return new ButtonsTestScreen(renderer);
+        return new ParentingTestScreen(renderer);
     }
 
 }

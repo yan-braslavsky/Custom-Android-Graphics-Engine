@@ -1,6 +1,11 @@
 package glengine.yan.glengine.nodes;
 
 import android.opengl.GLES20;
+import android.support.annotation.NonNull;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 
 import glengine.yan.glengine.data.YANVertexArray;
 import glengine.yan.glengine.input.YANNodeTouchListener;
@@ -19,7 +24,7 @@ import static android.opengl.GLES20.glDisable;
  * <p/>
  * Basic implementation of renderable node.
  */
-public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRenderableNode<T> {
+public abstract class YANBaseNode<T extends ShaderProgram> implements YANIParentNode, YANIChildNode<T> {
 
     protected static final int POSITION_COMPONENT_COUNT = 2;
     protected static final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
@@ -39,8 +44,12 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     private YANColor mOverlayColor;
     private YANNodeScreen.SortingLayerChangeListener mSortingLayerChangeListener;
     private YANNodeScreen mScreen;
+    private Collection<YANIChildNode> mChildNodes;
+    private Collection<YANIChildNode> mUnmodifiableChildNodes;
 
     protected YANBaseNode() {
+        mChildNodes = new HashSet<>();
+        mUnmodifiableChildNodes = Collections.unmodifiableCollection(mChildNodes);
         mSize = new YANVector2(0, 0);
         mPosition = new YANVector2();
         mAnchorPoint = new YANVector2();
@@ -74,6 +83,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     public void setPosition(float x, float y) {
         mPosition.setX(x);
         mPosition.setY(y);
+        notifyChildrenOfAttributeChange(Attribute.POSITION);
     }
 
     @Override
@@ -81,6 +91,13 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
         mSize.setX(width);
         mSize.setY(height);
         recalculateDimensions();
+        notifyChildrenOfAttributeChange(Attribute.SIZE);
+    }
+
+    private void notifyChildrenOfAttributeChange(final Attribute attribute) {
+        for (YANIChildNode child : mChildNodes) {
+            child.onParentAttributeChanged(this, attribute);
+        }
     }
 
     @Override
@@ -176,6 +193,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     public void setAnchorPoint(float x, float y) {
         mAnchorPoint.setX(x);
         mAnchorPoint.setY(y);
+        notifyChildrenOfAttributeChange(Attribute.ANCHOR_POINT);
     }
 
     @Override
@@ -191,6 +209,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     @Override
     public void setRotationY(float rotationY) {
         mRotationY = rotationY;
+        notifyChildrenOfAttributeChange(Attribute.ROTATION_Y);
     }
 
     @Override
@@ -201,6 +220,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     @Override
     public void setRotationZ(float rotationZ) {
         mRotationZ = rotationZ;
+        notifyChildrenOfAttributeChange(Attribute.ROTATION_Z);
     }
 
     @Override
@@ -211,6 +231,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     @Override
     public void setOpacity(float opacity) {
         mOpacity = opacity;
+        notifyChildrenOfAttributeChange(Attribute.OPACITY);
     }
 
     @Override
@@ -220,6 +241,8 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
         if (mSortingLayerChangeListener != null) {
             mSortingLayerChangeListener.onNodeChangesSortingLayer(prevSortingLayer, sortingLayer, this);
         }
+
+        notifyChildrenOfAttributeChange(Attribute.SORTING_LAYER);
     }
 
     @Override
@@ -235,9 +258,65 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIRender
     @Override
     public void setOverlayColor(float r, float g, float b, float a) {
         mOverlayColor.setColor(r, g, b, a);
+        notifyChildrenOfAttributeChange(Attribute.OVERLAY_COLOR);
     }
 
     public YANNodeScreen getScreen() {
         return mScreen;
+    }
+
+    @Override
+    public void addChildNode(@NonNull final YANIChildNode node) {
+        mChildNodes.add(node);
+
+        //if the child node was added when parent was already attached
+        //to screen , we will attach the child node immediately to the screen
+        if (getScreen() != null) {
+            getScreen().getNodeList().add(node);
+        }
+
+        node.onAttachedToParentNode(this);
+    }
+
+    @Override
+    public void removeChildNode(@NonNull final YANIChildNode node) {
+        mChildNodes.remove(node);
+        if (getScreen() != null) {
+            getScreen().getNodeList().remove(node);
+        }
+
+        node.onDetachedFromParentNode(this);
+    }
+
+    @Override
+    public void removeAllChildNodes() {
+        if (getScreen() != null) {
+            getScreen().getNodeList().removeAll(mChildNodes);
+        }
+
+        for (YANIChildNode child : mChildNodes) {
+            child.onDetachedFromParentNode(this);
+        }
+
+        mChildNodes.clear();
+    }
+
+    @Override
+    @NonNull
+    public Collection<YANIChildNode> getChildNodes() {
+        return mUnmodifiableChildNodes;
+    }
+
+    @Override
+    public void onAttachedToParentNode(@NonNull final YANIParentNode parentNode) {
+    }
+
+    @Override
+    public void onDetachedFromParentNode(@NonNull final YANIParentNode parentNode) {
+        //Override
+    }
+
+    @Override
+    public void onParentAttributeChanged(@NonNull final YANIParentNode parentNode, @NonNull final Attribute attribute) {
     }
 }

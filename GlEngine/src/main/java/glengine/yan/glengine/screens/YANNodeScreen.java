@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import glengine.yan.glengine.nodes.YANBaseNode;
+import glengine.yan.glengine.nodes.YANIChildNode;
 import glengine.yan.glengine.nodes.YANIRenderableNode;
 import glengine.yan.glengine.renderer.YANGLRenderer;
 import glengine.yan.glengine.util.geometry.YANReadOnlyVector2;
@@ -59,9 +61,16 @@ public abstract class YANNodeScreen implements YANIScreen {
      */
     protected abstract void onCreateNodes();
 
-    protected void addNode(YANIRenderableNode node) {
-        node.onAttachedToScreen(this,mSortingLayerChangeListener);
+    protected void addNode(YANBaseNode node) {
+        node.onAttachedToScreen(this, mSortingLayerChangeListener);
         getNodeList().add(node);
+
+        for (Object c : node.getChildNodes()) {
+            YANIChildNode child = (YANIChildNode) c;
+            child.onAttachedToScreen(this, mSortingLayerChangeListener);
+            getNodeList().add(child);
+        }
+
         shouldSortNodes = true;
     }
 
@@ -70,9 +79,17 @@ public abstract class YANNodeScreen implements YANIScreen {
         YANSort.sort(getNodeList(), mSortingLayerComparator);
     }
 
-    protected void removeNode(YANIRenderableNode node) {
+    protected void removeNode(YANBaseNode node) {
         node.onDetachedFromScreen();
         getNodeList().remove(node);
+
+        //detach all child nodes
+        for (Object c : node.getChildNodes()) {
+            YANIChildNode child = (YANIChildNode) c;
+            child.onDetachedFromScreen();
+            getNodeList().remove(child);
+        }
+
         shouldSortNodes = true;
     }
 
