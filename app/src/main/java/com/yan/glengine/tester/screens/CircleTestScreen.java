@@ -11,6 +11,7 @@ public class CircleTestScreen extends BaseTestScreen {
 
 
     private YANCircleNode mCircleNode;
+    private YANCircleNode mElipseNode;
     private float mPercentage = 0f;
     private float mChangeSpeed = 0.002f;
 
@@ -22,12 +23,14 @@ public class CircleTestScreen extends BaseTestScreen {
     protected void onAddNodesToScene() {
         super.onAddNodesToScene();
         addNode(mCircleNode);
+        addNode(mElipseNode);
     }
 
     @Override
     protected void onLayoutNodes() {
         super.onLayoutNodes();
         mCircleNode.setPosition((getSceneSize().getX() - mCircleNode.getSize().getX()) / 2, (getSceneSize().getY() - mCircleNode.getSize().getY()) / 2);
+        mElipseNode.setPosition(mCircleNode.getPosition().getX(), mCircleNode.getRotationY() + 500);
     }
 
     @Override
@@ -35,12 +38,17 @@ public class CircleTestScreen extends BaseTestScreen {
         super.onChangeNodesSize();
         mCircleNode.setSize(300, 300);
         mCircleNode.setColor(0, 0, 0);
+
+        mElipseNode.setSize(300, 200);
+        mElipseNode.setColor(0, 1, 0);
+
     }
 
     @Override
     protected void onCreateNodes() {
         super.onCreateNodes();
         mCircleNode = new YANCircleNode();
+        mElipseNode = new YANCircleNode();
     }
 
     @Override

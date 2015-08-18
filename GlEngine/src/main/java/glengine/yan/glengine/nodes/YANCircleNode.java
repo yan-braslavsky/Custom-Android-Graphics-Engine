@@ -45,7 +45,8 @@ public class YANCircleNode extends YANBaseNode<YANColorShaderProgram> {
     @Override
     protected float[] createVertexData() {
 
-        float radius = getSize().getX() / 2f;
+        float radiusX = getSize().getX() / 2f;
+        float radiusY = getSize().getY() / 2f;
         float centerX = 0.0f;
         float centerY = 0.0f;
         int index = 0;
@@ -67,8 +68,8 @@ public class YANCircleNode extends YANBaseNode<YANColorShaderProgram> {
 
         for (int i = startingVertex; i < verticesToDraw; ++i) {
             float rad = (float) Math.toRadians(rotationOffset - (degreeStep * (float) i));
-            buffer[index++] = (float) (centerX + radius * Math.cos(rad));
-            buffer[index++] = (float) (centerY + radius * Math.sin(rad));
+            buffer[index++] = (float) (centerX + radiusX * Math.cos(rad));
+            buffer[index++] = (float) (centerY + radiusY * Math.sin(rad));
         }
 
         //when we drawing a full circle we want to close the loop
