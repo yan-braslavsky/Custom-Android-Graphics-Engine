@@ -44,8 +44,8 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIParent
     private YANColor mOverlayColor;
     private YANNodeScreen.SortingLayerChangeListener mSortingLayerChangeListener;
     private YANNodeScreen mScreen;
-    private Collection<YANIChildNode> mChildNodes;
-    private Collection<YANIChildNode> mUnmodifiableChildNodes;
+    private Collection<YANBaseNode> mChildNodes;
+    private Collection<YANBaseNode> mUnmodifiableChildNodes;
 
     protected YANBaseNode() {
         mChildNodes = new HashSet<>();
@@ -266,57 +266,53 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIParent
     }
 
     @Override
-    public void addChildNode(@NonNull final YANIChildNode node) {
+    public void addChildNode(@NonNull final YANBaseNode node) {
         mChildNodes.add(node);
+        node.onAttachedToParentNode(this);
 
         //if the child node was added when parent was already attached
         //to screen , we will attach the child node immediately to the screen
         if (getScreen() != null) {
-            getScreen().getNodeList().add(node);
+            getScreen().addNode(node);
         }
-
-        node.onAttachedToParentNode(this);
     }
 
     @Override
-    public void removeChildNode(@NonNull final YANIChildNode node) {
+    public void removeChildNode(@NonNull final YANBaseNode node) {
         mChildNodes.remove(node);
-        if (getScreen() != null) {
-            getScreen().getNodeList().remove(node);
-        }
-
         node.onDetachedFromParentNode(this);
+
+        if (getScreen() != null) {
+            getScreen().removeNode(node);
+        }
     }
 
     @Override
     public void removeAllChildNodes() {
         if (getScreen() != null) {
-            getScreen().getNodeList().removeAll(mChildNodes);
+            for (YANBaseNode childNode : mChildNodes) {
+                removeChildNode(childNode);
+            }
         }
-
-        for (YANIChildNode child : mChildNodes) {
-            child.onDetachedFromParentNode(this);
-        }
-
         mChildNodes.clear();
     }
 
     @Override
     @NonNull
-    public Collection<YANIChildNode> getChildNodes() {
+    public Collection<YANBaseNode> getChildNodes() {
         return mUnmodifiableChildNodes;
     }
 
     @Override
-    public void onAttachedToParentNode(@NonNull final YANIParentNode parentNode) {
+    public void onAttachedToParentNode(@NonNull final YANBaseNode parentNode) {
     }
 
     @Override
-    public void onDetachedFromParentNode(@NonNull final YANIParentNode parentNode) {
+    public void onDetachedFromParentNode(@NonNull final YANBaseNode parentNode) {
         //Override
     }
 
     @Override
-    public void onParentAttributeChanged(@NonNull final YANIParentNode parentNode, @NonNull final Attribute attribute) {
+    public void onParentAttributeChanged(@NonNull final YANBaseNode parentNode, @NonNull final Attribute attribute) {
     }
 }

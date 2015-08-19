@@ -60,7 +60,7 @@ public abstract class YANNodeScreen implements YANIScreen {
      */
     protected abstract void onCreateNodes();
 
-    protected void addNode(YANBaseNode node) {
+    public void addNode(YANBaseNode node) {
         node.onAttachedToScreen(this, mSortingLayerChangeListener);
         getNodeList().add(node);
 
@@ -77,7 +77,7 @@ public abstract class YANNodeScreen implements YANIScreen {
         YANSort.sort(getNodeList(), mSortingLayerComparator);
     }
 
-    protected void removeNode(YANBaseNode node) {
+    public void removeNode(YANBaseNode node) {
         node.onDetachedFromScreen();
         getNodeList().remove(node);
 

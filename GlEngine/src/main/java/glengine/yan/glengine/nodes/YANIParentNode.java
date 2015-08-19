@@ -11,12 +11,12 @@ import java.util.Collection;
  */
 public interface YANIParentNode extends YANITransformableNode {
 
-    void addChildNode(@NonNull final YANIChildNode node);
+    void addChildNode(@NonNull final YANBaseNode node);
 
-    void removeChildNode(@NonNull final YANIChildNode node);
+    void removeChildNode(@NonNull final YANBaseNode node);
 
     void removeAllChildNodes();
 
     @NonNull
-    Collection<YANIChildNode> getChildNodes();
+    Collection<YANBaseNode> getChildNodes();
 }

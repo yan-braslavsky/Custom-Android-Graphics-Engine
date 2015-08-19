@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import glengine.yan.glengine.assets.YANAssetManager;
+import glengine.yan.glengine.nodes.YANBaseNode;
 import glengine.yan.glengine.nodes.YANButtonNode;
 import glengine.yan.glengine.nodes.YANIParentNode;
 import glengine.yan.glengine.nodes.YANTextNode;
@@ -106,7 +107,7 @@ public class ParentingTestScreen extends BaseTestScreen {
         //we are creating simple button to be attached to the card node
         mSimpleButton = new YANButtonNode(mUiAtlas.getTextureRegion("call_btn_default.png"), mUiAtlas.getTextureRegion("call_btn_pressed.png")) {
             @Override
-            public void onParentAttributeChanged(@NonNull final YANIParentNode parentNode, @NonNull final Attribute attribute) {
+            public void onParentAttributeChanged(@NonNull final YANBaseNode parentNode, @NonNull final Attribute attribute) {
                 super.onParentAttributeChanged(parentNode, attribute);
 
                 switch (attribute) {
@@ -127,7 +128,7 @@ public class ParentingTestScreen extends BaseTestScreen {
             }
 
             @Override
-            public void onAttachedToParentNode(@NonNull final YANIParentNode parentNode) {
+            public void onAttachedToParentNode(@NonNull final YANBaseNode parentNode) {
                 super.onAttachedToParentNode(parentNode);
 
                 //adjust sorting layer to be always on top of the parent

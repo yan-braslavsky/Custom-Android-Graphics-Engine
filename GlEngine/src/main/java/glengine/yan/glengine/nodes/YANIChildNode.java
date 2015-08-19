@@ -15,9 +15,9 @@ public interface YANIChildNode<T extends ShaderProgram> extends YANIRenderableNo
         SORTING_LAYER,SIZE, POSITION, ROTATION_Z, ROTATION_Y, OPACITY, OVERLAY_COLOR, ANCHOR_POINT
     }
 
-    void onAttachedToParentNode(@NonNull final YANIParentNode parentNode);
+    void onAttachedToParentNode(@NonNull final YANBaseNode parentNode);
 
-    void onDetachedFromParentNode(@NonNull final YANIParentNode parentNode);
+    void onDetachedFromParentNode(@NonNull final YANBaseNode parentNode);
 
-    void onParentAttributeChanged(@NonNull final YANIParentNode parentNode, @NonNull final Attribute attribute);
+    void onParentAttributeChanged(@NonNull final YANBaseNode parentNode, @NonNull final Attribute attribute);
 }
