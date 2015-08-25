@@ -3,9 +3,9 @@ package glengine.yan.glengine.nodes;
 import android.opengl.GLES20;
 import android.support.annotation.NonNull;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.List;
 
 import glengine.yan.glengine.data.YANVertexArray;
 import glengine.yan.glengine.input.YANNodeTouchListener;
@@ -44,12 +44,12 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIParent
     private YANColor mOverlayColor;
     private YANNodeScreen.SortingLayerChangeListener mSortingLayerChangeListener;
     private YANNodeScreen mScreen;
-    private Collection<YANBaseNode> mChildNodes;
-    private Collection<YANBaseNode> mUnmodifiableChildNodes;
+    private List<YANBaseNode> mChildNodes;
+    private List<YANBaseNode> mUnmodifiableChildNodes;
 
     protected YANBaseNode() {
-        mChildNodes = new HashSet<>();
-        mUnmodifiableChildNodes = Collections.unmodifiableCollection(mChildNodes);
+        mChildNodes = new ArrayList<>();
+        mUnmodifiableChildNodes = Collections.unmodifiableList(mChildNodes);
         mSize = new YANVector2(0, 0);
         mPosition = new YANVector2();
         mAnchorPoint = new YANVector2();
@@ -95,7 +95,8 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIParent
     }
 
     private void notifyChildrenOfAttributeChange(final Attribute attribute) {
-        for (YANIChildNode child : mChildNodes) {
+        for (int i = 0; i < mChildNodes.size(); i++) {
+            YANIChildNode child = mChildNodes.get(i);
             child.onParentAttributeChanged(this, attribute);
         }
     }
@@ -290,7 +291,8 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIParent
     @Override
     public void removeAllChildNodes() {
         if (getScreen() != null) {
-            for (YANBaseNode childNode : mChildNodes) {
+            for (int i = 0; i < mChildNodes.size(); i++) {
+                YANBaseNode childNode = mChildNodes.get(i);
                 removeChildNode(childNode);
             }
         }
@@ -299,7 +301,7 @@ public abstract class YANBaseNode<T extends ShaderProgram> implements YANIParent
 
     @Override
     @NonNull
-    public Collection<YANBaseNode> getChildNodes() {
+    public List<YANBaseNode> getChildNodes() {
         return mUnmodifiableChildNodes;
     }
 

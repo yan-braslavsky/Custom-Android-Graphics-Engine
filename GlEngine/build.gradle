@@ -3,7 +3,7 @@ apply plugin: 'maven'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "20.0.0"
+    buildToolsVersion '23.0.0'
 
     defaultConfig {
         minSdkVersion 14
@@ -25,7 +25,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:21.0.0'
     compile files('libs/gson-2.2.4.jar')
     compile files('libs/tween-engine-api.jar')
@@ -37,6 +37,7 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository(url: "file:///E:/Dropbox/public/maven-repo")
+//            repository(url: "file:///Users/yan.braslavski/Dropbox/public/maven-repo ")
             pom.groupId = 'com.yan.glengine'
             pom.artifactId = 'engine-lib'
 //            pom.version = '1.0'

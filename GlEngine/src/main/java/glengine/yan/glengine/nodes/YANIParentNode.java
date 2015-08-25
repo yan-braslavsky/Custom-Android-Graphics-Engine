@@ -2,7 +2,7 @@ package glengine.yan.glengine.nodes;
 
 import android.support.annotation.NonNull;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Yan-Home on 16/8/2015.
@@ -18,5 +18,5 @@ public interface YANIParentNode extends YANITransformableNode {
     void removeAllChildNodes();
 
     @NonNull
-    Collection<YANBaseNode> getChildNodes();
+    List<YANBaseNode> getChildNodes();
 }
