@@ -1,6 +1,5 @@
-# OpenGLEngineAndroid
-Simple node based graphics engine for simple 2d rendering.
-Includes
+# Custom Android Graphics Engine
+I implemented a simple node based graphics engine for simple 2d rendering.
 
 ### Rendering Features
   - Texture node rendering
